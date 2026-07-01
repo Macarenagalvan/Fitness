@@ -146,6 +146,13 @@
   .rate{display:flex;gap:6px}
   .rate button{flex:1;background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:8px 0;font-weight:700}
   .rate button.on{background:var(--volt);border-color:var(--volt);color:#0b0c0f}
+  .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .medal{text-align:center;opacity:.5;cursor:pointer}
+  .medal.on{opacity:1}
+  .mic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;margin:0 auto}
+  .mic svg{width:26px;height:26px}
+  .mn{font-size:12px;font-weight:700;margin-top:6px;line-height:1.15}
+  .mp{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -171,6 +178,9 @@
       <div class="stat"><div class="num" id="stTotal">0</div><div class="lbl" data-i18n="st_total"></div></div>
     </div>
     <div class="card"><div class="small" id="motiv"></div></div>
+    <div id="streakBody"></div>
+    <h2 class="sec"><span class="ic" id="icMedal"></span><span data-i18n="medals_title"></span></h2>
+    <div id="medalsBody"></div>
     <h2 class="sec"><span class="ic" id="icWeek"></span><span data-i18n="week_summary"></span></h2>
     <div id="weekSummary"></div>
     <h2 class="sec"><span class="ic" id="icCal"></span><span data-i18n="consistency"></span></h2>
@@ -297,7 +307,9 @@ const ICONS={
  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>',
  drop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7 6 10a6 6 0 0 1-12 0c0-3 3-6 6-10z"/></svg>',
  trophy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M9 14h6M10 14v3M14 14v3M8 20h8"/></svg>',
- spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>'
+ spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+ gem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 5-9 13L3 8z"/><path d="M3 8h18M9 3l-2.5 5L12 21l5.5-13L15 3"/></svg>',
+ medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M8 3.5l4 6 4-6"/><path d="M9.8 15l1.4 1.4 2.8-2.8"/></svg>'
 };
 function ic(n){ return '<span class="ic">'+ICONS[n]+'</span>'; }
 
@@ -456,6 +468,14 @@ const I18N={
   energy:"Energía", sleep:"Sueño", mood:"Ánimo", optional15:"opcional (1-5)",
   settings:"Ajustes", weekly_goal:"Objetivo semanal (entrenos)", cycle_len:"Duración del ciclo (días)", save_settings:"Guardar ajustes",
   progress_of:"Progreso de", no_history:"Sin datos todavía. Entrená este ejercicio para ver tu progreso.", view_progress:"Ver progreso",
+  streak_title:"Racha y gemas", streak_unit:"semanas seguidas",
+  streak_zero:"Empezá tu racha esta semana. Cumplí tu objetivo semanal para sumar.",
+  this_week:"Esta semana", week_met:"¡Semana cumplida!", gems:"Gemas",
+  weeks_strip:"Últimas semanas", use_freeze:"Salvar racha",
+  streak_risk:"Racha en riesgo: la semana pasada no llegaste al objetivo. Usá un congelador para salvarla.",
+  confirm_freeze:"¿Usar {c} gemas para congelar esa semana y salvar tu racha?", not_enough_gems:"Te faltan gemas para el congelador.",
+  medals_title:"Logros", locked:"Bloqueado", medal_earned:"¡Logro desbloqueado!",
+  gems_plus:"+{n} gemas", week_bonus:"¡Semana cumplida! +{n} gemas",
   phase_label:"Tu fase actual",
   phase1:"Semanas 1-3 · Adaptación. Peso liviano, 2 series, SIN llegar al fallo. Priorizá técnica y movilidad.",
   phase2:"Semanas 4-8 · Construcción. 3 series y buscá progresión: si llegás al tope de reps, subí el peso.",
@@ -520,6 +540,14 @@ const I18N={
   energy:"Energie", sleep:"Schlaf", mood:"Stimmung", optional15:"optional (1-5)",
   settings:"Einstellungen", weekly_goal:"Wochenziel (Workouts)", cycle_len:"Zykluslänge (Tage)", save_settings:"Einstellungen speichern",
   progress_of:"Fortschritt von", no_history:"Noch keine Daten. Trainiere diese Übung, um den Fortschritt zu sehen.", view_progress:"Fortschritt ansehen",
+  streak_title:"Serie & Edelsteine", streak_unit:"Wochen in Folge",
+  streak_zero:"Starte deine Serie diese Woche. Erreiche dein Wochenziel, um zu zählen.",
+  this_week:"Diese Woche", week_met:"Woche geschafft!", gems:"Edelsteine",
+  weeks_strip:"Letzte Wochen", use_freeze:"Serie retten",
+  streak_risk:"Serie in Gefahr: letzte Woche Ziel verpasst. Nutze einen Freeze, um sie zu retten.",
+  confirm_freeze:"{c} Edelsteine nutzen, um die Woche einzufrieren und die Serie zu retten?", not_enough_gems:"Nicht genug Edelsteine für den Freeze.",
+  medals_title:"Erfolge", locked:"Gesperrt", medal_earned:"Erfolg freigeschaltet!",
+  gems_plus:"+{n} Edelsteine", week_bonus:"Woche geschafft! +{n} Edelsteine",
   phase_label:"Deine aktuelle Phase",
   phase1:"Woche 1-3 · Eingewöhnung. Leichtes Gewicht, 2 Sätze, NICHT bis zum Versagen. Technik und Mobilität zuerst.",
   phase2:"Woche 4-8 · Aufbau. 3 Sätze und Progression: wenn du die obere Wdh.-Grenze schaffst, mehr Gewicht.",
@@ -588,9 +616,9 @@ function tagColor(k){ return {"":"#caff00","red":"#ff5a36","amber":"#ffb020","bl
 /* ===== ALMACENAMIENTO ===== */
 const KEY="forjaTraining_v3";
 let DB=load(); let currentView="inicio";
-function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(!d.lang)d.lang="es"; if(!d.photos)d.photos=[]; if(d.name==null)d.name=""; if(!d.measures)d.measures=[]; if(!d.cycle)d.cycle=[]; if(!d.settings)d.settings={weeklyGoal:3,cycleLen:28}; return d;}}catch(e){} return seed(); }
+function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(!d.lang)d.lang="es"; if(!d.photos)d.photos=[]; if(d.name==null)d.name=""; if(!d.measures)d.measures=[]; if(!d.cycle)d.cycle=[]; if(!d.settings)d.settings={weeklyGoal:3,cycleLen:28}; if(d.gems==null)d.gems=0; if(!d.frozenWeeks)d.frozenWeeks=[]; if(d.prCount==null)d.prCount=0; if(!d.medalsSeen)d.medalsSeen=[]; return d;}}catch(e){} return seed(); }
 function save(){ try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){ alert(DB.lang==='de'?"Speichern fehlgeschlagen (Speicher voll/Inkognito).":"No se pudo guardar (memoria llena o incógnito)."); } }
-function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28}}; }
+function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},gems:0,frozenWeeks:[],prCount:0,medalsSeen:[]}; }
 
 function makeItem(libId,ov){ const e=LIB[libId]; if(!e)return null; const it={uid:uid(),libId,cat:e.cat,section:CAT_SEC[e.cat],kind:e.kind,name:e.name,nameDe:e.nameDe,sets:e.defSets,rMin:e.rMin,rMax:e.rMax,rest:e.rest,instr:e.instr,instrDe:e.instrDe}; if(ov)Object.assign(it,ov); return it; }
 function buildDay(name,nameDe,ids){ return {id:uid(),name,nameDe,ex:ids.map(i=>makeItem(i)).filter(Boolean)}; }
@@ -652,6 +680,7 @@ function applyStatic(){
  setIc('icToday','flame');setIc('icPlay','play');setIc('icScale','scale');setIc('icPen','pen');setIc('icBook2','book');
  setIc('icCheck','check');setIc('icPlus2','plus');setIc('icBook','book');setIc('icScale2','scale');setIc('icCam','camera');setIc('icCam2','camera');setIc('icPlusLib','plus');
  setIc('icWeek','trophy');setIc('icCal','calendar');setIc('icRuler','ruler');setIc('icCycle','calendar');setIc('icDrop','drop');setIc('restIc','clock');
+ setIc('icMedal','medal');
  document.getElementById('restLbl').textContent=t('rest_lbl'); document.getElementById('restSkip').textContent=t('skip');
  const nm=(DB.name||"").trim();
  document.getElementById('brandName').textContent=nm?nm.toUpperCase():"FORJA";
@@ -689,7 +718,7 @@ function renderInicio(){
  document.getElementById("suggestDay").textContent=dn(DB.routine[nextDayIdx()]).split('·')[0];
  const rn=document.getElementById("recentNotes"); const last3=[...DB.journal].slice(-3).reverse();
  rn.innerHTML=last3.length?last3.map(journalCard).join(""):`<div class="empty">${t('no_notes')}</div>`;
- renderWeekSummary(); renderConsistency();
+ renderStreak(); renderMedals(); renderWeekSummary(); renderConsistency();
 }
 function streak(){ if(!DB.logs.length)return 0; const sow=new Date();sow.setDate(sow.getDate()-6); return [...new Set(DB.logs.map(l=>l.date))].filter(d=>new Date(d+"T00:00:00")>=sow).length; }
 function nextDayIdx(){ if(!DB.logs.length)return 0; const last=DB.logs[DB.logs.length-1].dayName; const idx=DB.routine.findIndex(d=>d.name===last||d.nameDe===last); return idx<0?0:(idx+1)%DB.routine.length; }
@@ -806,11 +835,17 @@ function saveWorkout(){
  });
  if(!exercises.length){ alert(t('pick_one')); return; }
  const prs=[]; exercises.forEach(x=>{ if(x.kind==='weight'&&x.weight>0){ const prev=bestWeight(x.name,DB.logs); if(prev>0&&x.weight>prev) prs.push({name:x.name,w:x.weight}); } });
+ const wk=weekStart(today()), goal=(DB.settings&&DB.settings.weeklyGoal)||3, weekBefore=DB.logs.filter(l=>weekStart(l.date)===wk).length;
  DB.logs.push({date:today(),dayName:day.name,exercises});
  DB.journal.push({date:today(),tags:["trained"],text:dn(day)});
+ let earned=GEM_PER; const weekJustDone=(weekBefore<goal && weekBefore+1>=goal); if(weekJustDone)earned+=WEEK_BONUS; if(prs.length)earned+=PR_BONUS*prs.length;
+ DB.gems=(DB.gems||0)+earned; DB.prCount=(DB.prCount||0)+prs.length;
  save();
- const prHtml=prs.length?`<div class="card" style="border-color:var(--volt);margin-top:4px"><div class="display" style="color:var(--volt);font-size:20px;display:flex;align-items:center;gap:8px">${ICONS.trophy} ${t('pr_title')}</div>${prs.map(p=>`<div class="small" style="margin-top:4px">${esc(t('pr_line',{ex:dn(LIB[lookupId(p.name)]||{name:p.name}),w:p.w}))}</div>`).join("")}</div>`:"";
- showModal(`<h3>${t('saved_title')}</h3><p class="small muted">${t('saved_msg')}</p>${prHtml}<button class="btn" style="margin-top:10px" onclick="closeModal();go('inicio')">${t('done')}</button>`);
+ const fresh=checkNewMedals(); save();
+ const prHtml=prs.length?`<div class="card" style="border-color:var(--volt);margin-top:8px"><div class="display" style="color:var(--volt);font-size:20px;display:flex;align-items:center;gap:8px">${ICONS.trophy} ${t('pr_title')}</div>${prs.map(p=>`<div class="small" style="margin-top:4px">${esc(t('pr_line',{ex:dn(LIB[lookupId(p.name)]||{name:p.name}),w:p.w}))}</div>`).join("")}</div>`:"";
+ const gemHtml=`<div class="card" style="margin-top:8px"><div class="row between"><span class="small">${weekJustDone?t('week_bonus',{n:earned}):t('gems_plus',{n:earned})}</span><span class="display" style="color:var(--blue);font-size:22px;display:flex;align-items:center;gap:6px"><span class="ic" style="width:18px">${ICONS.gem}</span>${DB.gems}</span></div></div>`;
+ const medalHtml=fresh.length?`<div class="card" style="border-color:var(--volt);margin-top:8px"><div class="display" style="color:var(--volt);font-size:18px;display:flex;align-items:center;gap:8px"><span class="ic">${ICONS.medal}</span>${t('medal_earned')}</div>${fresh.map(id=>{const m=MEDALS.find(x=>x.id===id);return `<div class="small" style="margin-top:4px">${esc(DB.lang==='de'?m.n.de:m.n.es)}</div>`;}).join("")}</div>`:"";
+ showModal(`<h3>${t('saved_title')}</h3><p class="small muted">${t('saved_msg')}</p>${gemHtml}${prHtml}${medalHtml}<button class="btn" style="margin-top:10px" onclick="closeModal();go('inicio')">${t('done')}</button>`);
 }
 function bestWeight(name,logs){ let b=0; logs.forEach(l=>l.exercises.forEach(x=>{ if(x.name===name&&x.kind==='weight'&&x.weight>b)b=x.weight; })); return b; }
 function lookupId(name){ const e=EXERCISES.find(x=>x.name===name); return e?e.id:null; }
@@ -976,7 +1011,56 @@ function openExerciseChart(enc){ const name=decodeURIComponent(enc); const e=EXE
  if(pts.length>=2)setTimeout(()=>drawLine('exSpark',pts,'kg'),30);
 }
 
+/* ===== RACHA, GEMAS Y CONGELADOR ===== */
+const GEM_PER=10, WEEK_BONUS=25, PR_BONUS=15, FREEZE_COST=50;
+function weekStart(d){ const x=new Date((d||today())+'T00:00:00'); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return x.toISOString().slice(0,10); }
+function prevWeek(ws){ const d=new Date(ws+'T00:00:00'); d.setDate(d.getDate()-7); return d.toISOString().slice(0,10); }
+function weekCounts(){ const c={}; DB.logs.forEach(l=>{ const w=weekStart(l.date); c[w]=(c[w]||0)+1; }); return c; }
+function computeStreak(){ const goal=(DB.settings&&DB.settings.weeklyGoal)||3, c=weekCounts(), froz=new Set(DB.frozenWeeks||[]), met=w=>((c[w]||0)>=goal)||froz.has(w), curW=weekStart(today()); let streak=0,cursor;
+ if(met(curW)){ streak=1; cursor=prevWeek(curW); } else cursor=prevWeek(curW);
+ while(met(cursor)){ streak++; cursor=prevWeek(cursor); }
+ return {streak,goal,curW,curCount:c[curW]||0,curMet:met(curW)}; }
+function firstLogWeek(){ if(!DB.logs.length)return null; let m=DB.logs[0].date; DB.logs.forEach(l=>{ if(l.date<m)m=l.date; }); return weekStart(m); }
+function riskWeek(){ const goal=(DB.settings&&DB.settings.weeklyGoal)||3, c=weekCounts(), froz=new Set(DB.frozenWeeks||[]), met=w=>((c[w]||0)>=goal)||froz.has(w), pw=prevWeek(weekStart(today())), fw=firstLogWeek();
+ if(fw && pw>=fw && !met(pw)) return pw; return null; }
+function useFreeze(){ const pw=riskWeek(); if(!pw)return; if((DB.gems||0)<FREEZE_COST){ alert(t('not_enough_gems')); return; } if(!confirm(t('confirm_freeze',{c:FREEZE_COST})))return; DB.gems-=FREEZE_COST; DB.frozenWeeks=DB.frozenWeeks||[]; DB.frozenWeeks.push(pw); save(); renderStreak(); }
+function renderStreak(){ const box=document.getElementById('streakBody'); if(!box)return; const s=computeStreak(), risk=riskWeek(), goal=s.goal, c=weekCounts(), froz=new Set(DB.frozenWeeks||[]);
+ let w=weekStart(today()); const arr=[]; for(let i=0;i<6;i++){ arr.unshift(w); w=prevWeek(w); }
+ const strip=arr.map(ws=>{ const cnt=c[ws]||0, isCur=ws===s.curW, ok=cnt>=goal, fr=froz.has(ws); const bg=fr?'var(--blue)':(ok?'var(--volt)':'#0e1014'); const col=(fr||ok)?'#0b0c0f':'var(--muted)'; const brd=isCur?'2px solid var(--volt)':'1px solid var(--line)'; return `<div style="flex:1;text-align:center"><div style="height:36px;border-radius:9px;display:grid;place-items:center;background:${bg};color:${col};font-weight:700;border:${brd}">${fr?'❄':cnt}</div></div>`; }).join("");
+ box.innerHTML=`<div class="card" style="background:linear-gradient(120deg,#1a1d25,#121419)"><div class="row between"><div><div class="display" style="font-size:52px;line-height:.9;color:var(--volt);display:flex;align-items:center;gap:8px"><span class="ic" style="width:34px;height:34px">${ICONS.flame}</span>${s.streak}</div><div class="muted small" style="text-transform:uppercase;letter-spacing:1px;margin-top:2px">${t('streak_unit')}</div></div>
+   <div style="text-align:right"><div class="display" style="font-size:28px;color:var(--blue);display:flex;align-items:center;gap:6px;justify-content:flex-end"><span class="ic" style="width:24px;height:24px">${ICONS.gem}</span>${DB.gems||0}</div><div class="muted xs">${t('gems')}</div></div></div>
+   <div class="xs muted" style="margin-top:8px">${t('this_week')}: ${s.curCount}/${goal}${s.curMet?' · '+t('week_met'):''}</div>
+   <div class="xs muted" style="margin:12px 0 5px;text-transform:uppercase;letter-spacing:.5px">${t('weeks_strip')}</div><div style="display:flex;gap:5px">${strip}</div>
+   ${risk?`<div class="note" style="border-left-color:var(--coral);margin-top:12px">${t('streak_risk')}</div><button class="btn" style="margin-top:8px" onclick="useFreeze()"><span class="ic">${ICONS.gem}</span>${t('use_freeze')} · ${FREEZE_COST}</button>`:''}
+   ${s.streak===0&&!risk?`<div class="note" style="margin-top:12px">${t('streak_zero')}</div>`:''}</div>`;
+}
+
+/* ===== MEDALLAS / LOGROS ===== */
+const MEDALS=[
+ {id:'first',icon:'flame',n:{es:'Primer paso',de:'Erster Schritt'},d:{es:'Completá tu primer entreno',de:'Absolviere dein erstes Workout'},g:1,v:s=>s.workouts},
+ {id:'w10',icon:'dumbbell',n:{es:'En marcha',de:'In Fahrt'},d:{es:'10 entrenos',de:'10 Workouts'},g:10,v:s=>s.workouts},
+ {id:'w25',icon:'dumbbell',n:{es:'Constante',de:'Beständig'},d:{es:'25 entrenos',de:'25 Workouts'},g:25,v:s=>s.workouts},
+ {id:'w50',icon:'dumbbell',n:{es:'Imparable',de:'Unaufhaltsam'},d:{es:'50 entrenos',de:'50 Workouts'},g:50,v:s=>s.workouts},
+ {id:'w100',icon:'trophy',n:{es:'Leyenda',de:'Legende'},d:{es:'100 entrenos',de:'100 Workouts'},g:100,v:s=>s.workouts},
+ {id:'s4',icon:'flame',n:{es:'Un mes fuerte',de:'Starker Monat'},d:{es:'Racha de 4 semanas',de:'4 Wochen Serie'},g:4,v:s=>s.streak},
+ {id:'s12',icon:'flame',n:{es:'Trimestre imbatible',de:'Top-Quartal'},d:{es:'Racha de 12 semanas',de:'12 Wochen Serie'},g:12,v:s=>s.streak},
+ {id:'s26',icon:'flame',n:{es:'Medio año',de:'Halbes Jahr'},d:{es:'Racha de 26 semanas',de:'26 Wochen Serie'},g:26,v:s=>s.streak},
+ {id:'gem200',icon:'gem',n:{es:'Coleccionista',de:'Sammlerin'},d:{es:'Juntá 200 gemas',de:'Sammle 200 Edelsteine'},g:200,v:s=>s.gems},
+ {id:'gem1000',icon:'gem',n:{es:'Tesoro',de:'Schatz'},d:{es:'Juntá 1000 gemas',de:'Sammle 1000 Edelsteine'},g:1000,v:s=>s.gems},
+ {id:'pr1',icon:'trophy',n:{es:'Más fuerte',de:'Stärker'},d:{es:'Tu primer récord de peso',de:'Dein erster Gewichtsrekord'},g:1,v:s=>s.prs},
+ {id:'photo4',icon:'camera',n:{es:'Transformación',de:'Verwandlung'},d:{es:'4 fotos de progreso',de:'4 Fortschrittsfotos'},g:4,v:s=>s.photos}
+];
+function statsForMedals(){ return {workouts:DB.logs.length,streak:computeStreak().streak,gems:DB.gems||0,prs:DB.prCount||0,photos:(DB.photos||[]).length}; }
+function earnedIds(){ const s=statsForMedals(); return MEDALS.filter(m=>m.v(s)>=m.g).map(m=>m.id); }
+function checkNewMedals(){ const seen=new Set(DB.medalsSeen||[]); const now=earnedIds(); const fresh=now.filter(id=>!seen.has(id)); DB.medalsSeen=now; return fresh; }
+function renderMedals(){ const box=document.getElementById('medalsBody'); if(!box)return; const s=statsForMedals();
+ box.innerHTML=`<div class="card"><div class="mgrid">`+MEDALS.map(m=>{ const val=m.v(s), earned=val>=m.g, nm=DB.lang==='de'?m.n.de:m.n.es;
+   return `<div class="medal ${earned?'on':''}" onclick="medalInfo('${m.id}')"><div class="mic" style="${earned?'background:var(--volt);color:#0b0c0f':'background:#0e1014;color:var(--muted)'}">${ICONS[m.icon]}</div><div class="mn">${esc(nm)}</div><div class="mp">${Math.min(val,m.g)}/${m.g}</div></div>`; }).join("")+`</div></div>`;
+}
+function medalInfo(id){ const m=MEDALS.find(x=>x.id===id); if(!m)return; const s=statsForMedals(), earned=m.v(s)>=m.g; showModal(`<h3 style="display:flex;align-items:center;gap:8px"><span class="ic">${ICONS[m.icon]}</span>${esc(DB.lang==='de'?m.n.de:m.n.es)}</h3><p class="small">${esc(DB.lang==='de'?m.d.de:m.d.es)}</p><p class="small" style="color:${earned?'var(--volt)':'var(--muted)'}">${earned?t('medal_earned'):t('locked')} · ${Math.min(m.v(s),m.g)}/${m.g}</p><button class="btn" onclick="closeModal()">${t('done')}</button>`); }
+
 /* ===== INIT ===== */
+if((DB.medalsSeen||[]).length===0 && DB.logs.length>0){ DB.medalsSeen=earnedIds(); save(); }
 applyStatic();
 go("inicio");
 </script>
