@@ -372,6 +372,8 @@ const EXERCISES=[
  X("w_jumpingjacks","warmup","move","Jumping jacks suaves","Lockere Jumping Jacks",1,0,0,0,"30-40 seg de ritmo suave","30-40 Sek lockeres Tempo"),
  X("w_anklewrist","warmup","move","Movilidad de tobillos y muñecas","Sprung- & Handgelenke",1,0,0,0,"Círculos en ambos sentidos","Kreisen in beide Richtungen"),
  X("w_chestopener","warmup","move","Apertura de pecho","Brustöffner",1,0,0,0,"Abre los brazos y junta omóplatos","Arme öffnen, Schulterblätter zusammen"),
+ X("w_lungewt","warmup","move","Zancadas con peso (mochila/barra)","Ausfallschritte mit Gewicht",1,0,0,0,"Zancadas caminando con peso en los hombros o mochila; tronco firme y baja controlada","Gehende Ausfallschritte mit Gewicht auf den Schultern; Rumpf fest, kontrolliert senken"),
+ X("w_shoulderdislocate","warmup","move","Pasaje de hombros con barra (dislocaciones)","Schulterdislokationen mit Stange",1,0,0,0,"Agarre ancho, pasá la barra de adelante hacia atrás por encima de la cabeza con los brazos estirados","Weiter Griff, Stange mit gestreckten Armen über den Kopf von vorne nach hinten führen"),
  // --- ABDOMINALES ---
  X("ab_crunch","abs","reps","Crunch clásico","Klassischer Crunch",3,15,20,30,"Sube los hombros sin tirar del cuello","Schultern heben, nicht am Nacken ziehen"),
  X("ab_reversecrunch","abs","reps","Crunch inverso","Reverse Crunch",3,12,15,30,"Lleva las rodillas al pecho","Knie zur Brust ziehen"),
@@ -505,6 +507,8 @@ const DGDEF={
  ar_dips:{head:[126,88],body:`<path d="M100 120 L122 96"/><path d="M122 96 L152 132"/><path d="M152 132 L202 122"/><path d="M202 122 L202 140"/>`,hi:[128,110],extra:`<rect x="56" y="116" width="50" height="9" rx="2" fill="#2a2e38" stroke="#3a3f47"/>`,arrow:`<line x1="152" y1="118" x2="152" y2="140" stroke="#caff00" stroke-width="3"/><polygon points="152,146 146,134 158,134" fill="#caff00"/>`},
  gl_glutebridge:{head:[74,132],body:`<path d="M92 134 L180 108"/><path d="M180 108 L225 118"/><path d="M225 118 L225 140"/>`,hi:[180,108],arrow:`<line x1="150" y1="130" x2="150" y2="96" stroke="#caff00" stroke-width="3"/><polygon points="150,88 144,102 156,102" fill="#caff00"/>`}
 };
+DGDEF.w_lungewt={head:[150,54],body:`<path d="M150 66 L150 104"/><path d="M150 104 L190 116"/><path d="M190 116 L190 140"/><path d="M150 104 L112 128"/><path d="M112 128 L90 140"/><path d="M150 68 L126 70"/><path d="M150 68 L174 70"/>`,hi:[190,116],extra:`<line x1="118" y1="70" x2="182" y2="70" stroke="#caff00" stroke-width="5" stroke-linecap="round"/>`};
+DGDEF.w_shoulderdislocate={head:[150,44],body:`<path d="M150 55 L150 106"/><path d="M150 106 L132 140"/><path d="M150 106 L168 140"/><path d="M150 62 L116 46"/><path d="M150 62 L184 46"/>`,extra:`<line x1="108" y1="44" x2="192" y2="44" stroke="#caff00" stroke-width="5" stroke-linecap="round"/>`,arrow:`<path d="M126 28 q24 -10 48 0" fill="none" stroke="#caff00" stroke-width="3"/><polygon points="121,28 133,22 131,34" fill="#caff00"/><polygon points="179,28 167,22 169,34" fill="#caff00"/>`};
 DGDEF.w_glutebridge=DGDEF.gl_glutebridge;
 function diagOf(id){ const d=DGDEF[id]; if(!d)return null;
  return `<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg"><line x1="20" y1="140" x2="280" y2="140" stroke="#3a3f47" stroke-width="2" stroke-linecap="round"/>${d.extra||''}${d.arrow||''}<g fill="none" stroke="#e8edf2" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">${d.body}</g><circle cx="${d.head[0]}" cy="${d.head[1]}" r="12" fill="#e8edf2"/>${d.hi?`<circle cx="${d.hi[0]}" cy="${d.hi[1]}" r="7" fill="#caff00"/>`:''}</svg>`;
