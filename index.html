@@ -561,6 +561,7 @@ const I18N={
   gems_plus:"+{n} gemas", week_bonus:"¡Semana cumplida! +{n} gemas",
   machine_label:"Máquina", see_how:"Ver cómo", no_machine_note:"Sin máquina · mirá el dibujo",
   nav_resumen:"Resumen", edit_exercise:"Editar ejercicio", hub_hint:"Tocá una burbuja para navegar",
+  draft_restored:"Recuperamos tu progreso de este entreno.", draft_clear:"Empezar de cero",
   ex_sets:"Series", ex_rmin:"Reps mín", ex_rmax:"Reps máx", ex_rest:"Descanso (seg)",
   scheme_label:"Esquema a escala (opcional)", scheme_ph:"ej: 15×10kg · 12×20kg · 10×30kg", detail_label:"Detalle / a escala (lo que hiciste)",
   phase_label:"Tu fase actual",
@@ -637,6 +638,7 @@ const I18N={
   gems_plus:"+{n} Edelsteine", week_bonus:"Woche geschafft! +{n} Edelsteine",
   machine_label:"Maschine", see_how:"So geht's", no_machine_note:"Ohne Maschine · sieh dir das Bild an",
   nav_resumen:"Übersicht", edit_exercise:"Übung bearbeiten", hub_hint:"Tippe eine Blase zum Navigieren",
+  draft_restored:"Wir haben deinen Trainingsfortschritt wiederhergestellt.", draft_clear:"Von vorne beginnen",
   ex_sets:"Sätze", ex_rmin:"Wdh. min", ex_rmax:"Wdh. max", ex_rest:"Pause (Sek)",
   scheme_label:"Staffel-Schema (optional)", scheme_ph:"z.B. 15×10kg · 12×20kg · 10×30kg", detail_label:"Detail / Staffelung (was du gemacht hast)",
   phase_label:"Deine aktuelle Phase",
@@ -708,11 +710,11 @@ function tagColor(k){ return {"":"#caff00","red":"#ff5a36","amber":"#ffb020","bl
 const KEY="forjaTraining_v3";
 let DB=load(); let currentView="inicio";
 function stripDayNum(s){ return (s||"").replace(/^\s*(D[ií]a|Tag)\s*\d+\s*[·.\-:]\s*/i,"").trim(); }
-function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(!d.lang)d.lang="es"; if(!d.photos)d.photos=[]; if(d.name==null)d.name=""; if(!d.measures)d.measures=[]; if(!d.cycle)d.cycle=[]; if(!d.settings)d.settings={weeklyGoal:3,cycleLen:28}; if(d.gems==null)d.gems=0; if(!d.frozenWeeks)d.frozenWeeks=[]; if(d.prCount==null)d.prCount=0; if(!d.medalsSeen)d.medalsSeen=[];
+function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.parse(raw); if(!d.lang)d.lang="es"; if(!d.photos)d.photos=[]; if(d.name==null)d.name=""; if(!d.measures)d.measures=[]; if(!d.cycle)d.cycle=[]; if(!d.settings)d.settings={weeklyGoal:3,cycleLen:28}; if(d.gems==null)d.gems=0; if(!d.frozenWeeks)d.frozenWeeks=[]; if(d.prCount==null)d.prCount=0; if(!d.medalsSeen)d.medalsSeen=[]; if(!d.drafts)d.drafts={};
   if(!d.routineMig){ (d.routine||[]).forEach(day=>{ day.name=stripDayNum(day.name); day.nameDe=stripDayNum(day.nameDe); }); if(d.routine&&d.routine.length>=3){ const tmp=d.routine[1]; d.routine[1]=d.routine[2]; d.routine[2]=tmp; } d.routineMig=true; }
   return d;}}catch(e){} return seed(); }
 function save(){ try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){ alert(DB.lang==='de'?"Speichern fehlgeschlagen (Speicher voll/Inkognito).":"No se pudo guardar (memoria llena o incógnito)."); } }
-function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true}; }
+function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,drafts:{}}; }
 
 function makeItem(libId,ov){ const e=LIB[libId]; if(!e)return null; const it={uid:uid(),libId,cat:e.cat,section:CAT_SEC[e.cat],kind:e.kind,name:e.name,nameDe:e.nameDe,sets:e.defSets,rMin:e.rMin,rMax:e.rMax,rest:e.rest,instr:e.instr,instrDe:e.instrDe}; if(ov)Object.assign(it,ov); return it; }
 function buildDay(name,nameDe,specs){ return {id:uid(),name,nameDe,ex:specs.map(mkItemSpec).filter(Boolean)}; }
@@ -994,16 +996,30 @@ function doAddToDay(libId,dayIdx){ const it=makeItem(libId); if(it){ DB.routine[
 function showToast(msg){ showModal(`<h3>${ICONS.check} ${esc(msg)}</h3><button class="btn" style="margin-top:6px" onclick="closeModal();go('rutina')">${t('done')}</button><button class="btn ghost" style="margin-top:8px" onclick="closeModal()">${t('close')}</button>`); }
 
 /* ===== ENTRENAR ===== */
-function renderTrainSelect(){ const sel=document.getElementById("trainDaySel"); sel.innerHTML=DB.routine.map((d,i)=>`<option value="${i}">${esc(dn(d))}</option>`).join(""); sel.value=nextDayIdx(); renderTrain(); }
+let curTrainIdx=0;
+function curDraft(){ const d=(DB.drafts||{})[curTrainIdx]; return (d&&d.date===today())?d:null; }
+function draftVal(u){ const d=curDraft(); return d&&d.vals?d.vals[u]:null; }
+function saveDraft(){ if(currentView!=='entrenar')return; const sel=document.getElementById('trainDaySel'); if(!sel)return; const idx=+sel.value; const vals={};
+ document.querySelectorAll('#trainBody .card').forEach(c=>{ const u=c.dataset.uid; if(!u)return; const kind=c.dataset.kind, g=s=>c.querySelector(s), o={};
+  if(kind==='weight'){ o.w=(g('.t-weight')||{}).value; o.r=(g('.t-reps')||{}).value; o.top=(g('.t-top')||{}).checked; o.detail=(g('.t-detail')||{}).value; }
+  else if(kind==='reps'){ o.r=(g('.t-reps')||{}).value; o.done=(g('.t-done')||{}).checked; }
+  else if(kind==='hold'){ o.secs=(g('.t-secs')||{}).value; o.done=(g('.t-done')||{}).checked; }
+  else if(kind==='cardio'){ o.min=(g('.t-min')||{}).value; }
+  else { o.done=(g('.t-done')||{}).checked; }
+  vals[u]=o; });
+ DB.drafts=DB.drafts||{}; DB.drafts[idx]={date:today(),vals}; save(); }
+function clearDraft(){ if(DB.drafts)delete DB.drafts[curTrainIdx]; save(); renderTrain(); }
+function renderTrainSelect(){ const sel=document.getElementById("trainDaySel"); sel.innerHTML=DB.routine.map((d,i)=>`<option value="${i}">${esc(dn(d))}</option>`).join(""); let def=nextDayIdx(); const dr=DB.drafts||{}; for(const k in dr){ if(dr[k]&&dr[k].date===today()){ def=+k; break; } } sel.value=def; renderTrain(); }
 function renderTrain(){
  const idx=+document.getElementById("trainDaySel").value, day=DB.routine[idx];
- let html=`<div class="note" style="margin:12px 0">${t('train_hint')}</div>`;
+ curTrainIdx=idx;
+ let html= curDraft()?`<div class="note" style="margin:12px 0;border-left-color:var(--volt)">${t('draft_restored')} · <a class="link" style="cursor:pointer" onclick="clearDraft()">${t('draft_clear')}</a></div>`:`<div class="note" style="margin:12px 0">${t('train_hint')}</div>`;
  SECTIONS.forEach(sec=>{
   const items=day.ex.filter(x=>x.section===sec); if(!items.length)return;
   html+=`<div class="sechead"><span class="dot" style="background:${SEC_COLOR[sec]}1f;color:${SEC_COLOR[sec]}">${ICONS[SEC_ICON[sec]]}</span><span class="t">${esc(secLabel(sec))}</span></div>`;
   html+=items.map(it=>trainCard(it)).join("");
  });
- document.getElementById("trainBody").innerHTML=html;
+ const tb=document.getElementById("trainBody"); tb.innerHTML=html; tb.oninput=saveDraft; tb.onchange=saveDraft;
  document.getElementById("saveTrainBtn").style.display="block";
 }
 function trainCard(it){
@@ -1011,37 +1027,39 @@ function trainCard(it){
  const macLine=mac?`<div class="mach">${ICONS.wrench}${t('machine_label')}: <b>${esc(mac)}</b></div>`:'';
  const eye=`<button class="btn mini ghost" style="flex:none" onclick="openExImages('${it.libId}')">${ICONS.photo}</button>`;
  const head=`<div style="flex:1"><div class="name">${esc(dn(it))}</div><div class="meta muted small">${esc(dinstr(it))}</div>${macLine}</div>`;
+ const dv=draftVal(it.uid); const chk=v=>v?'checked':'';
  if(it.kind==='weight'){
   const s=suggestion(it); const badge=s.type==='up'?`<span class="badge up">${ICONS.flame}${t('badge_up')}</span>`:s.type==='hold'?`<span class="badge hold">${t('badge_hold')}</span>`:`<span class="badge new">${t('badge_new')}</span>`;
-  return `<div class="card" data-ex="${esc(it.name)}" data-kind="weight" data-rmax="${it.rMax}" data-sets="${it.sets}">
+  const wVal=dv?esc(dv.w||''):(s.pref!==''&&s.pref!=null?s.pref:''); const rVal=dv?esc(dv.r||''):''; const detVal=dv?esc(dv.detail||''):(it.scheme?esc(it.scheme):'');
+  return `<div class="card" data-uid="${it.uid}" data-ex="${esc(it.name)}" data-kind="weight" data-rmax="${it.rMax}" data-sets="${it.sets}">
    <div class="row between"><div class="name">${esc(dn(it))}</div><div style="display:flex;gap:6px;align-items:center">${eye}${badge}</div></div>
    ${macLine}
    <div class="meta muted small">${t('objective')}: ${it.scheme?esc(it.scheme):`${it.sets} × ${it.rMin}-${it.rMax} · ${it.rest}${t('secs')} ${t('rest')}`}</div>
    <div class="small swatch-${s.type==='up'?'up':'hold'}" style="margin:6px 0">${s.txt}</div>
-   <div class="grid2" style="margin-top:4px"><div><label class="fld">${t('weight_kg')}</label><input type="number" inputmode="decimal" step="0.5" class="t-weight" value="${s.pref}"></div>
-   <div><label class="fld">${t('reps_done')}</label><input type="number" inputmode="numeric" class="t-reps" placeholder="${it.rMax}"></div></div>
-   <label class="fld" style="margin-top:8px;text-transform:none;display:flex;align-items:center"><input type="checkbox" class="t-top" style="width:auto;margin-right:8px">${t('completed_sets',{n:it.sets})}</label>
-   <label class="fld" style="margin-top:8px">${t('detail_label')}</label><input class="t-detail" value="${it.scheme?esc(it.scheme):''}" placeholder="${esc(t('scheme_ph'))}">
+   <div class="grid2" style="margin-top:4px"><div><label class="fld">${t('weight_kg')}</label><input type="number" inputmode="decimal" step="0.5" class="t-weight" value="${wVal}"></div>
+   <div><label class="fld">${t('reps_done')}</label><input type="number" inputmode="numeric" class="t-reps" value="${rVal}" placeholder="${it.rMax}"></div></div>
+   <label class="fld" style="margin-top:8px;text-transform:none;display:flex;align-items:center"><input type="checkbox" class="t-top" style="width:auto;margin-right:8px" ${chk(dv&&dv.top)}>${t('completed_sets',{n:it.sets})}</label>
+   <label class="fld" style="margin-top:8px">${t('detail_label')}</label><input class="t-detail" value="${detVal}" placeholder="${esc(t('scheme_ph'))}">
    <button class="btn sec" style="margin-top:8px" onclick="startRest(${it.rest})"><span class="ic">${ICONS.clock}</span>${t('rest_btn')} · ${it.rest}s</button></div>`;
  }
  if(it.kind==='reps'){
-  return `<div class="card" data-ex="${esc(it.name)}" data-kind="reps" data-sets="${it.sets}"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto">${t('done_check')}</label></div></div>
+  return `<div class="card" data-uid="${it.uid}" data-ex="${esc(it.name)}" data-kind="reps" data-sets="${it.sets}"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto" ${chk(dv&&dv.done)}>${t('done_check')}</label></div></div>
    <div class="meta muted small">${t('objective')}: ${it.sets} × ${it.rMin}-${it.rMax} ${t('reps')}</div>
-   <input type="number" inputmode="numeric" class="t-reps" placeholder="${t('reps_done')}: ${it.rMax}" style="margin-top:8px">
+   <input type="number" inputmode="numeric" class="t-reps" value="${dv?esc(dv.r||''):''}" placeholder="${t('reps_done')}: ${it.rMax}" style="margin-top:8px">
    <button class="btn sec" style="margin-top:8px" onclick="startRest(${it.rest||30})"><span class="ic">${ICONS.clock}</span>${t('rest_btn')} · ${it.rest||30}s</button></div>`;
  }
  if(it.kind==='hold'){
-  return `<div class="card" data-ex="${esc(it.name)}" data-kind="hold" data-sets="${it.sets}"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto">${t('done_check')}</label></div></div>
+  return `<div class="card" data-uid="${it.uid}" data-ex="${esc(it.name)}" data-kind="hold" data-sets="${it.sets}"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto" ${chk(dv&&dv.done)}>${t('done_check')}</label></div></div>
    <div class="meta muted small">${t('objective')}: ${it.sets} × ${it.rMin}-${it.rMax} ${t('secs')}</div>
-   <input type="number" inputmode="numeric" class="t-secs" placeholder="${t('secs')}: ${it.rMax}" style="margin-top:8px">
+   <input type="number" inputmode="numeric" class="t-secs" value="${dv?esc(dv.secs||''):''}" placeholder="${t('secs')}: ${it.rMax}" style="margin-top:8px">
    <button class="btn sec" style="margin-top:8px" onclick="startRest(${it.rest||30})"><span class="ic">${ICONS.clock}</span>${t('rest_btn')} · ${it.rest||30}s</button></div>`;
  }
  if(it.kind==='cardio'){
-  return `<div class="card" data-ex="${esc(it.name)}" data-kind="cardio"><div class="row between">${head}${eye}</div>
-   <label class="fld" style="margin-top:8px">${t('min_note')}</label><input class="t-min" placeholder="${it.rMin}-${it.rMax} min"></div>`;
+  return `<div class="card" data-uid="${it.uid}" data-ex="${esc(it.name)}" data-kind="cardio"><div class="row between">${head}${eye}</div>
+   <label class="fld" style="margin-top:8px">${t('min_note')}</label><input class="t-min" value="${dv?esc(dv.min||''):''}" placeholder="${it.rMin}-${it.rMax} min"></div>`;
  }
  // move (movilidad/estiramiento)
- return `<div class="card" data-ex="${esc(it.name)}" data-kind="move"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto">${t('done_check')}</label></div></div></div>`;
+ return `<div class="card" data-uid="${it.uid}" data-ex="${esc(it.name)}" data-kind="move"><div class="row between">${head}<div style="display:flex;align-items:center;gap:8px">${eye}<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" class="t-done" style="width:auto" ${chk(dv&&dv.done)}>${t('done_check')}</label></div></div></div>`;
 }
 function saveWorkout(){
  const idx=+document.getElementById("trainDaySel").value, day=DB.routine[idx]; const exercises=[];
@@ -1059,7 +1077,7 @@ function saveWorkout(){
  DB.logs.push({date:today(),dayName:day.name,exercises});
  DB.journal.push({date:today(),tags:["trained"],text:dn(day)});
  let earned=GEM_PER; const weekJustDone=(weekBefore<goal && weekBefore+1>=goal); if(weekJustDone)earned+=WEEK_BONUS; if(prs.length)earned+=PR_BONUS*prs.length;
- DB.gems=(DB.gems||0)+earned; DB.prCount=(DB.prCount||0)+prs.length;
+ DB.gems=(DB.gems||0)+earned; DB.prCount=(DB.prCount||0)+prs.length; if(DB.drafts)delete DB.drafts[idx];
  save();
  const fresh=checkNewMedals(); save();
  const prHtml=prs.length?`<div class="card" style="border-color:var(--volt);margin-top:8px"><div class="display" style="color:var(--volt);font-size:20px;display:flex;align-items:center;gap:8px">${ICONS.trophy} ${t('pr_title')}</div>${prs.map(p=>`<div class="small" style="margin-top:4px">${esc(t('pr_line',{ex:dn(LIB[lookupId(p.name)]||{name:p.name}),w:p.w}))}</div>`).join("")}</div>`:"";
@@ -1283,6 +1301,9 @@ function medalInfo(id){ const m=MEDALS.find(x=>x.id===id); if(!m)return; const s
 if((DB.medalsSeen||[]).length===0 && DB.logs.length>0){ DB.medalsSeen=earnedIds(); save(); }
 applyStatic();
 go("inicio");
+window.addEventListener('pagehide',saveDraft);
+window.addEventListener('blur',saveDraft);
+document.addEventListener('visibilitychange',function(){ if(document.hidden)saveDraft(); });
 </script>
 </body>
 </html>
