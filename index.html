@@ -236,6 +236,28 @@
     .seriesrow input,.seriesrow select{font-size:13px;padding:8px 3px}
   }
 </style>
+
+<style>
+/* ===== FORJA V3.1 ===== */
+.modebar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 12px}
+.modebar .btn{margin:0}
+.shortnote{border-left-color:var(--amber)!important}
+.shortnote b{color:var(--amber)}
+.machactions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.subnote{font-size:12px;color:var(--amber);margin-top:5px;font-weight:700}
+.altlist{display:grid;gap:8px;margin-top:12px}
+.altitem{background:#0e1014;border:1px solid var(--line);border-radius:13px;padding:12px}
+.altitem .aname{font-weight:700;font-size:16px}
+.altitem .ameta{font-size:12px;color:var(--muted);margin:3px 0 9px}
+.yogaprog{height:8px;background:#0e1014;border-radius:999px;overflow:hidden;margin:12px 0}
+.yogaprog i{display:block;height:100%;background:var(--volt);border-radius:999px;transition:width .25s}
+.yogaclock{font-family:Impact,'Arial Narrow',sans-serif;font-size:56px;letter-spacing:1px;text-align:center;color:var(--volt);line-height:1;margin:12px 0}
+.yogastep{text-align:center;font-weight:700;font-size:19px}
+.yogacue{text-align:center;color:var(--muted);font-size:14px;line-height:1.5;margin:8px 4px 14px}
+.yoganav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.shortbadge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,176,32,.14);color:var(--amber);border:1px solid rgba(255,176,32,.35);padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -734,6 +756,10 @@ const I18N={
   resume_training:"Continuar entrenamiento", autosave_saved:"Se guarda automáticamente", guided_mode:"Modo guiado", guided_exit:"Ver rutina completa", guided_prev:"Anterior", guided_next:"Siguiente", guided_count:"Ejercicio {a} de {b}",
   machine_setup:"Mi máquina", machine_seat:"Asiento / posición", machine_back:"Respaldo / altura", machine_extra:"Otro ajuste", machine_notes:"Notas rápidas", machine_saved:"Configuración guardada",
   first_weight:"Encontrar mi peso inicial", first_weight_title:"Encontrar peso inicial", first_weight_help:"Hacé 10 repeticiones con un peso cómodo y contame cuánto margen te quedó.", trial_weight:"Peso que probaste (kg)", reserve_q:"¿Cuántas reps más podrías haber hecho?", reserve_5:"5 o más", reserve_34:"3-4", reserve_2:"2", reserve_01:"0-1", use_weight:"Usar {w} kg",
+  occupied_alt:"Máquina ocupada", alt_title:"Alternativas para hoy", alt_help:"Elegí un reemplazo para esta sesión. Tu rutina original no cambia.", alt_use_today:"Usar hoy", alt_original:"Volver al ejercicio original", alt_replacing:"Reemplazo de {n}",
+  short_mode:"Cero ganas · modo corto", short_exit:"Volver a rutina completa", short_active:"Modo corto activo", short_help:"30-35 min aprox. · 2 series · mantenemos lo esencial.",
+  yoga_start_guided:"Empezar yoga guiado", yoga_step:"Postura {a} de {b}", yoga_pause:"Pausar", yoga_resume:"Continuar", yoga_prev:"Anterior", yoga_next:"Siguiente", yoga_finish:"Finalizar y guardar", yoga_cancel:"Salir de yoga", yoga_complete:"Sesión completada", yoga_saved_v31:"Yoga guardado · no cuenta como día de gimnasio",
+
   set_num:"Serie", set_weight:"kg", set_reps:"reps", set_rir:"RIR", set_done:"Hecha", draft_restored:"Sesión recuperada",
   objective:"Objetivo", series:"series", reps:"reps", rest:"desc.", weight_kg:"Peso (kg)", reps_done:"Reps", save_workout:"Guardar entrenamiento",
   completed_sets:"Completé las {n} series", done_check:"Hecho", min_note:"Minutos", secs:"seg",
@@ -850,6 +876,10 @@ const I18N={
   resume_training:"Training fortsetzen", autosave_saved:"Wird automatisch gespeichert", guided_mode:"Geführter Modus", guided_exit:"Ganzen Plan zeigen", guided_prev:"Zurück", guided_next:"Weiter", guided_count:"Übung {a} von {b}",
   machine_setup:"Meine Maschine", machine_seat:"Sitz / Position", machine_back:"Lehne / Höhe", machine_extra:"Weitere Einstellung", machine_notes:"Kurze Notizen", machine_saved:"Einstellung gespeichert",
   first_weight:"Startgewicht finden", first_weight_title:"Startgewicht finden", first_weight_help:"Mach 10 Wiederholungen mit einem angenehmen Gewicht und sag, wie viel Reserve du hattest.", trial_weight:"Getestetes Gewicht (kg)", reserve_q:"Wie viele Wiederholungen wären noch gegangen?", reserve_5:"5 oder mehr", reserve_34:"3-4", reserve_2:"2", reserve_01:"0-1", use_weight:"{w} kg verwenden",
+  occupied_alt:"Gerät besetzt", alt_title:"Alternativen für heute", alt_help:"Wähle nur für diese Einheit einen Ersatz. Dein eigentlicher Plan bleibt unverändert.", alt_use_today:"Heute verwenden", alt_original:"Zur Originalübung", alt_replacing:"Ersatz für {n}",
+  short_mode:"Null Motivation · Kurzmodus", short_exit:"Zurück zum ganzen Plan", short_active:"Kurzmodus aktiv", short_help:"Ca. 30-35 Min · 2 Sätze · nur das Wesentliche.",
+  yoga_start_guided:"Geführtes Yoga starten", yoga_step:"Position {a} von {b}", yoga_pause:"Pause", yoga_resume:"Weiter", yoga_prev:"Zurück", yoga_next:"Weiter", yoga_finish:"Beenden und speichern", yoga_cancel:"Yoga verlassen", yoga_complete:"Einheit abgeschlossen", yoga_saved_v31:"Yoga gespeichert · zählt nicht als Fitnessstudio-Tag",
+
   set_num:"Satz", set_weight:"kg", set_reps:"Wdh.", set_rir:"RIR", set_done:"Fertig", draft_restored:"Training wiederhergestellt",
   objective:"Ziel", series:"Sätze", reps:"Wdh.", rest:"Pause", weight_kg:"Gewicht (kg)", reps_done:"Wdh.", save_workout:"Training speichern",
   completed_sets:"Alle {n} Sätze geschafft", done_check:"Erledigt", min_note:"Minuten", secs:"Sek",
@@ -2002,6 +2032,241 @@ function volumeBySection(wl){
  const rows=VOL_CATS.filter(c=>v[c]>0).sort((a,b)=>v[b]-v[a]),body=rows.length?rows.map(c=>`<div class="volrow"><div class="row between xs"><span style="font-weight:700">${esc(catLabel(c))}</span><span class="muted">${Math.round(v[c])} kg · ${Math.round(v[c]/total*100)}%</span></div><div class="volbar"><i style="width:${Math.round(v[c]/total*100)}%;background:${CAT_COLOR[c]}"></i></div></div>`).join(""):`<div class="xs muted">${t('no_vol')}</div>`;
  return `<div class="card"><div class="xs muted" style="margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">${t('vol_section')}</div>${body}</div>`;
 }
+
+
+/* ===== FORJA V3.1 · ADHERENCIA, ALTERNATIVAS Y YOGA ===== */
+
+/* --- MODO CORTO: conserva la rutina, reduce la sesión de hoy --- */
+function isShortModeV31(){ return !!(DB.session && DB.session.shortMode); }
+
+function shortKeepV31(day){
+ const keep=new Set();
+ const first=(sec,n)=>day.ex.filter(x=>x.section===sec).slice(0,n).forEach(x=>keep.add(x.uid));
+ first('warmup',1);
+ first('abs',1);
+
+ const machines=day.ex.filter(x=>x.section==='machines');
+ const lower=machines.filter(x=>x.cat==='legs'||x.cat==='glutes');
+ const pull=machines.filter(x=>x.cat==='back');
+ const push=machines.filter(x=>x.cat==='chest'||x.cat==='shoulders');
+
+ [lower[0],lower[1],pull[0],push[0]].filter(Boolean).forEach(x=>keep.add(x.uid));
+ for(const x of machines){ if([...keep].filter(id=>machines.some(m=>m.uid===id)).length>=4)break; keep.add(x.uid); }
+
+ first('cardio',1);
+ first('stretch',2);
+ return keep;
+}
+function toggleShortModeV31(){
+ saveTrainingDraft();
+ if(!DB.session)return;
+ DB.session.shortMode=!DB.session.shortMode;
+ save();
+ guidedModeV3=false; guidedIndexV3=0;
+ renderTrain();
+}
+function sessionSets(it){
+ const n=Math.max(1,+it.sets||1);
+ if(isShortModeV31() && (it.kind==='weight'||it.kind==='reps'||it.kind==='hold'))return Math.min(2,n);
+ if(phaseInfo().n===1 && (it.kind==='weight'||it.kind==='reps'||it.kind==='hold'))return Math.min(2,n);
+ return n;
+}
+
+/* El autosave V3.1 fusiona datos: al activar modo corto no borra lo ya cargado
+   en ejercicios temporalmente ocultos. */
+function saveTrainingDraft(){
+ if(!DB.session)return;
+ const draft={...(DB.session.draft||{})};
+ document.querySelectorAll('#trainBody .traincard').forEach(c=>{if(c.dataset.uid)draft[c.dataset.uid]=cardDraft(c);});
+ DB.session.draft=draft; save();
+}
+
+/* --- MÁQUINA OCUPADA: sustituciones SOLO para la sesión activa --- */
+const ALT_V31={
+ lg_legpress:["lg_hacksquat","lg_goblet","lg_squatbw"],
+ lg_hacksquat:["lg_legpress","lg_goblet","lg_smithsquat"],
+ gl_hipthrust:["gl_glutebridge","gl_kickback","gl_abductor"],
+ gl_glutebridge:["gl_hipthrust","gl_kickback","gl_frogpump"],
+ lg_legcurl:["lg_rdl","gl_glutebridge","gl_kickback"],
+ lg_legext:["lg_legpress","lg_hacksquat","lg_goblet"],
+ ch_chestpress:["ch_inclinepress","ch_pecdeck","ch_dbpress"],
+ ch_inclinepress:["ch_chestpress","ch_pecdeck","ch_dbpress"],
+ bk_seatedrow:["bk_hammerrow","bk_dbrow","bk_latpulldown"],
+ bk_hammerrow:["bk_seatedrow","bk_dbrow","bk_latpulldown"],
+ bk_latpulldown:["bk_closelat","bk_pullover","bk_assistedpullup"],
+ bk_closelat:["bk_latpulldown","bk_pullover","bk_seatedrow"],
+ gl_abductor:["gl_kickback","gl_hipthrust","gl_glutebridge"],
+ gl_kickback:["gl_abductor","gl_hipthrust","gl_glutebridge"],
+ sh_reardelt:["bk_facepull","sh_lateral","bk_seatedrow"],
+ bk_facepull:["sh_reardelt","bk_seatedrow","bk_latpulldown"],
+ ar_dbcurl:["ar_machinecurl","ar_cablecurl","ar_hammer"],
+ ar_machinecurl:["ar_dbcurl","ar_cablecurl","ar_hammer"],
+ sh_lateral:["sh_reardelt","bk_facepull","sh_dbpress"]
+};
+function itemByUidV31(uid){
+ for(const d of DB.routine||[]){ const it=(d.ex||[]).find(x=>x.uid===uid); if(it)return it; }
+ return null;
+}
+function sessionItemV31(it){
+ if(!it)return it;
+ const id=DB.session&&DB.session.substitutions&&DB.session.substitutions[it.uid];
+ if(!id)return it;
+ const alt=makeItem(id); if(!alt)return it;
+ alt.uid=it.uid;
+ alt._subFrom=it;
+ return alt;
+}
+function altCandidatesV31(it){
+ let ids=(ALT_V31[it.libId]||[]).slice();
+ if(!ids.length){
+  ids=EXERCISES.filter(e=>e.kind==='weight'&&e.cat===it.cat&&e.id!==it.libId&&machineOf(e.id)).map(e=>e.id);
+ }
+ return [...new Set(ids)].filter(id=>LIB[id]&&id!==it.libId).slice(0,4);
+}
+function openAlternativesV31(uid){
+ const original=itemByUidV31(uid); if(!original)return;
+ const current=sessionItemV31(original), ids=altCandidatesV31(current);
+ let html=`<h3>${t('alt_title')}</h3><p class="small muted">${t('alt_help')}</p>`;
+ html+=`<div class="altlist">`+ids.map(id=>{
+  const e=LIB[id], mac=machineOf(id);
+  return `<div class="altitem"><div class="aname">${esc(dn(e))}</div><div class="ameta">${mac?`${ICONS.wrench} ${esc(mac)}`:esc(dinstr(e))}</div><button class="btn sec" onclick="useAlternativeV31('${uid}','${id}')">${t('alt_use_today')}</button></div>`;
+ }).join("")+`</div>`;
+ if(original.libId!==current.libId)html+=`<button class="btn ghost" style="margin-top:10px" onclick="restoreOriginalV31('${uid}')">${t('alt_original')}</button>`;
+ html+=`<button class="btn ghost" style="margin-top:8px" onclick="closeModal()">${t('cancel')}</button>`;
+ showModal(html);
+}
+function useAlternativeV31(uid,id){
+ if(!DB.session)return;
+ DB.session.substitutions=DB.session.substitutions||{};
+ DB.session.substitutions[uid]=id;
+ if(DB.session.draft)delete DB.session.draft[uid];
+ save(); closeModal(); renderTrain();
+}
+function restoreOriginalV31(uid){
+ if(DB.session&&DB.session.substitutions)delete DB.session.substitutions[uid];
+ if(DB.session&&DB.session.draft)delete DB.session.draft[uid];
+ save(); closeModal(); renderTrain();
+}
+function machineLineV3(it){
+ const mac=machineOf(it.libId); if(!mac)return'';
+ const sum=machineSummaryV3(it.libId);
+ const sub=it._subFrom?`<div class="subnote">${t('alt_replacing',{n:dn(it._subFrom)})}</div>`:'';
+ return `<div class="machsetup"><div class="mach">${ICONS.wrench}${t('machine_label')}: <b>${esc(mac)}</b></div><div class="machactions"><button type="button" class="btn mini ghost" onclick="openMachineSetup('${it.libId}')">${t('machine_setup')}</button><button type="button" class="btn mini ghost" onclick="openAlternativesV31('${it.uid}')">${t('occupied_alt')}</button></div>${sum?`<div class="machnote">${esc(sum)}</div>`:''}${sub}</div>`;
+}
+
+/* Render V3.1: aplica sustituciones temporales y modo corto sin tocar DB.routine. */
+function renderTrain(){
+ clearInlineTimers();
+ const idx=+document.getElementById("trainDaySel").value,day=DB.routine[idx]; startSession(idx);
+ const short=isShortModeV31(),keep=short?shortKeepV31(day):null;
+ let html=`<div class="note ${short?'shortnote':''}" style="margin:12px 0">${short?`<b>${t('short_active')}</b><br>${t('short_help')}`:t('train_hint')}<br><span style="opacity:.8">${t('set_rest_hint')}</span><div id="autoSaveNote" class="autosave">✓ ${t('autosave_saved')}</div></div>
+ <div class="modebar"><button class="btn ${short?'':'sec'}" onclick="toggleShortModeV31()">${short?t('short_exit'):t('short_mode')}</button><button id="guideToggle" class="btn sec" onclick="toggleGuidedMode()">${t('guided_mode')}</button></div><div id="guidedNav"></div>`;
+ SECTIONS.forEach(sec=>{
+  let items=day.ex.filter(x=>x.section===sec && (!short||keep.has(x.uid))).map(sessionItemV31);
+  if(!items.length)return;
+  html+=`<div class="sechead trainhead"><span class="dot" style="background:${SEC_COLOR[sec]}1f;color:${SEC_COLOR[sec]}">${ICONS[SEC_ICON[sec]]}</span><span class="t">${esc(secLabel(sec))}</span>${short?`<span class="c"><span class="shortbadge">${t('short_active')}</span></span>`:''}</div>`;
+  html+=items.map(it=>trainCard(it)).join("");
+ });
+ document.getElementById("trainBody").innerHTML=html;
+ document.getElementById("saveTrainBtn").style.display="block";
+ restoreTrainingDraft();
+ const body=document.getElementById('trainBody'); body.oninput=scheduleDraftSave; body.onchange=scheduleDraftSave;
+ if(guidedModeV3)updateGuidedMode();
+}
+
+/* --- YOGA GUIADO 20 MIN CON TIMER --- */
+let yogaStateV31=null,yogaIntV31=null;
+function clearYogaTimerV31(){ if(yogaIntV31){clearInterval(yogaIntV31);yogaIntV31=null;} if(yogaStateV31)yogaStateV31.running=false; }
+function openYoga(){
+ clearYogaTimerV31();
+ const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es;
+ const rows=flow.map((x,i)=>`<div class="libitem"><div class="ico" style="background:rgba(202,255,0,.12);color:var(--volt)"><b>${i+1}</b></div><div><div class="nm">${esc(x[0])} · ${x[1]} min</div><div class="ht">${esc(x[2])}</div></div></div>`).join("");
+ showModal(`<h3>${t('yoga_home')}</h3><p class="small muted">${t('yoga_intro')}</p><div class="card" style="margin-top:12px">${rows}</div><button class="btn" onclick="startYogaGuidedV31()">${t('yoga_start_guided')}</button><button class="btn ghost" style="margin-top:8px" onclick="cancelYogaV31()">${t('cancel')}</button>`);
+}
+function startYogaGuidedV31(){
+ const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es;
+ yogaStateV31={idx:0,left:flow[0][1]*60,running:false,elapsed:0};
+ renderYogaV31();
+}
+function yogaProgressV31(){
+ const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es,s=yogaStateV31;if(!s)return 0;
+ const total=flow[s.idx][1]*60,frac=total?1-s.left/total:1;
+ return Math.round(((s.idx+Math.max(0,Math.min(1,frac)))/flow.length)*100);
+}
+function renderYogaV31(){
+ clearYogaTimerV31();
+ const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es,s=yogaStateV31;if(!s)return;
+ const x=flow[s.idx],last=s.idx===flow.length-1;
+ showModal(`<h3>${t('yoga_home')}</h3><div class="row between"><span class="small muted">${t('yoga_step',{a:s.idx+1,b:flow.length})}</span><span class="small muted">20 min</span></div><div class="yogaprog"><i id="yogaProg" style="width:${yogaProgressV31()}%"></i></div><div class="yogastep">${esc(x[0])}</div><div class="yogaclock" id="yogaClock">${fmtClock(s.left)}</div><div class="yogacue">${esc(x[2])}</div><button class="btn" id="yogaToggle" onclick="toggleYogaV31()">${t('yoga_resume')}</button><div class="yoganav"><button class="btn ghost" onclick="yogaMoveV31(-1)" ${s.idx===0?'disabled':''}>${t('yoga_prev')}</button><button class="btn sec" onclick="yogaMoveV31(1)" ${last?'disabled':''}>${t('yoga_next')}</button></div><button class="btn sec" style="margin-top:8px" onclick="finishYogaV31()">${t('yoga_finish')}</button><button class="btn ghost" style="margin-top:8px" onclick="cancelYogaV31()">${t('yoga_cancel')}</button>`);
+}
+function updateYogaUiV31(){
+ if(!yogaStateV31)return;
+ const c=document.getElementById('yogaClock'),p=document.getElementById('yogaProg'),b=document.getElementById('yogaToggle');
+ if(c)c.textContent=fmtClock(Math.max(0,yogaStateV31.left));
+ if(p)p.style.width=yogaProgressV31()+'%';
+ if(b)b.textContent=yogaStateV31.running?t('yoga_pause'):t('yoga_resume');
+}
+function toggleYogaV31(){
+ const s=yogaStateV31;if(!s)return;
+ if(s.running){clearYogaTimerV31();updateYogaUiV31();return;}
+ s.running=true; updateYogaUiV31();
+ yogaIntV31=setInterval(()=>{
+  if(!yogaStateV31)return;
+  yogaStateV31.left--; yogaStateV31.elapsed++;
+  updateYogaUiV31();
+  if(yogaStateV31.left<=0){
+   clearYogaTimerV31(); buzz();
+   const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es;
+   if(yogaStateV31.idx<flow.length-1)setTimeout(()=>yogaMoveV31(1),500);
+   else {
+    const c=document.getElementById('yogaClock');if(c)c.textContent=t('yoga_complete');
+   }
+  }
+ },1000);
+}
+function yogaMoveV31(d){
+ const flow=YOGA_FLOW[DB.lang]||YOGA_FLOW.es,s=yogaStateV31;if(!s)return;
+ clearYogaTimerV31();
+ s.idx=Math.max(0,Math.min(flow.length-1,s.idx+d));
+ s.left=flow[s.idx][1]*60;
+ renderYogaV31();
+}
+function cancelYogaV31(){ clearYogaTimerV31();yogaStateV31=null;closeModal(); }
+function finishYogaV31(){
+ const elapsed=yogaStateV31?yogaStateV31.elapsed:0,dur=Math.max(1,Math.round(elapsed/60));
+ clearYogaTimerV31();
+ DB.yogaLogs=DB.yogaLogs||[];
+ DB.yogaLogs.push({date:today(),durMin:dur});
+ DB.journal.push({date:today(),tags:["yoga"],text:t('yoga_home')});
+ save();yogaStateV31=null;
+ showModal(`<h3>${t('yoga_complete')}</h3><p class="small muted">${t('yoga_saved_v31')}</p><button class="btn" onclick="closeModal();go('inicio')">${t('done')}</button>`);
+}
+
+/* El modo corto sí cuenta como entrenamiento: es una sesión válida, solo reducida. */
+function commitWorkout(){
+ if(!pendingWorkout)return;
+ const {idx,exercises}=pendingWorkout, day=DB.routine[idx];
+ const short=!!(DB.session&&DB.session.shortMode);
+ const durEl=document.getElementById('wkDur');
+ const durMin=Math.max(1,Math.min(300,+(durEl?durEl.value:0)||sessionMinutes()));
+ const prs=[]; exercises.forEach(x=>{ if(x.kind==='weight'&&x.weight>0){ const prev=bestWeight(x.name,DB.logs); if(prev>0&&x.weight>prev) prs.push({name:x.name,w:x.weight}); } });
+ const wk=weekStart(today()), goal=(DB.settings&&DB.settings.weeklyGoal)||3, weekBefore=DB.logs.filter(l=>weekStart(l.date)===wk).length;
+ const entry={date:today(),dayName:day.name,dayId:day.id,exercises,durMin};
+ if(short)entry.mode="short";
+ if(modalRpe!=null)entry.rpe=modalRpe;
+ DB.logs.push(entry);
+ DB.journal.push({date:today(),tags:["trained"],text:dn(day)+(short?` · ${t('short_active')}`:"")});
+ DB.session=null; pendingWorkout=null; guidedModeV3=false; guidedIndexV3=0; clearInlineTimers();
+ let earned=GEM_PER; const weekJustDone=(weekBefore<goal && weekBefore+1>=goal); if(weekJustDone)earned+=WEEK_BONUS; if(prs.length)earned+=PR_BONUS*prs.length;
+ DB.gems=(DB.gems||0)+earned; DB.prCount=(DB.prCount||0)+prs.length;
+ save();
+ const fresh=checkNewMedals(); save();
+ const prHtml=prs.length?`<div class="card" style="border-color:var(--volt);margin-top:8px"><div class="display" style="color:var(--volt);font-size:20px;display:flex;align-items:center;gap:8px">${ICONS.trophy} ${t('pr_title')}</div>${prs.map(p=>`<div class="small" style="margin-top:4px">${esc(t('pr_line',{ex:dn(LIB[lookupId(p.name)]||{name:p.name}),w:p.w}))}</div>`).join("")}</div>`:"";
+ const gemHtml=`<div class="card" style="margin-top:8px"><div class="row between"><span class="small">${weekJustDone?t('week_bonus',{n:earned}):t('gems_plus',{n:earned})}</span><span class="display" style="color:var(--blue);font-size:22px;display:flex;align-items:center;gap:6px"><span class="ic" style="width:18px">${ICONS.gem}</span>${DB.gems}</span></div></div>`;
+ const medalHtml=fresh.length?`<div class="card" style="border-color:var(--volt);margin-top:8px"><div class="display" style="color:var(--volt);font-size:18px;display:flex;align-items:center;gap:8px"><span class="ic">${ICONS.medal}</span>${t('medal_earned')}</div>${fresh.map(id=>{const m=MEDALS.find(x=>x.id===id);return `<div class="small" style="margin-top:4px">${esc(DB.lang==='de'?m.n.de:m.n.es)}</div>`;}).join("")}</div>`:"";
+ showModal(`<h3>${t('saved_title')}</h3><p class="small muted">${t('saved_msg')}</p>${short?`<div class="note shortnote"><b>${t('short_active')}</b> · ${t('short_help')}</div>`:""}${gemHtml}${prHtml}${medalHtml}<button class="btn" style="margin-top:10px" onclick="closeModal();go('inicio')">${t('done')}</button>`);
+}
+
 
 /* ===== INIT ===== */
 if((DB.medalsSeen||[]).length===0 && DB.logs.length>0){ DB.medalsSeen=earnedIds(); save(); }
