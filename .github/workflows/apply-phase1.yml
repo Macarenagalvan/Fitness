@@ -1,5 +1,7 @@
 name: apply-phase1
 on:
+  push:
+    branches: [feat/training-types]
   workflow_dispatch:
 jobs:
   apply:
@@ -14,6 +16,10 @@ jobs:
       - name: Rebuild Phase 1 index.html from main + patch
         run: |
           set -euo pipefail
+          if [ -f index.html ] && grep -q 'function sessionType' index.html && grep -q 'function strengthLogs' index.html && grep -q 'type:"strength"' index.html; then
+            echo 'Phase 1 already present; skipping'
+            exit 0
+          fi
           git fetch origin main
           git show origin/main:index.html > index.html
           git apply --whitespace=nowarn phase1-session-types.patch
