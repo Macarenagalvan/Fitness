@@ -1,0 +1,23 @@
+name: apply-yoga
+on:
+  workflow_dispatch:
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/training-types
+      - name: apply
+        run: python3 apply-yoga.py
+      - name: commit index
+        run: |
+          git config user.name "Macarenagalvan"
+          git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "feat: add 24-week progressive yoga program"
+          git rm -f apply-yoga.py yoga-block.js i18n-yoga.txt .github/workflows/apply-yoga.yml || true
+          git diff --cached --quiet || git commit -m "chore: remove yoga apply helpers"
+          git push
