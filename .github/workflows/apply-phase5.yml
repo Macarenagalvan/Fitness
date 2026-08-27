@@ -4,6 +4,7 @@ on:
     branches: [feat/training-types]
     paths:
       - '.github/workflows/apply-phase5.yml'
+  workflow_dispatch:
 jobs:
   apply:
     runs-on: ubuntu-latest
@@ -15,11 +16,11 @@ jobs:
           ref: feat/training-types
       - name: Apply Phase 5 and cleanup
         run: |
-          python3 phase5-apply.py
-          rm -f phase5-apply.py
+          python3 apply.py
+          rm -f apply.py i18n-es.txt i18n-de.txt running-block-a.js running-block-b.js running-block-c.js running-block-c.b64 running-block.js phase5-apply.py
           rm -f .github/workflows/apply-phase5.yml
           git add -A
           git config user.name "Macarenagalvan"
           git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
-          git commit -m "feat: add complete 24-week running program"
+          git diff --cached --quiet || git commit -m "feat: add complete 24-week running program"
           git push origin feat/training-types
