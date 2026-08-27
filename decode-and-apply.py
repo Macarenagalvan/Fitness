@@ -2,20 +2,15 @@
 from pathlib import Path
 import base64
 root = Path(".")
-parts = []
-numbered = [root/f"yoga-block.js.b64.{i}" for i in range(8) if (root/f"yoga-block.js.b64.{i}").exists()]
-if numbered:
-    parts = [p.read_text().strip() for p in numbered]
-else:
-    for n in ["yoga-block.js.b64.a", "yoga-block.js.b64.b", "yoga-block.js.b64"]:
-        p = root / n
-        if p.exists():
-            parts.append(p.read_text().strip())
-            if n.endswith(".b64"):
-                break
-if not parts:
-    raise SystemExit("missing yoga b64")
-Path("yoga-block.js").write_bytes(base64.b64decode("".join(parts)))
-Path("i18n-yoga.txt").write_bytes(base64.b64decode(Path("i18n-yoga.txt.b64").read_text().strip()))
+def gather(prefix):
+    numbered = [root/f"{prefix}.{i}" for i in range(16) if (root/f"{prefix}.{i}").exists()]
+    if numbered:
+        return "".join(p.read_text().strip() for p in numbered)
+    p = root/prefix
+    if p.exists():
+        return p.read_text().strip()
+    raise SystemExit("missing "+prefix)
+Path("yoga-block.js").write_bytes(base64.b64decode(gather("yoga-block.js.b64")))
+Path("i18n-yoga.txt").write_bytes(base64.b64decode(gather("i18n-yoga.txt.b64")))
 Path("apply-yoga.py").write_bytes(base64.b64decode(Path("apply-yoga.py.b64").read_text().strip()))
-print("decoded", Path("yoga-block.js").stat().st_size)
+print("decoded", Path("yoga-block.js").stat().st_size, Path("i18n-yoga.txt").stat().st_size)
