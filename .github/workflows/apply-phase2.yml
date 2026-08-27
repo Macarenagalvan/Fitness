@@ -1,0 +1,36 @@
+name: apply-phase2
+on:
+  push:
+    branches: [feat/training-types]
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/training-types
+          fetch-depth: 0
+      - name: Apply Phase 2 yoga persistence patch
+        run: |
+          set -e
+          if grep -q 'function commitYogaSession' index.html && grep -q 'if(!Array.isArray(d.yogaLogs))d.yogaLogs=[]' index.html; then
+            echo 'Phase 2 already applied'
+            rm -f phase2-yoga.patch .github/workflows/apply-phase2.yml
+            if [ -n "$(git status --porcelain)" ]; then
+              git config user.name "Macarenagalvan"
+              git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+              git add -A
+              git commit -m "chore: remove Phase 2 helper files"
+              git push origin feat/training-types
+            fi
+            exit 0
+          fi
+          git apply --whitespace=nowarn phase2-yoga.patch
+          rm -f phase2-yoga.patch .github/workflows/apply-phase2.yml
+          git add -A
+          git config user.name "Macarenagalvan"
+          git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+          git commit -m "fix: unify yoga persistence and legacy compatibility"
+          git push origin feat/training-types
