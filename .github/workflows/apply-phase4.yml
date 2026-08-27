@@ -4,6 +4,9 @@ on:
     branches: [feat/training-types]
     paths:
       - phase4-apply.py
+      - phase4-a.py
+      - phase4-b.py
+      - phase4-c.py
       - .github/workflows/apply-phase4.yml
   workflow_dispatch:
 jobs:
@@ -20,12 +23,12 @@ jobs:
           set -e
           if [ ! -f phase4-apply.py ]; then echo "no helper"; exit 0; fi
           python3 phase4-apply.py
-          test -f index.html
           grep -q 'id="v-mas"' index.html
           grep -q 'function navGo' index.html
+          grep -q 'forjaTraining_v3' index.html
           git config user.name "Macarenagalvan"
           git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
-          rm -f phase4-apply.py
+          rm -f phase4-apply.py phase4-a.py phase4-b.py phase4-c.py
           rm -f .github/workflows/apply-phase4.yml
           rmdir .github/workflows 2>/dev/null || true
           rmdir .github 2>/dev/null || true
