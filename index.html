@@ -967,6 +967,12 @@ const I18N={
   run_walk_min:"Caminata {n} min",
   run_cont_min:"{n} min continuos",
   run_dist_or_time:"{km} km o {n} min",
+  run_dist_or_range:"{km} km o {a}–{b} min",
+  run_range_min:"{a}–{b} min",
+  run_opt_easy:"Opcional fácil",
+  run_opt_w4:"Caminata o repetir semana 3",
+  run_opt_w5:"Caminata o fácil de semana 4",
+  run_opt_w6:"Opcional fácil, solo si recuperaste bien",
   run_ph_walkrun:"Caminar + trotar",
   run_ph_trans:"Hacia el continuo",
   run_ph_5k:"Hacia 5 km",
@@ -1205,6 +1211,12 @@ const I18N={
   run_walk_min:"Spaziergang {n} Min.",
   run_cont_min:"{n} Min. durchgehend",
   run_dist_or_time:"{km} km oder {n} Min.",
+  run_dist_or_range:"{km} km oder {a}–{b} Min.",
+  run_range_min:"{a}–{b} Min.",
+  run_opt_easy:"Optionale leichte Einheit",
+  run_opt_w4:"Spaziergang oder Woche 3 wiederholen",
+  run_opt_w5:"Spaziergang oder leichte Einheit aus Woche 4",
+  run_opt_w6:"Leicht, nur wenn du gut erholt bist",
   run_ph_walkrun:"Gehen + Trab",
   run_ph_trans:"Richtung Dauerlauf",
   run_ph_5k:"Richtung 5 km",
@@ -2742,8 +2754,10 @@ function runFmtPretty(sec){ sec=Math.max(0,Math.round(+sec||0)); if(sec<60) retu
 function runSessionTitle(s){
  if(!s) return "";
  if(s.type==="intervals") return s.sets+" × "+runFmtPretty(s.workSec)+" / "+runFmtPretty(s.walkSec);
- if(s.type==="walk") return t("run_walk_min",{n:Math.round(s.sec/60)});
+ if(s.distKm&&s.secMin&&s.secMax) return t("run_dist_or_range",{km:s.distKm,a:Math.round(s.secMin/60),b:Math.round(s.secMax/60)});
  if(s.distKm) return t("run_dist_or_time",{km:s.distKm,n:Math.round(s.sec/60)});
+ if(s.secMin&&s.secMax) return t("run_range_min",{a:Math.round(s.secMin/60),b:Math.round(s.secMax/60)});
+ if(s.type==="walk") return t("run_walk_min",{n:Math.round(s.sec/60)});
  return t("run_cont_min",{n:Math.round((s.secMin||s.sec)/60)});
 }
 function runBuildSteps(s){
@@ -2783,7 +2797,7 @@ const RUNNING_PROGRAM=[
  {week:2,phase:"walkrun",goalKey:"run_g2",rpe:"2–3",sessions:[
   {id:"s1",type:"intervals",sets:8,workSec:45,walkSec:120,warmup:1,cooldown:1},
   {id:"s2",type:"intervals",sets:8,workSec:45,walkSec:120,warmup:1,cooldown:1},
-  {id:"s3",type:"walk",sec:28*60,optional:1,warmup:0,cooldown:0}]},
+  {id:"s3",type:"walk",sec:28*60,secMin:25*60,secMax:30*60,optional:1,warmup:0,cooldown:0}]},
  {week:3,phase:"walkrun",goalKey:"run_g3",rpe:"3",sessions:[
   {id:"s1",type:"intervals",sets:8,workSec:60,walkSec:90,warmup:1,cooldown:1},
   {id:"s2",type:"intervals",sets:8,workSec:60,walkSec:90,warmup:1,cooldown:1},
@@ -2791,49 +2805,54 @@ const RUNNING_PROGRAM=[
  {week:4,phase:"walkrun",goalKey:"run_g4",rpe:"3",sessions:[
   {id:"s1",type:"intervals",sets:10,workSec:60,walkSec:60,warmup:1,cooldown:1},
   {id:"s2",type:"intervals",sets:10,workSec:60,walkSec:60,warmup:1,cooldown:1},
-  {id:"s3",type:"walk",sec:30*60,optional:1,warmup:0,cooldown:0}]},
+  {id:"s3",type:"walk",sec:30*60,optional:1,labelKey:"run_opt_w4",warmup:0,cooldown:0}]},
  {week:5,phase:"walkrun",goalKey:"run_g5",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:8,workSec:90,walkSec:60,warmup:1,cooldown:1},
-  {id:"s2",type:"intervals",sets:8,workSec:90,walkSec:60,warmup:1,cooldown:1}]},
+  {id:"s2",type:"intervals",sets:8,workSec:90,walkSec:60,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:30*60,optional:1,labelKey:"run_opt_w5",warmup:0,cooldown:0}]},
  {week:6,phase:"walkrun",goalKey:"run_g6",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:8,workSec:120,walkSec:60,warmup:1,cooldown:1},
-  {id:"s2",type:"intervals",sets:8,workSec:120,walkSec:60,warmup:1,cooldown:1}]},
+  {id:"s2",type:"intervals",sets:8,workSec:120,walkSec:60,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:25*60,optional:1,labelKey:"run_opt_w6",warmup:0,cooldown:0}]},
  {week:7,phase:"walkrun",goalKey:"run_g7",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:6,workSec:180,walkSec:60,warmup:1,cooldown:1},
-  {id:"s2",type:"intervals",sets:6,workSec:180,walkSec:60,warmup:1,cooldown:1}]},
+  {id:"s2",type:"intervals",sets:6,workSec:180,walkSec:60,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:25*60,optional:1,labelKey:"run_opt_easy",warmup:0,cooldown:0}]},
  {week:8,phase:"walkrun",goalKey:"run_g8",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:5,workSec:240,walkSec:90,warmup:1,cooldown:1},
-  {id:"s2",type:"intervals",sets:5,workSec:240,walkSec:90,warmup:1,cooldown:1}]},
+  {id:"s2",type:"intervals",sets:5,workSec:240,walkSec:90,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:25*60,optional:1,labelKey:"run_opt_easy",warmup:0,cooldown:0}]},
  {week:9,phase:"walkrun",goalKey:"run_g9",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:5,workSec:300,walkSec:60,warmup:1,cooldown:1},
-  {id:"s2",type:"intervals",sets:5,workSec:300,walkSec:60,warmup:1,cooldown:1}]},
+  {id:"s2",type:"intervals",sets:5,workSec:300,walkSec:60,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:25*60,optional:1,labelKey:"run_opt_easy",warmup:0,cooldown:0}]},
  {week:10,phase:"transition",goalKey:"run_g10",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:3,workSec:480,walkSec:60,warmup:1,cooldown:1},
   {id:"s2",type:"intervals",sets:2,workSec:600,walkSec:120,warmup:1,cooldown:1}]},
  {week:11,phase:"transition",goalKey:"run_g11",rpe:"3–4",sessions:[
   {id:"s1",type:"intervals",sets:2,workSec:720,walkSec:120,warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:17*60,warmup:1,cooldown:1}]},
+  {id:"s2",type:"continuous",sec:17*60,secMin:16*60,secMax:18*60,warmup:1,cooldown:1}]},
  {week:12,phase:"transition",goalKey:"run_g12",rpe:"3–4",sessions:[
-  {id:"s1",type:"continuous",sec:21*60,warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:24*60,warmup:1,cooldown:1}]},
+  {id:"s1",type:"continuous",sec:21*60,secMin:20*60,secMax:22*60,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:24*60,secMin:22*60,secMax:25*60,warmup:1,cooldown:1}]},
  {week:13,phase:"k5",goalKey:"run_g13",rpe:"3–4",sessions:[
-  {id:"s1",type:"continuous",sec:27*60,warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:28*60,warmup:1,cooldown:1}]},
+  {id:"s1",type:"continuous",sec:27*60,secMin:25*60,secMax:28*60,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:28*60,secMin:25*60,secMax:28*60,warmup:1,cooldown:1}]},
  {week:14,phase:"k5",goalKey:"run_g14",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:30*60,warmup:1,cooldown:1},
   {id:"s2",type:"continuous",sec:25*60,warmup:1,cooldown:1}]},
  {week:15,phase:"k5",goalKey:"run_g15",rpe:"3–4",sessions:[
-  {id:"s1",type:"continuous",sec:34*60,distKm:"5",askKm:1,warmup:1,cooldown:1},
+  {id:"s1",type:"continuous",sec:34*60,secMin:32*60,secMax:35*60,distKm:"5",askKm:1,warmup:1,cooldown:1},
   {id:"s2",type:"continuous",sec:28*60,warmup:1,cooldown:1}]},
  {week:16,phase:"build",goalKey:"run_g16",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:39*60,role:"long",warmup:1,cooldown:1}]},
+  {id:"s2",type:"continuous",sec:39*60,secMin:38*60,secMax:40*60,role:"long",warmup:1,cooldown:1}]},
  {week:17,phase:"build",goalKey:"run_g17",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:44*60,role:"long",warmup:1,cooldown:1}]},
+  {id:"s2",type:"continuous",sec:44*60,secMin:42*60,secMax:45*60,role:"long",warmup:1,cooldown:1}]},
  {week:18,phase:"build",goalKey:"run_g18",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:31*60,role:"short",warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:49*60,role:"long",warmup:1,cooldown:1}]},
+  {id:"s2",type:"continuous",sec:49*60,secMin:48*60,secMax:50*60,role:"long",warmup:1,cooldown:1}]},
  {week:19,phase:"build",goalKey:"run_g19",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
   {id:"s2",type:"continuous",sec:48*60,role:"long",distKm:"7-8",askKm:1,warmup:1,cooldown:1}]},
@@ -2845,13 +2864,13 @@ const RUNNING_PROGRAM=[
   {id:"s2",type:"continuous",sec:60*60,role:"long",warmup:1,cooldown:1}]},
  {week:22,phase:"build",goalKey:"run_g22",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:68*60,role:"long",warmup:1,cooldown:1}]},
+  {id:"s2",type:"continuous",sec:68*60,secMin:65*60,secMax:70*60,role:"long",warmup:1,cooldown:1}]},
  {week:23,phase:"build",goalKey:"run_g23",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
   {id:"s2",type:"continuous",sec:60*60,role:"long",distKm:"10",askKm:1,warmup:1,cooldown:1}]},
  {week:24,phase:"build",goalKey:"run_g24",rpe:"3–4",sessions:[
   {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
-  {id:"s2",type:"continuous",sec:75*60,role:"long",distKm:"10-12",askKm:1,warmup:1,cooldown:1}]}
+  {id:"s2",type:"continuous",sec:75*60,secMin:70*60,secMax:80*60,role:"long",distKm:"10-12",askKm:1,warmup:1,cooldown:1}]}
 ];
 let runLive=null, runFb={rpe:3,breath:"controlled",legs:"fresh",could:1,km:""}, runWuOn={};
 
@@ -2921,8 +2940,8 @@ function runPhaseLabel(ph){
 function runHtmlHome(){
  const p=runProg(), w=runWeekDef(p.week), done=runDoneRequired(p.week), gap=runGapHint();
  const sess=(w.sessions||[]).map(s=>{
-  const ok=runIsRequiredDone(p.week,s.id);
-  const lab=s.optional?t("run_optional"):(s.role==="short"?t("run_short"):s.role==="long"?t("run_long"):t("run_session",{n:s.id==="s1"?1:s.id==="s2"?2:3}));
+  const ok=s.optional?(runProg().history||[]).some(h=>h.week===p.week&&h.sessionId===s.id):runIsRequiredDone(p.week,s.id);
+  const lab=s.optional?t(s.labelKey||"run_optional"):(s.role==="short"?t("run_short"):s.role==="long"?t("run_long"):t("run_session",{n:s.id==="s1"?1:s.id==="s2"?2:3}));
   return `<div class="runcard"><div class="row between"><div><div class="nm">${esc(lab)}</div><div class="ht">${esc(runSessionTitle(s))}</div></div><span class="badge ${ok?"up":"hold"}">${ok?t("run_done_mark"):t("run_pending")}</span></div><button class="btn" style="margin-top:10px" onclick="runBegin('${s.id}')">${ok?t("run_repeat"):t("run_start")}</button></div>`;
  }).join("");
  const hist=(p.history||[]).slice().reverse().slice(0,12).map(h=>`<div class="runhist"><div><b>${esc(h.date)}</b> · ${t("run_week_n",{n:h.week})} · ${esc(h.title||h.sessionId)}</div><div class="xs muted">${h.durMin||0} min${h.km?(" · "+h.km+" km"):""} · RPE ${h.rpe==null?"—":h.rpe} · ${h.completed?t("run_completed"):t("run_cut")}</div></div>`).join("")||`<div class="empty">${t("run_no_hist")}</div>`;
