@@ -270,6 +270,25 @@
 .morelist{display:flex;flex-direction:column;gap:8px}
 .morelist .btn{justify-content:flex-start;text-transform:none;letter-spacing:.2px;min-height:48px}
 .morelist .btn svg{width:22px;height:22px;flex:none}
+
+.runcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.runcard .nm{font-weight:800;font-size:16px}
+.runlive{text-align:center;padding:8px 0 18px}
+.runkind{font-family:Impact,sans-serif;font-size:28px;letter-spacing:1px;margin-top:6px}
+.runclock{font-family:Impact,'Arial Narrow',sans-serif;font-size:64px;letter-spacing:1px;color:var(--volt);line-height:1;margin:10px 0}
+.runmeta,.runnext{color:var(--muted);font-size:15px;margin-top:6px}
+.rungrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.runterm{margin-top:18px;opacity:.7}
+.runwu{display:block;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.runwu:last-child{border-bottom:none}
+.runhist{padding:8px 0;border-top:1px solid var(--line)}
+.runhist:first-of-type{border-top:none}
+.rperow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.rpeb{min-height:44px;background:var(--surface2);color:var(--txt);border:1px solid var(--line);border-radius:12px;font-weight:800}
+.rpeb.on{background:var(--volt);color:#0b0c0f;border-color:var(--volt)}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+@media(max-width:360px){.runclock{font-size:52px}.runkind{font-size:24px}}
+
 @media(max-width:360px){nav.tabs button{font-size:10px} .disccard .ttl{font-size:18px}}
   @media(min-width:375px){nav.tabs button{font-size:11px}}
 </style>
@@ -347,9 +366,10 @@
           <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_yoga"></span><span class="sub" data-i18n="disc_yoga_sub"></span></span>
           <span class="goarr">›</span>
         </button>
-        <button class="disccard soon" onclick="comingSoon()">
+        <button class="disccard" onclick="openRunning()">
           <span class="ico" id="icoRun"></span>
-          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_run"></span><span class="sub" data-i18n="disc_soon"></span></span>
+          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_run"></span><span class="sub" data-i18n="disc_run_sub"></span></span>
+          <span class="goarr">›</span>
         </button>
         <button class="disccard soon" onclick="comingSoon()">
           <span class="ico" id="icoMob"></span>
@@ -362,6 +382,9 @@
       <div class="card tight"><label class="fld" data-i18n="which_day"></label><select id="trainDaySel" onchange="renderTrain()"></select></div>
       <div id="trainBody"></div>
       <button class="btn" id="saveTrainBtn" style="margin-top:6px;display:none" onclick="saveWorkout()"><span class="ic" id="icCheck"></span><span data-i18n="save_workout"></span></button>
+    </div>
+    <div id="trainRun" style="display:none">
+      <div id="runBody"></div>
     </div>
   </section>
 
@@ -871,7 +894,124 @@ const I18N={
   onb1_t:"Bienvenida a FORJA", onb1_b:"Tu app de entrenamiento, <b>100 % offline</b>. Todo se guarda en este teléfono: no hay cuentas, ni nube, ni internet necesario.",
   onb2_t:"Cómo funciona", onb2_b:"<b>Rutina</b>: armá tus días con el catálogo.<br><b>Entrenar</b>: cargá peso y reps; la app te dice cuándo subir.<br><b>Progreso</b>: peso, medidas, fotos y ciclo en un solo lugar.",
   onb3_t:"Listo para arrancar", onb3_b:"Poné tu nombre y cuántos días por semana querés entrenar. Después lo cambiás cuando quieras desde Ajustes.",
-  onb_name:"Tu nombre (opcional)", onb_goal:"Entrenos por semana"
+  onb_name:"Tu nombre (opcional)", onb_goal:"Entrenos por semana",
+  disc_run_sub:"Programa 24 semanas",
+  run_week_of:"Semana {n} de 24",
+  run_week_n:"Semana {n}",
+  run_session:"Sesión {n}",
+  run_optional:"Caminata opcional",
+  run_short:"Salida corta",
+  run_long:"Salida larga",
+  run_pending:"Pendiente",
+  run_done_mark:"✓ Completada",
+  run_start:"Iniciar",
+  run_repeat:"Repetir",
+  run_req_prog:"{a} de {b} sesiones principales",
+  run_pace_tip:"Corré lo suficientemente lento para decir una frase corta. RPE 2–4. Si empezás a jadear, caminá y retomá más despacio.",
+  run_history:"Historial",
+  run_no_hist:"Todavía no hay salidas guardadas.",
+  run_milestones:"Hitos",
+  run_no_ach:"Los hitos aparecen cuando completes salidas.",
+  run_manual:"Ajuste manual",
+  run_btn_repeat:"Repetir esta semana",
+  run_btn_back:"Volver una semana",
+  run_btn_fwd:"Avanzar una semana",
+  run_fwd_q:"¿Avanzar de semana?",
+  run_fwd_h:"Solo si sentís que esta semana te quedó cómoda. No es una obligación.",
+  run_warmup:"Calentamiento",
+  run_wu_hint:"6–8 min caminando + movilidad breve. No hace falta cronometrar cada movimiento.",
+  run_wu_walk:"Caminata 6–8 min",
+  run_wu_ankles:"Círculos de tobillos",
+  run_wu_knees:"Rodillas al pecho suaves",
+  run_wu_hips:"Apertura de cadera",
+  run_wu_swing:"Balanceo suave de pierna",
+  run_wu_squat:"Sentadillas lentas sin peso",
+  run_wu_calf:"Elevaciones de talón",
+  run_start_ints:"Empezar intervalos",
+  run_jog:"Trote",
+  run_walk:"Caminar",
+  run_run:"Correr",
+  run_pause:"Pausa",
+  run_resume:"Continuar",
+  run_skip:"Saltar",
+  run_end:"Terminar",
+  run_end_q:"¿Terminar esta salida?",
+  run_end_h:"Se va a guardar como sesión cortada. El timer se detiene.",
+  run_keep:"Seguir corriendo",
+  run_end_yes:"Sí, terminar",
+  run_rep_of:"Repetición {a} de {b}",
+  run_next:"Siguiente: {lab} · {t}",
+  run_next_end:"Último bloque",
+  run_cooldown:"Enfriamiento",
+  run_cool_hint:"5 min caminando. Después, estiramiento suave si querés.",
+  run_how:"¿Cómo salió?",
+  run_breath:"Respiración",
+  run_br_easy:"Muy fácil",
+  run_br_ctrl:"Controlada",
+  run_br_tax:"Algo exigida",
+  run_br_gasp:"Jadeando",
+  run_legs:"Piernas",
+  run_lg_fresh:"Frescas",
+  run_lg_tired:"Algo cansadas",
+  run_lg_heavy:"Pesadas",
+  run_lg_pain:"Dolor",
+  run_more_q:"¿Podrías haber hecho un poco más?",
+  run_yes:"Sí",
+  run_no:"No",
+  run_km_label:"Distancia aproximada (km)",
+  run_saved:"Salida guardada",
+  run_saved_ok:"Registrada. Sin apuro: lo importante es volver a salir.",
+  run_adv_ok:"Pasás a la semana {n}. Seguí tan suave como hasta ahora.",
+  run_rep_msg:"Repetimos esta semana. Está bien. El cuerpo pide asentar lo que ya hiciste.",
+  run_pain_msg:"No avances todavía. Priorizá descanso o caminata y retomá una semana más fácil si el dolor persiste.",
+  run_walk_min:"Caminata {n} min",
+  run_cont_min:"{n} min continuos",
+  run_dist_or_time:"{km} km o {n} min",
+  run_ph_walkrun:"Caminar + trotar",
+  run_ph_trans:"Hacia el continuo",
+  run_ph_5k:"Hacia 5 km",
+  run_ph_build:"Corta + larga",
+  run_g1:"Primera salida agradable.",
+  run_g2:"Sumar un poco de trote, misma calma.",
+  run_g3:"Trote de 1 min con caminata cómoda.",
+  run_g4:"Más bloques cortos, mismo ritmo fácil.",
+  run_g5:"El trote ya dura más que la caminata.",
+  run_g6:"2 min de trote se sienten naturales.",
+  run_g7:"Bloques de 3 min sin apurarse.",
+  run_g8:"4 min seguidos, respiración de frase.",
+  run_g9:"Primer bloque largo de 5 min.",
+  run_g10:"Casi continuo.",
+  run_g11:"Probar un tramo continuo corto.",
+  run_g12:"20–25 min seguidos, fácil.",
+  run_g13:"Acercarse a media hora.",
+  run_g14:"30 min continuos + una salida fácil.",
+  run_g15:"Primeros 5 km o 32–35 min fácil.",
+  run_g16:"Una salida crece; la otra queda fácil.",
+  run_g17:"La larga se estira un poco más.",
+  run_g18:"Seguir creciendo solo la larga.",
+  run_g19:"7–8 km fácil en la larga.",
+  run_g20:"Larga de 55 min fácil.",
+  run_g21:"Larga de 60 min fácil.",
+  run_g22:"65–70 min sin apurar el ritmo.",
+  run_g23:"10 km fácil.",
+  run_g24:"10–12 km o 70–80 min, llegada suave.",
+  run_gap_short:"Llevás {n} días sin correr. Repetí la última semana fácil.",
+  run_gap_mid:"Llevás {n} días. Conviene volver una semana atrás.",
+  run_gap_long:"Llevás {n} días. Sugerencia: bajar dos semanas y reconstruir.",
+  run_ach_first:"Primera salida",
+  run_ach_week_pair:"Primera semana con 2 sesiones",
+  run_ach_jog5:"5 min de trote acumulado",
+  run_ach_jog10:"10 min de trote acumulado",
+  run_ach_block5:"Primer bloque de 5 min seguido",
+  run_ach_cont20:"20 min continuos",
+  run_ach_cont30:"30 min continuos",
+  run_ach_km3:"Primeros 3 km",
+  run_ach_km5:"Primeros 5 km",
+  run_ach_km7:"Primeros 7 km",
+  run_ach_km10:"Primeros 10 km",
+  run_ach_km12:"10–12 km",
+  run_completed:"Completada",
+  run_cut:"Cortada",
  },
  de:{
   brand_sub:"Training", your_name:"Dein Name", name_ph:"Wie heißt du?", hero_hello:"Hallo, {n}!", hero_hi:"Auf geht's!",
@@ -992,7 +1132,124 @@ const I18N={
   onb1_t:"Willkommen bei FORJA", onb1_b:"Deine Trainings-App, <b>komplett offline</b>. Alles bleibt auf diesem Handy: kein Konto, keine Cloud, kein Internet nötig.",
   onb2_t:"So funktioniert's", onb2_b:"<b>Plan</b>: stell deine Tage aus dem Katalog zusammen.<br><b>Training</b>: trag Gewicht und Wdh. ein, die App sagt dir, wann du erhöhen sollst.<br><b>Fortschritt</b>: Gewicht, Maße, Fotos und Zyklus an einem Ort.",
   onb3_t:"Bereit loszulegen", onb3_b:"Trag deinen Namen ein und wie oft du pro Woche trainieren willst. Änderbar jederzeit in den Einstellungen.",
-  onb_name:"Dein Name (optional)", onb_goal:"Trainings pro Woche"
+  onb_name:"Dein Name (optional)", onb_goal:"Trainings pro Woche",
+  disc_run_sub:"24-Wochen-Programm",
+  run_week_of:"Woche {n} von 24",
+  run_week_n:"Woche {n}",
+  run_session:"Einheit {n}",
+  run_optional:"Optionaler Spaziergang",
+  run_short:"Kurzer Lauf",
+  run_long:"Langer Lauf",
+  run_pending:"Offen",
+  run_done_mark:"✓ Erledigt",
+  run_start:"Starten",
+  run_repeat:"Wiederholen",
+  run_req_prog:"{a} von {b} Pflicht-Einheiten",
+  run_pace_tip:"Lauf so langsam, dass du einen kurzen Satz sagen kannst. RPE 2–4. Wenn du außer Atem gerätst, geh und starte langsamer neu.",
+  run_history:"Verlauf",
+  run_no_hist:"Noch keine Läufe gespeichert.",
+  run_milestones:"Meilensteine",
+  run_no_ach:"Meilensteine erscheinen nach den ersten Läufen.",
+  run_manual:"Manuell anpassen",
+  run_btn_repeat:"Diese Woche wiederholen",
+  run_btn_back:"Eine Woche zurück",
+  run_btn_fwd:"Eine Woche weiter",
+  run_fwd_q:"Woche wirklich vorrücken?",
+  run_fwd_h:"Nur wenn sich die Woche leicht angefühlt hat. Kein Muss.",
+  run_warmup:"Aufwärmen",
+  run_wu_hint:"6–8 Min. gehen + kurze Mobilisation. Die einzelnen Übungen müssen nicht getimt werden.",
+  run_wu_walk:"6–8 Min. gehen",
+  run_wu_ankles:"Fußkreise",
+  run_wu_knees:"Knie zur Brust, sanft",
+  run_wu_hips:"Hüfte öffnen",
+  run_wu_swing:"Leichtes Beinschwingen",
+  run_wu_squat:"Langsame Kniebeugen ohne Gewicht",
+  run_wu_calf:"Fersenheben",
+  run_start_ints:"Intervalle starten",
+  run_jog:"Trab",
+  run_walk:"Gehen",
+  run_run:"Laufen",
+  run_pause:"Pause",
+  run_resume:"Weiter",
+  run_skip:"Überspringen",
+  run_end:"Beenden",
+  run_end_q:"Diesen Lauf beenden?",
+  run_end_h:"Er wird als abgebrochen gespeichert. Der Timer stoppt.",
+  run_keep:"Weiterlaufen",
+  run_end_yes:"Ja, beenden",
+  run_rep_of:"Wiederholung {a} von {b}",
+  run_next:"Als Nächstes: {lab} · {t}",
+  run_next_end:"Letzter Block",
+  run_cooldown:"Auslaufen",
+  run_cool_hint:"5 Min. gehen. Danach optional leicht dehnen.",
+  run_how:"Wie war's?",
+  run_breath:"Atmung",
+  run_br_easy:"Sehr leicht",
+  run_br_ctrl:"Kontrolliert",
+  run_br_tax:"Etwas anstrengend",
+  run_br_gasp:"Außer Atem",
+  run_legs:"Beine",
+  run_lg_fresh:"Frisch",
+  run_lg_tired:"Etwas müde",
+  run_lg_heavy:"Schwer",
+  run_lg_pain:"Schmerz",
+  run_more_q:"Hättest du noch ein bisschen mehr geschafft?",
+  run_yes:"Ja",
+  run_no:"Nein",
+  run_km_label:"Ungefähre Distanz (km)",
+  run_saved:"Lauf gespeichert",
+  run_saved_ok:"Eingetragen. Keine Eile: wichtig ist, wieder loszugehen.",
+  run_adv_ok:"Weiter zu Woche {n}. Bleib so locker wie bisher.",
+  run_rep_msg:"Wir wiederholen diese Woche. Alles gut. Der Körper will das Gelernte festigen.",
+  run_pain_msg:"Noch nicht weitergehen. Lieber Pause oder Spaziergang, und eine leichtere Woche wenn der Schmerz bleibt.",
+  run_walk_min:"Spaziergang {n} Min.",
+  run_cont_min:"{n} Min. durchgehend",
+  run_dist_or_time:"{km} km oder {n} Min.",
+  run_ph_walkrun:"Gehen + Trab",
+  run_ph_trans:"Richtung Dauerlauf",
+  run_ph_5k:"Richtung 5 km",
+  run_ph_build:"Kurz + lang",
+  run_g1:"Erster angenehmer Lauf.",
+  run_g2:"Etwas mehr Trab, gleiche Ruhe.",
+  run_g3:"1 Min. Trab mit lockerem Gehen.",
+  run_g4:"Mehr kurze Blöcke, gleiches lockeres Tempo.",
+  run_g5:"Der Trab dauert länger als das Gehen.",
+  run_g6:"2 Min. Trab fühlen sich natürlich an.",
+  run_g7:"3-Minuten-Blöcke ohne Hetze.",
+  run_g8:"4 Min. am Stück, Satz-Atmung.",
+  run_g9:"Erster 5-Minuten-Block.",
+  run_g10:"Fast durchgehend.",
+  run_g11:"Kurzen Dauerlauf ausprobieren.",
+  run_g12:"20–25 Min. locker am Stück.",
+  run_g13:"Richtung halbe Stunde.",
+  run_g14:"30 Min. durchgehend + ein lockerer Lauf.",
+  run_g15:"Erste 5 km oder 32–35 Min. locker.",
+  run_g16:"Nur ein Lauf wird länger; der andere bleibt leicht.",
+  run_g17:"Der lange Lauf wächst etwas.",
+  run_g18:"Nur der lange Lauf wächst weiter.",
+  run_g19:"7–8 km locker im langen Lauf.",
+  run_g20:"Langer Lauf 55 Min. locker.",
+  run_g21:"Langer Lauf 60 Min. locker.",
+  run_g22:"65–70 Min. ohne Tempojagd.",
+  run_g23:"10 km locker.",
+  run_g24:"10–12 km oder 70–80 Min., ruhiger Abschluss.",
+  run_gap_short:"{n} Tage ohne Lauf. Wiederhole die letzte leichte Woche.",
+  run_gap_mid:"{n} Tage Pause. Eine Woche zurück ist sinnvoll.",
+  run_gap_long:"{n} Tage Pause. Vorschlag: zwei Wochen zurück und neu aufbauen.",
+  run_ach_first:"Erster Lauf",
+  run_ach_week_pair:"Erste Woche mit 2 Einheiten",
+  run_ach_jog5:"5 Min. Trab gesammelt",
+  run_ach_jog10:"10 Min. Trab gesammelt",
+  run_ach_block5:"Erster 5-Minuten-Block am Stück",
+  run_ach_cont20:"20 Min. durchgehend",
+  run_ach_cont30:"30 Min. durchgehend",
+  run_ach_km3:"Erste 3 km",
+  run_ach_km5:"Erste 5 km",
+  run_ach_km7:"Erste 7 km",
+  run_ach_km10:"Erste 10 km",
+  run_ach_km12:"10–12 km",
+  run_completed:"Abgeschlossen",
+  run_cut:"Abgebrochen",
  }
 };
 function t(key,p){ let s=(I18N[DB.lang]&&I18N[DB.lang][key]!=null)?I18N[DB.lang][key]:(I18N.es[key]!=null?I18N.es[key]:key); if(p)for(const k in p)s=s.split('{'+k+'}').join(p[k]); return s; }
@@ -1051,9 +1308,10 @@ function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.p
   if(!Array.isArray(d.routine)||!d.routine.length)d.routine=defaultRoutine();
   if(!(d.activeDay>=0&&d.activeDay<d.routine.length))d.activeDay=0;
   if(!Array.isArray(d.yogaLogs))d.yogaLogs=[];
+  ensureRunningDB(d);
   return d;}}catch(e){} return seed(); }
 function save(){ try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){ alert(DB.lang==='de'?"Speichern fehlgeschlagen (Speicher voll/Inkognito).":"No se pudo guardar (memoria llena o incógnito)."); } }
-function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],yogaLogs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},machineSettings:{},programStartDate:today(),gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,onboarded:false,session:null}; }
+function seed(){ return ensureRunningDB({lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],yogaLogs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},machineSettings:{},programStartDate:today(),gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,onboarded:false,session:null}); }
 
 function sessionType(log){ return (log&&log.type)?log.type:"strength"; }
 function strengthLogs(){ return (DB.logs||[]).filter(l=>sessionType(l)==="strength"); }
@@ -1246,17 +1504,17 @@ let trainPane="hub";
 function buildNav(){
  document.getElementById('navBar').innerHTML=NAV_ITEMS.map(([v,i,k])=>`<button class="${v===currentView?'on':''}" data-v="${v}" onclick="navGo('${v}')">${ICONS[i]}<span>${t(k)}</span></button>`).join("");
 }
-function navGo(v){ if(v==="entrenar")trainPane="hub"; go(v); }
+function navGo(v){ if(v==="entrenar"){ trainPane=(DB.runningSession&&DB.runningSession.active)?"run":"hub"; } go(v); }
 function showTrainHub(){
  trainPane="hub";
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym");
- if(h)h.style.display="block"; if(g)g.style.display="none";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun");
+ if(h)h.style.display="block"; if(g)g.style.display="none"; if(r)r.style.display="none";
  renderTrainHub();
 }
 function showTrainGym(){
  trainPane="gym";
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym");
- if(h)h.style.display="none"; if(g)g.style.display="block";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun");
+ if(h)h.style.display="none"; if(g)g.style.display="block"; if(r)r.style.display="none";
  renderTrainSelect();
 }
 function renderTrainHub(){
@@ -1286,7 +1544,7 @@ function go(v){ currentView=v; document.querySelectorAll(".view").forEach(s=>s.c
  const tabOn=["inicio","entrenar","resumen","progreso","mas"].includes(v)?v:"mas";
  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===tabOn)); window.scrollTo(0,0);
  if(v==="inicio")renderHub(); if(v==="resumen")renderResumen(); if(v==="rutina")renderRutina();
- if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else showTrainHub(); }
+ if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else if(trainPane==="run")showTrainRun(); else showTrainHub(); }
  if(v==="ejercicios")renderLibrary(); if(v==="diario")renderJournal(); if(v==="progreso")renderProgreso(); if(v==="mas")renderMore(); }
 
 /* ===== FASE / PROGRESIÓN ===== */
@@ -1685,7 +1943,7 @@ function openSettings(){ const s=DB.settings||{}; showModal(`<h3>${t('settings')
 function saveSettings(){ DB.settings=DB.settings||{}; DB.settings.weeklyGoal=Math.max(1,Math.min(7,+document.getElementById('setGoal').value||3)); DB.settings.cycleLen=Math.max(21,Math.min(40,+document.getElementById('setCyc').value||28)); save(); closeModal(); go(currentView); }
 function openMenu(){ showModal(`<h3>${t('options')}</h3><button class="btn sec" onclick="openSettings()">${ICONS.gear}<span style="margin-left:8px">${t('settings')}</span></button><button class="btn sec" style="margin-top:8px" onclick="exportData()">${ICONS.download}<span style="margin-left:8px">${t('backup_dl')}</span></button><button class="btn sec" style="margin-top:8px" onclick="document.getElementById('importFile').click()">${ICONS.upload}<span style="margin-left:8px">${t('backup_up')}</span></button><input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)"><button class="btn sec" style="margin-top:8px" onclick="closeModal();showHelp()">${ICONS.help}<span style="margin-left:8px">${t('how_to')}</span></button><button class="btn danger" style="margin-top:16px" onclick="wipe()">${t('delete_all')}</button><button class="btn ghost" style="margin-top:8px" onclick="closeModal()">${t('close')}</button><p class="xs muted" style="margin-top:14px;text-align:center">${t('data_local')}</p>`); }
 function exportData(){ const b=new Blob([JSON.stringify(DB,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="forja-backup-"+today()+".json"; a.click(); }
-function importData(ev){ const f=ev.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{DB=JSON.parse(r.result); if(!DB.lang)DB.lang="es"; if(!DB.photos)DB.photos=[]; if(DB.name==null)DB.name=""; if(DB.onboarded==null)DB.onboarded=true; if(DB.session===undefined)DB.session=null; if(!Array.isArray(DB.yogaLogs))DB.yogaLogs=[]; save(); applyStatic(); closeModal(); go("inicio"); alert(t('imported'));}catch(e){alert(t('invalid_file'));}}; r.readAsText(f); }
+function importData(ev){ const f=ev.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{DB=JSON.parse(r.result); if(!DB.lang)DB.lang="es"; if(!DB.photos)DB.photos=[]; if(DB.name==null)DB.name=""; if(DB.onboarded==null)DB.onboarded=true; if(DB.session===undefined)DB.session=null; if(!Array.isArray(DB.yogaLogs))DB.yogaLogs=[]; ensureRunningDB(DB); save(); applyStatic(); closeModal(); go("inicio"); alert(t('imported'));}catch(e){alert(t('invalid_file'));}}; r.readAsText(f); }
 function wipe(){ if(confirm(t('confirm_wipe'))){ DB=seed(); save(); applyStatic(); closeModal(); go("inicio"); openOnboarding(); } }
 function showHelp(){ showModal(`<h3>${t('how_to')}</h3><div class="small" style="line-height:1.6">${t('help_body')}</div><button class="btn" style="margin-top:14px" onclick="closeModal()">${t('got_it')}</button>`); }
 
@@ -2458,6 +2716,427 @@ function commitWorkout(){
  showModal(`<h3>${t('saved_title')}</h3><p class="small muted">${t('saved_msg')}</p>${short?`<div class="note shortnote"><b>${t('short_active')}</b> · ${t('short_help')}</div>`:""}${gemHtml}${prHtml}${medalHtml}<button class="btn" style="margin-top:10px" onclick="closeModal();go('inicio')">${t('done')}</button>`);
 }
 
+
+/* ===== FASE 5 · RUNNING ===== */
+function ensureRunningDB(d){
+ if(!d.programs||typeof d.programs!=="object") d.programs={};
+ const r=d.programs.running;
+ if(!r||typeof r!=="object"){
+  d.programs.running={week:1,completedSessions:[],history:[],startedAt:null,lastDecision:null,lastRunAt:null,jogSec:0};
+ }else{
+  if(!(r.week>=1&&r.week<=24)) r.week=1;
+  if(!Array.isArray(r.completedSessions)) r.completedSessions=[];
+  if(!Array.isArray(r.history)) r.history=[];
+  if(r.jogSec==null) r.jogSec=0;
+ }
+ if(d.runningSession===undefined) d.runningSession=null;
+ if(!Array.isArray(d.runningAchievements)) d.runningAchievements=[];
+ return d;
+}
+function runProg(){ ensureRunningDB(DB); return DB.programs.running; }
+function runWeekDef(w){ return RUNNING_PROGRAM.find(x=>x.week===(w||runProg().week))||RUNNING_PROGRAM[0]; }
+function runSessDef(week,id){ return (runWeekDef(week).sessions||[]).find(s=>s.id===id)||null; }
+function runRequired(week){ return (runWeekDef(week).sessions||[]).filter(s=>!s.optional); }
+function runFmt(sec){ sec=Math.max(0,Math.round(+sec||0)); const m=Math.floor(sec/60),s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function runFmtPretty(sec){ sec=Math.max(0,Math.round(+sec||0)); if(sec<60) return sec+" s"; if(sec%60===0) return (sec/60)+" min"; return runFmt(sec); }
+function runSessionTitle(s){
+ if(!s) return "";
+ if(s.type==="intervals") return s.sets+" × "+runFmtPretty(s.workSec)+" / "+runFmtPretty(s.walkSec);
+ if(s.type==="walk") return t("run_walk_min",{n:Math.round(s.sec/60)});
+ if(s.distKm) return t("run_dist_or_time",{km:s.distKm,n:Math.round(s.sec/60)});
+ return t("run_cont_min",{n:Math.round((s.secMin||s.sec)/60)});
+}
+function runBuildSteps(s){
+ const steps=[];
+ if(!s) return steps;
+ if(s.type==="intervals"){
+  for(let i=0;i<s.sets;i++){
+   steps.push({id:"w"+i,label:t("run_jog"),sec:s.workSec,kind:"run"});
+   steps.push({id:"r"+i,label:t("run_walk"),sec:s.walkSec,kind:"walk"});
+  }
+ }else{
+  steps.push({id:"main",label:s.type==="walk"?t("run_walk"):t("run_run"),sec:s.sec,kind:s.type==="walk"?"walk":"run"});
+ }
+ return steps;
+}
+function runWorkSec(s){
+ if(!s) return 0;
+ if(s.type==="intervals") return s.sets*s.workSec;
+ if(s.type==="walk") return 0;
+ return s.sec||0;
+}
+function runDoneRequired(week){
+ const ids=new Set(runRequired(week).map(s=>s.id));
+ const got=new Set();
+ (runProg().completedSessions||[]).forEach(c=>{
+  if(c.week===week&&ids.has(c.sessionId)&&!c.repeat) got.add(c.sessionId);
+ });
+ return got;
+}
+function runIsRequiredDone(week,id){ return runDoneRequired(week).has(id); }
+
+const RUNNING_PROGRAM=[
+ {week:1,phase:"walkrun",goalKey:"run_g1",rpe:"2–3",sessions:[
+  {id:"s1",type:"intervals",sets:8,workSec:30,walkSec:120,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:8,workSec:30,walkSec:120,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:25*60,optional:1,warmup:0,cooldown:0}]},
+ {week:2,phase:"walkrun",goalKey:"run_g2",rpe:"2–3",sessions:[
+  {id:"s1",type:"intervals",sets:8,workSec:45,walkSec:120,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:8,workSec:45,walkSec:120,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:28*60,optional:1,warmup:0,cooldown:0}]},
+ {week:3,phase:"walkrun",goalKey:"run_g3",rpe:"3",sessions:[
+  {id:"s1",type:"intervals",sets:8,workSec:60,walkSec:90,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:8,workSec:60,walkSec:90,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:30*60,optional:1,warmup:0,cooldown:0}]},
+ {week:4,phase:"walkrun",goalKey:"run_g4",rpe:"3",sessions:[
+  {id:"s1",type:"intervals",sets:10,workSec:60,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:10,workSec:60,walkSec:60,warmup:1,cooldown:1},
+  {id:"s3",type:"walk",sec:30*60,optional:1,warmup:0,cooldown:0}]},
+ {week:5,phase:"walkrun",goalKey:"run_g5",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:8,workSec:90,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:8,workSec:90,walkSec:60,warmup:1,cooldown:1}]},
+ {week:6,phase:"walkrun",goalKey:"run_g6",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:8,workSec:120,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:8,workSec:120,walkSec:60,warmup:1,cooldown:1}]},
+ {week:7,phase:"walkrun",goalKey:"run_g7",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:6,workSec:180,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:6,workSec:180,walkSec:60,warmup:1,cooldown:1}]},
+ {week:8,phase:"walkrun",goalKey:"run_g8",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:5,workSec:240,walkSec:90,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:5,workSec:240,walkSec:90,warmup:1,cooldown:1}]},
+ {week:9,phase:"walkrun",goalKey:"run_g9",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:5,workSec:300,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:5,workSec:300,walkSec:60,warmup:1,cooldown:1}]},
+ {week:10,phase:"transition",goalKey:"run_g10",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:3,workSec:480,walkSec:60,warmup:1,cooldown:1},
+  {id:"s2",type:"intervals",sets:2,workSec:600,walkSec:120,warmup:1,cooldown:1}]},
+ {week:11,phase:"transition",goalKey:"run_g11",rpe:"3–4",sessions:[
+  {id:"s1",type:"intervals",sets:2,workSec:720,walkSec:120,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:17*60,warmup:1,cooldown:1}]},
+ {week:12,phase:"transition",goalKey:"run_g12",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:21*60,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:24*60,warmup:1,cooldown:1}]},
+ {week:13,phase:"k5",goalKey:"run_g13",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:27*60,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:28*60,warmup:1,cooldown:1}]},
+ {week:14,phase:"k5",goalKey:"run_g14",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:30*60,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:25*60,warmup:1,cooldown:1}]},
+ {week:15,phase:"k5",goalKey:"run_g15",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:34*60,distKm:"5",askKm:1,warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:28*60,warmup:1,cooldown:1}]},
+ {week:16,phase:"build",goalKey:"run_g16",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:39*60,role:"long",warmup:1,cooldown:1}]},
+ {week:17,phase:"build",goalKey:"run_g17",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:44*60,role:"long",warmup:1,cooldown:1}]},
+ {week:18,phase:"build",goalKey:"run_g18",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:31*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:49*60,role:"long",warmup:1,cooldown:1}]},
+ {week:19,phase:"build",goalKey:"run_g19",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:30*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:48*60,role:"long",distKm:"7-8",askKm:1,warmup:1,cooldown:1}]},
+ {week:20,phase:"build",goalKey:"run_g20",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:55*60,role:"long",warmup:1,cooldown:1}]},
+ {week:21,phase:"build",goalKey:"run_g21",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:60*60,role:"long",warmup:1,cooldown:1}]},
+ {week:22,phase:"build",goalKey:"run_g22",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:68*60,role:"long",warmup:1,cooldown:1}]},
+ {week:23,phase:"build",goalKey:"run_g23",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:60*60,role:"long",distKm:"10",askKm:1,warmup:1,cooldown:1}]},
+ {week:24,phase:"build",goalKey:"run_g24",rpe:"3–4",sessions:[
+  {id:"s1",type:"continuous",sec:32*60,role:"short",warmup:1,cooldown:1},
+  {id:"s2",type:"continuous",sec:75*60,role:"long",distKm:"10-12",askKm:1,warmup:1,cooldown:1}]}
+];
+let runLive=null, runFb={rpe:3,breath:"controlled",legs:"fresh",could:1,km:""}, runWuOn={};
+
+function runPaneShow(){
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun");
+ if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="block";
+}
+function showTrainRun(){ trainPane="run"; runPaneShow(); renderRunning(); }
+function openRunning(){
+ ensureRunningDB(DB);
+ if(!runProg().startedAt){ runProg().startedAt=today(); save(); }
+ trainPane="run";
+ if(DB.runningSession&&DB.runningSession.active) runResumeSession();
+ go("entrenar");
+}
+function runBackHub(){
+ if(runLive&&(runLive.view==="active"||runLive.view==="cooldown")&&(seqTimer.active||seqTimer.paused)) runPersist();
+ trainPane="hub"; showTrainHub();
+}
+function runPersist(){
+ if(!runLive){ DB.runningSession=null; save(); return; }
+ DB.runningSession={
+  active:true,week:runLive.week,sessionId:runLive.sessionId,view:runLive.view,
+  skippedSteps:runLive.skippedSteps||0,startedAt:runLive.startedAt,
+  completedMain:!!runLive.completedMain,
+  snap:(seqTimer.active||seqTimer.paused)?seqSnapshot():null
+ };
+ save();
+}
+function runClearLive(){ runLive=null; DB.runningSession=null; save(); }
+function runCbs(){
+ return {
+  onStep:function(){ runPaintLive(); runPersist(); },
+  onTick:function(){ runPaintLive(); },
+  onDone:function(){ runOnSeqDone(); },
+  onCancel:function(){}
+ };
+}
+function runResumeSession(){
+ const rs=DB.runningSession; if(!rs||!rs.active) return;
+ runLive={week:rs.week,sessionId:rs.sessionId,view:rs.view||"active",skippedSteps:rs.skippedSteps||0,startedAt:rs.startedAt||seqNow(),completedMain:!!rs.completedMain};
+ if((rs.view==="active"||rs.view==="cooldown")&&rs.snap&&rs.snap.steps&&rs.snap.steps.length){
+  if(!(seqTimer.active||seqTimer.paused)) seqRestore(rs.snap,runCbs());
+ }
+}
+function runGapDays(){ const last=runProg().lastRunAt; if(!last) return 0; return daysBetween(last,today()); }
+function runGapHint(){
+ const d=runGapDays(); if(d<=0) return "";
+ if(d>=15) return t("run_gap_long",{n:d});
+ if(d>=8) return t("run_gap_mid",{n:d});
+ if(d>=1) return t("run_gap_short",{n:d});
+ return "";
+}
+function renderRunning(){
+ ensureRunningDB(DB);
+ const box=document.getElementById("runBody"); if(!box) return;
+ if(runLive){
+  if(runLive.view==="warmup"){ box.innerHTML=runHtmlWarmup(); return; }
+  if(runLive.view==="active"||runLive.view==="cooldown"){ box.innerHTML=runHtmlLive(); runPaintLive(); return; }
+  if(runLive.view==="feedback"){ box.innerHTML=runHtmlFeedback(); return; }
+ }
+ box.innerHTML=runHtmlHome();
+}
+function runPhaseLabel(ph){
+ return t(ph==="walkrun"?"run_ph_walkrun":ph==="transition"?"run_ph_trans":ph==="k5"?"run_ph_5k":"run_ph_build");
+}
+function runHtmlHome(){
+ const p=runProg(), w=runWeekDef(p.week), done=runDoneRequired(p.week), gap=runGapHint();
+ const sess=(w.sessions||[]).map(s=>{
+  const ok=runIsRequiredDone(p.week,s.id);
+  const lab=s.optional?t("run_optional"):(s.role==="short"?t("run_short"):s.role==="long"?t("run_long"):t("run_session",{n:s.id==="s1"?1:s.id==="s2"?2:3}));
+  return `<div class="runcard"><div class="row between"><div><div class="nm">${esc(lab)}</div><div class="ht">${esc(runSessionTitle(s))}</div></div><span class="badge ${ok?"up":"hold"}">${ok?t("run_done_mark"):t("run_pending")}</span></div><button class="btn" style="margin-top:10px" onclick="runBegin('${s.id}')">${ok?t("run_repeat"):t("run_start")}</button></div>`;
+ }).join("");
+ const hist=(p.history||[]).slice().reverse().slice(0,12).map(h=>`<div class="runhist"><div><b>${esc(h.date)}</b> · ${t("run_week_n",{n:h.week})} · ${esc(h.title||h.sessionId)}</div><div class="xs muted">${h.durMin||0} min${h.km?(" · "+h.km+" km"):""} · RPE ${h.rpe==null?"—":h.rpe} · ${h.completed?t("run_completed"):t("run_cut")}</div></div>`).join("")||`<div class="empty">${t("run_no_hist")}</div>`;
+ const hits=(DB.runningAchievements||[]).slice().reverse().map(a=>`<div class="xs" style="margin-top:6px">🏅 ${esc(t("run_ach_"+a.id))}</div>`).join("")||`<div class="xs muted">${t("run_no_ach")}</div>`;
+ return `<button class="btn ghost" style="margin-bottom:10px" onclick="runBackHub()">${t("train_back")}</button>
+  <h2 class="sec"><span class="ic">${ICONS.run}</span>${t("disc_run")}</h2>
+  <div class="card"><div class="display" style="font-size:26px">${t("run_week_of",{n:p.week})}</div>
+   <div class="small muted">${esc(runPhaseLabel(w.phase))} · RPE ${esc(w.rpe)}</div>
+   <div style="margin-top:8px">${esc(t(w.goalKey))}</div>
+   <div class="xs muted" style="margin-top:8px">${t("run_req_prog",{a:done.size,b:runRequired(p.week).length})}</div></div>
+  ${gap?`<div class="note">${esc(gap)}</div>`:""}
+  <div class="note">${t("run_pace_tip")}</div>
+  ${sess}
+  <div class="card"><div class="xs muted" style="text-transform:uppercase;letter-spacing:.5px">${t("run_history")}</div>${hist}</div>
+  <div class="card"><div class="xs muted" style="text-transform:uppercase;letter-spacing:.5px">${t("run_milestones")}</div>${hits}</div>
+  <div class="card"><div class="xs muted" style="margin-bottom:8px">${t("run_manual")}</div>
+   <button class="btn sec" onclick="runRepeatWeek()">${t("run_btn_repeat")}</button>
+   <button class="btn sec" style="margin-top:8px" onclick="runShiftWeek(-1)">${t("run_btn_back")}</button>
+   <button class="btn ghost" style="margin-top:8px" onclick="runConfirmAdvance()">${t("run_btn_fwd")}</button></div>`;
+}
+function runBegin(id){
+ const p=runProg(), s=runSessDef(p.week,id); if(!s) return;
+ runWuOn={};
+ runLive={week:p.week,sessionId:id,view:s.warmup?"warmup":"active",skippedSteps:0,startedAt:seqNow(),completedMain:false};
+ if(runLive.view==="active") runStartMain();
+ else renderRunning();
+ runPersist();
+}
+function runHtmlWarmup(){
+ const items=["run_wu_walk","run_wu_ankles","run_wu_knees","run_wu_hips","run_wu_swing","run_wu_squat","run_wu_calf"];
+ const rows=items.map(k=>`<label class="runwu"><input type="checkbox" ${runWuOn[k]?"checked":""} onchange="runWuOn['${k}']=this.checked"> ${t(k)}</label>`).join("");
+ return `<button class="btn ghost" style="margin-bottom:10px" onclick="runAbortConfirm()">${t("cancel")}</button>
+  <h2 class="sec">${t("run_warmup")}</h2><div class="note">${t("run_wu_hint")}</div>
+  <div class="card">${rows}</div>
+  <button class="btn" onclick="runStartMain()">${t("run_start_ints")}</button>`;
+}
+function runStartMain(){
+ if(!runLive) return;
+ const s=runSessDef(runLive.week,runLive.sessionId); if(!s) return;
+ runLive.view="active"; runLive.completedMain=false;
+ seqStart(runBuildSteps(s),runCbs());
+ renderRunning(); runPersist();
+}
+function runHtmlLive(){
+ return `<div class="runlive"><div class="runkind" id="runKind">—</div><div class="runclock" id="runClock">0:00</div>
+  <div class="runmeta" id="runMeta"></div><div class="runnext" id="runNext"></div>
+  <div class="rungrid"><button class="btn" id="runPauseBtn" onclick="runTogglePause()">${t("run_pause")}</button>
+  <button class="btn sec" onclick="runDoSkip()">${t("run_skip")}</button></div>
+  <button class="btn ghost runterm" onclick="runAbortConfirm()">${t("run_end")}</button></div>`;
+}
+function runPaintLive(){
+ const kind=document.getElementById("runKind"), clock=document.getElementById("runClock");
+ if(!kind||!clock) return;
+ const st=seqCurrent(), nxt=seqNext(), isCd=runLive&&runLive.view==="cooldown";
+ kind.textContent=st?((st.kind==="run"?t("run_jog"):t("run_walk")).toUpperCase()):(isCd?t("run_cooldown").toUpperCase():"—");
+ kind.style.color=st&&st.kind==="run"?"var(--volt)":"var(--blue)";
+ clock.textContent=runFmt(seqRemainingSec());
+ const s=runLive?runSessDef(runLive.week,runLive.sessionId):null;
+ const meta=document.getElementById("runMeta"), nx=document.getElementById("runNext");
+ if(s&&s.type==="intervals"&&st&&st.kind==="run"){
+  const n=parseInt((st.id||"w0").slice(1),10)+1;
+  if(meta) meta.textContent=t("run_rep_of",{a:n,b:s.sets});
+ }else if(meta){ meta.textContent=isCd?t("run_cool_hint"):(s?runSessionTitle(s):""); }
+ if(nx) nx.textContent=nxt?t("run_next",{lab:nxt.label,t:runFmt(nxt.sec)}):t("run_next_end");
+ const pb=document.getElementById("runPauseBtn");
+ if(pb) pb.textContent=seqTimer.paused?t("run_resume"):t("run_pause");
+}
+function runTogglePause(){
+ if(!seqTimer.active&&!seqTimer.paused) return;
+ if(seqTimer.paused) seqResume(); else seqPause();
+ runPaintLive(); runPersist();
+}
+function runDoSkip(){
+ if(!(seqTimer.active||seqTimer.paused)) return;
+ if(runLive) runLive.skippedSteps=(runLive.skippedSteps||0)+1;
+ seqSkip(); runPaintLive(); runPersist();
+}
+function runOnSeqDone(){
+ if(!runLive) return;
+ const s=runSessDef(runLive.week,runLive.sessionId);
+ if(runLive.view==="active"&&s&&s.cooldown){
+  runLive.view="cooldown"; runLive.completedMain=true;
+  seqStart([{id:"cd",label:t("run_walk"),sec:5*60,kind:"walk"}],runCbs());
+  renderRunning(); runPersist(); return;
+ }
+ runLive.completedMain=true; runLive.view="feedback"; seqReset(); renderRunning(); runPersist();
+}
+function runAbortConfirm(){
+ showModal(`<h3>${t("run_end_q")}</h3><p class="small muted">${t("run_end_h")}</p>
+  <button class="btn" style="margin-top:10px" onclick="closeModal()">${t("run_keep")}</button>
+  <button class="btn danger" style="margin-top:8px" onclick="runAbortNow()">${t("run_end_yes")}</button>`);
+}
+function runAbortNow(){
+ closeModal();
+ if(seqTimer.active||seqTimer.paused) seqCancel();
+ if(!runLive){ showTrainRun(); return; }
+ runLive.view="feedback"; runLive.cutEarly=true; renderRunning(); runPersist();
+}
+function runHtmlFeedback(){
+ const s=runLive?runSessDef(runLive.week,runLive.sessionId):null;
+ const askKm=s&&s.askKm;
+ const rpeBtns=Array.from({length:10},(_,i)=>i+1).map(n=>`<button class="rpeb ${runFb.rpe===n?"on":""}" onclick="runFb.rpe=${n};renderRunning()">${n}</button>`).join("");
+ const breath=[["easy","run_br_easy"],["controlled","run_br_ctrl"],["taxed","run_br_tax"],["gasping","run_br_gasp"]].map(([k,l])=>`<button class="pill ${runFb.breath===k?"on":""}" onclick="runFb.breath='${k}';renderRunning()">${t(l)}</button>`).join("");
+ const legs=[["fresh","run_lg_fresh"],["tired","run_lg_tired"],["heavy","run_lg_heavy"],["pain","run_lg_pain"]].map(([k,l])=>`<button class="pill ${k==="pain"?"red":""} ${runFb.legs===k?"on":""}" onclick="runFb.legs='${k}';renderRunning()">${t(l)}</button>`).join("");
+ return `<h2 class="sec">${t("run_how")}</h2>
+  <div class="card"><div class="xs muted">${t("rpe_label")}</div><div class="rperow">${rpeBtns}</div></div>
+  <div class="card"><div class="xs muted">${t("run_breath")}</div><div class="pillrow">${breath}</div></div>
+  <div class="card"><div class="xs muted">${t("run_legs")}</div><div class="pillrow">${legs}</div></div>
+  <div class="card"><div class="xs muted">${t("run_more_q")}</div><div class="pillrow">
+    <button class="pill ${runFb.could===1?"on":""}" onclick="runFb.could=1;renderRunning()">${t("run_yes")}</button>
+    <button class="pill ${runFb.could===0?"on":""}" onclick="runFb.could=0;renderRunning()">${t("run_no")}</button></div></div>
+  ${askKm?`<div class="card"><label class="fld">${t("run_km_label")}</label><input id="runKm" inputmode="decimal" value="${esc(runFb.km||"")}" placeholder="5.0"></div>`:""}
+  <button class="btn" onclick="runSaveFeedback()">${t("finish_save")}</button>
+  <button class="btn ghost" style="margin-top:8px" onclick="runDiscard()">${t("cancel")}</button>`;
+}
+function runDiscard(){ if(seqTimer.active||seqTimer.paused) seqCancel(); runClearLive(); renderRunning(); }
+function runDecision(entries){
+ const bad=entries.filter(e=>e.rpe>=5||e.breath==="gasping"||e.legs==="heavy"||e.legs==="pain"||e.couldDoAnother===false||!e.completed);
+ if(entries.some(e=>e.legs==="pain")) return "pain";
+ if(bad.length) return "repeat";
+ const good=entries.every(e=>e.completed&&e.rpe<=4&&(e.breath==="easy"||e.breath==="controlled")&&e.legs!=="pain"&&e.couldDoAnother===true);
+ return good?"advance":"repeat";
+}
+function runRequiredLogs(week){
+ const ids=runRequired(week).map(s=>s.id), out={};
+ (runProg().history||[]).forEach(h=>{ if(h.week===week&&ids.indexOf(h.sessionId)>=0&&!h.repeat) out[h.sessionId]=h; });
+ return ids.map(id=>out[id]).filter(Boolean);
+}
+function runUnlockAchievements(entry){
+ const have=new Set((DB.runningAchievements||[]).map(a=>a.id));
+ const add=id=>{ if(!have.has(id)){ DB.runningAchievements.push({id,date:today()}); have.add(id); } };
+ const hist=runProg().history||[];
+ if(hist.length===1) add("first");
+ if(runRequired(entry.week).every(s=>hist.some(h=>h.week===entry.week&&h.sessionId===s.id&&h.completed&&!h.repeat))) add("week_pair");
+ const jog=runProg().jogSec||0;
+ if(jog>=300) add("jog5"); if(jog>=600) add("jog10");
+ if(entry.week>=9&&entry.completed) add("block5");
+ if(entry.week>=12&&entry.completed&&entry.sessionId==="s1") add("cont20");
+ if(entry.week>=14&&entry.completed) add("cont30");
+ const km=+entry.km||0;
+ if(km>=3) add("km3"); if(km>=5) add("km5"); if(km>=7) add("km7"); if(km>=10) add("km10"); if(km>=11) add("km12");
+}
+function runSaveFeedback(){
+ if(!runLive) return;
+ const s=runSessDef(runLive.week,runLive.sessionId); if(!s) return;
+ const kmEl=document.getElementById("runKm"); if(kmEl){ const v=(kmEl.value||"").trim(); if(v) runFb.km=v; }
+ const planned=runBuildSteps(s).reduce((a,x)=>a+(+x.sec||0),0);
+ const extra=(s.cooldown?300:0);
+ const elapsed=runLive.cutEarly?Math.max(1,Math.round((seqNow()-runLive.startedAt)/60000)):Math.max(1,Math.round((planned+extra)/60));
+ const completed=!runLive.cutEarly && !!runLive.completedMain && (runLive.skippedSteps||0)<Math.max(2,(s.sets||1));
+ const already=runIsRequiredDone(runLive.week,runLive.sessionId);
+ const entry={
+  type:"running",date:today(),week:runLive.week,sessionId:runLive.sessionId,
+  durMin:elapsed,completed,rpe:+runFb.rpe,breath:runFb.breath,legs:runFb.legs,
+  couldDoAnother:!!runFb.could,skippedSteps:runLive.skippedSteps||0,
+  km:runFb.km?String(runFb.km).replace(",","."):null,
+  optional:!!s.optional,repeat:already&&!s.optional,exercises:[],
+  title:runSessionTitle(s)
+ };
+ DB.logs.push(entry);
+ const p=runProg();
+ p.history.push(entry); p.lastRunAt=today();
+ p.completedSessions.push({week:entry.week,sessionId:entry.sessionId,date:entry.date,repeat:!!entry.repeat,optional:!!s.optional});
+ if(completed) p.jogSec=(p.jogSec||0)+runWorkSec(s);
+ runUnlockAchievements(entry);
+ let msg="";
+ if(!s.optional){
+  const reqLogs=runRequiredLogs(entry.week);
+  if(reqLogs.length>=runRequired(entry.week).length){
+   const decision=runDecision(reqLogs);
+   p.lastDecision=decision;
+   if(decision==="advance"&&p.week<24){ p.week=p.week+1; msg=t("run_adv_ok",{n:p.week}); }
+   else if(decision==="pain") msg=t("run_pain_msg");
+   else msg=t("run_rep_msg");
+  }
+ }
+ save();
+ if(seqTimer.active||seqTimer.paused) seqCancel();
+ runClearLive();
+ showModal(`<h3>${t("run_saved")}</h3><p class="small">${msg||t("run_saved_ok")}</p><button class="btn" style="margin-top:10px" onclick="closeModal();renderRunning()">${t("done")}</button>`);
+ renderRunning();
+}
+function runRepeatWeek(){ runProg().lastDecision="repeat"; save(); showModal(`<h3>${t("run_rep_msg")}</h3><button class="btn" style="margin-top:10px" onclick="closeModal();renderRunning()">${t("got_it")}</button>`); }
+function runShiftWeek(delta){
+ const p=runProg(), nw=Math.max(1,Math.min(24,(p.week||1)+delta));
+ if(nw===p.week) return;
+ p.week=nw; p.lastDecision=delta<0?"back":"manual"; save(); renderRunning();
+}
+function runConfirmAdvance(){
+ showModal(`<h3>${t("run_fwd_q")}</h3><p class="small muted">${t("run_fwd_h")}</p>
+  <button class="btn" style="margin-top:10px" onclick="closeModal();runShiftWeek(1);">${t("run_btn_fwd")}</button>
+  <button class="btn ghost" style="margin-top:8px" onclick="closeModal()">${t("cancel")}</button>`);
+}
+function seqRestore(snap,cbs){
+ seqReset();
+ if(!snap||!snap.steps||!snap.steps.length) return false;
+ seqTimer.steps=snap.steps.slice();
+ seqTimer._cbs=cbs||{};
+ seqTimer.stepIndex=Math.max(0,Math.min(snap.stepIndex||0,seqTimer.steps.length-1));
+ seqTimer._elapsedBefore=0;
+ for(let i=0;i<seqTimer.stepIndex;i++) seqTimer._elapsedBefore+=(+(seqTimer.steps[i].sec)||0)*1000;
+ seqTimer.active=true; seqTimer._done=false;
+ const rem=Math.max(0,+snap.remainingMs||0);
+ const st=seqCurrent(), dur=st?((+st.sec||0)*1000):0;
+ seqTimer.elapsedMs=seqTimer._elapsedBefore+Math.max(0,dur-rem);
+ if(snap.paused){
+  seqTimer.paused=true; seqTimer.remainingMs=rem; seqTimer.startedAt=0; seqTimer.targetEnd=0;
+  if(seqTimer._cbs.onStep) seqTimer._cbs.onStep(st,seqTimer.stepIndex,seqNext());
+  return true;
+ }
+ seqTimer.paused=false; seqTimer.startedAt=seqNow(); seqTimer.targetEnd=seqTimer.startedAt+rem; seqTimer.remainingMs=rem;
+ if(seqTimer._cbs.onStep) seqTimer._cbs.onStep(st,seqTimer.stepIndex,seqNext());
+ seqPulse(); seqSync(); return true;
+}
 
 /* ===== INIT ===== */
 if((DB.medalsSeen||[]).length===0 && strengthLogs().length>0){ DB.medalsSeen=earnedIds(); save(); }
