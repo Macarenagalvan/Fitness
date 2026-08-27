@@ -1,0 +1,33 @@
+name: apply-mobility
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/training-types]
+    paths:
+      - mobility-block.js.b64
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/training-types
+      - name: decode and apply
+        run: |
+          python3 - <<'PY'
+          import base64, pathlib
+          for n in ["apply-mobility.py", "mobility-block.js"]:
+              pathlib.Path(n).write_bytes(base64.b64decode(pathlib.Path(n + ".b64").read_text()))
+          PY
+          python3 apply-mobility.py
+      - name: commit product and cleanup
+        run: |
+          git config user.name "Macarenagalvan"
+          git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "feat: add mobility and recovery presets"
+          git rm -f apply-mobility.py apply-mobility.py.b64 mobility-block.js mobility-block.js.b64 i18n-es.txt i18n-de.txt .github/workflows/apply-mobility.yml || true
+          git diff --cached --quiet || git commit -m "chore: remove mobility apply helpers"
+          git push
