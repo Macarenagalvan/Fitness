@@ -80,7 +80,7 @@ function showTrainGym(){
  renderTrainSelect();
 }''', "nav")
 rep(' if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else showTrainHub(); }', ' if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else if(trainPane==="run")showTrainRun(); else showTrainHub(); }', "go")
-block = Path("running-block.js").read_text()
+block = Path("running-block-a.js").read_text()+Path("running-block-b.js").read_text()+Path("running-block-c.js").read_text()
 rep("/* ===== INIT ===== */", block + "\n/* ===== INIT ===== */", "js")
 Path("index.html").write_text(text)
 print("WROTE", Path("index.html").stat().st_size)
