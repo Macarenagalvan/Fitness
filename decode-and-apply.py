@@ -3,12 +3,16 @@ from pathlib import Path
 import base64
 root = Path(".")
 parts = []
-for n in ["yoga-block.js.b64.a", "yoga-block.js.b64.b", "yoga-block.js.b64"]:
-    p = root / n
-    if p.exists():
-        parts.append(p.read_text().strip())
-        if n.endswith(".b64"):
-            break
+numbered = [root/f"yoga-block.js.b64.{i}" for i in range(8) if (root/f"yoga-block.js.b64.{i}").exists()]
+if numbered:
+    parts = [p.read_text().strip() for p in numbered]
+else:
+    for n in ["yoga-block.js.b64.a", "yoga-block.js.b64.b", "yoga-block.js.b64"]:
+        p = root / n
+        if p.exists():
+            parts.append(p.read_text().strip())
+            if n.endswith(".b64"):
+                break
 if not parts:
     raise SystemExit("missing yoga b64")
 Path("yoga-block.js").write_bytes(base64.b64decode("".join(parts)))
