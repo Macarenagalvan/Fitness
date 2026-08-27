@@ -25,7 +25,7 @@ CSS = """
 
 rep(
 "@media(max-width:360px){.runclock{font-size:52px}.runkind{font-size:24px}}",
-"@media(max-width:360px){.runclock{font-size:52px}.runkind{font-size:24px}}\n"+CSS,
+"@media(max-width:360px){.runclock{font-size:52px}.runkind{font-size:24px}\n"+CSS,
 "css",
 )
 
@@ -43,12 +43,7 @@ rep(
 )
 
 rep(
-"""function showTrainHub(){
- trainPane=\"hub\";
- const h=document.getElementById(\"trainHub\"),g=document.getElementById(\"trainGym\"),r=document.getElementById(\"trainRun\");
- if(h)h.style.display=\"block\"; if(g)g.style.display=\"none\"; if(r)r.style.display=\"none\";
- renderTrainHub();
-}""".replace('\\"','"'),
-"placeholder",
-"hub-skip",
+"function showTrainHub(){\n trainPane=\"hub\";\n const h=document.getElementById(\"trainHub\"),g=document.getElementById(\"trainGym\"),r=document.getElementById(\"trainRun\");\n if(h)h.style.display=\"block\"; if(g)g.style.display=\"none\"; if(r)r.style.display=\"none\";\n renderTrainHub();\n}".replace('\\"', '"') if False else "function showTrainHub(){\n trainPane=\"hub\";\n const h=document.getElementById(\"trainHub\"),g=document.getElementById(\"trainGym\"),r=document.getElementById(\"trainRun\");\n if(h)h.style.display=\"block\"; if(g)g.style.display=\"none\"; if(r)r.style.display=\"none\";\n renderTrainHub();\n}",
+"x",
+"skip",
 )
