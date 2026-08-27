@@ -1,0 +1,134 @@
+diff --git a/index.html b/index.html
+index a7b202d..4cd2a83 100644
+--- a/index.html
++++ b/index.html
+@@ -1012,6 +1012,9 @@ function load(){ try{const raw=localStorage.getItem(KEY); if(raw){const d=JSON.p
+ function save(){ try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){ alert(DB.lang==='de'?"Speichern fehlgeschlagen (Speicher voll/Inkognito).":"No se pudo guardar (memoria llena o incógnito)."); } }
+ function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},machineSettings:{},programStartDate:today(),gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,onboarded:false,session:null}; }
+ 
++function sessionType(log){ return (log&&log.type)?log.type:"strength"; }
++function strengthLogs(){ return (DB.logs||[]).filter(l=>sessionType(l)==="strength"); }
++
+ function makeItem(libId,ov){ const e=LIB[libId]; if(!e)return null; const it={uid:uid(),libId,cat:e.cat,section:CAT_SEC[e.cat],kind:e.kind,name:e.name,nameDe:e.nameDe,sets:e.defSets,rMin:e.rMin,rMax:e.rMax,rest:e.rest,instr:e.instr,instrDe:e.instrDe}; if(ov)Object.assign(it,ov); return it; }
+ function buildDay(name,nameDe,ids){ return {id:uid(),name,nameDe,ex:ids.map(i=>makeItem(i)).filter(Boolean)}; }
+ function defaultRoutine(){
+@@ -1235,8 +1238,8 @@ function histLine(hist){
+ /* ===== RESUMEN (panel) ===== */
+ function renderResumen(){
+  const sow=startOfWeek();
+- document.getElementById("stWeek").textContent=DB.logs.filter(l=>new Date(l.date+"T00:00:00")>=sow).length;
+- document.getElementById("stTotal").textContent=DB.logs.length;
++ document.getElementById("stWeek").textContent=strengthLogs().filter(l=>new Date(l.date+"T00:00:00")>=sow).length;
++ document.getElementById("stTotal").textContent=strengthLogs().length;
+  document.getElementById("stStreak").textContent=streak();
+  const m=I18N[DB.lang].motiv||I18N.es.motiv; document.getElementById("motiv").textContent=m[Math.floor(Math.random()*m.length)];
+  document.getElementById("suggestDay").textContent=dn(DB.routine[nextDayIdx()]).split('·')[0];
+@@ -1245,7 +1248,7 @@ function renderResumen(){
+  renderStreak(); renderMedals(); renderWeekSummary(); renderConsistency();
+ }
+ function streak(){ if(!DB.logs.length)return 0; const sow=new Date();sow.setDate(sow.getDate()-6); return [...new Set(DB.logs.map(l=>l.date))].filter(d=>new Date(d+"T00:00:00")>=sow).length; }
+-function nextDayIdx(){ if(!DB.logs.length)return 0; const last=DB.logs[DB.logs.length-1].dayName; const idx=DB.routine.findIndex(d=>d.name===last||d.nameDe===last); return idx<0?0:(idx+1)%DB.routine.length; }
++function nextDayIdx(){ const logs=strengthLogs(); if(!logs.length)return 0; const last=logs[logs.length-1].dayName; const idx=DB.routine.findIndex(d=>d.name===last||d.nameDe===last); return idx<0?0:(idx+1)%DB.routine.length; }
+ function startSuggested(){ go("entrenar"); setTimeout(()=>{document.getElementById("trainDaySel").value=nextDayIdx();renderTrain();},120); }
+ 
+ /* ===== RUTINA ===== */
+@@ -1676,7 +1679,7 @@ function calMonth(y,m,markFn){
+  for(let d=1;d<=dim;d++){ const iso=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; cells+=`<div class="cell${markFn(iso)}">${d}</div>`; }
+  return `<div class="cal">${cells}</div>`;
+ }
+-function renderConsistency(){ const now=new Date(); const trained=new Set(DB.logs.map(l=>l.date)); document.getElementById('consistencyCal').innerHTML=calMonth(now.getFullYear(),now.getMonth(),iso=>{ let c=""; if(trained.has(iso))c+=" train"; if(iso===today())c+=" today"; return c; }); }
++function renderConsistency(){ const now=new Date(); const trained=new Set(strengthLogs().map(l=>l.date)); document.getElementById('consistencyCal').innerHTML=calMonth(now.getFullYear(),now.getMonth(),iso=>{ let c=""; if(trained.has(iso))c+=" train"; if(iso===today())c+=" today"; return c; }); }
+ 
+ /* ===== MEDIDAS CORPORALES ===== */
+ let measKey='waist';
+@@ -1715,7 +1718,7 @@ function renderCycle(){
+ }
+ 
+ /* ===== GRÁFICO DE FUERZA POR EJERCICIO ===== */
+-function openExerciseChart(enc){ const name=decodeURIComponent(enc); const e=EXERCISES.find(x=>x.name===name)||{name,nameDe:""}; const pts=[]; DB.logs.forEach(l=>l.exercises.forEach(x=>{ if(x.name===name&&x.kind==='weight'&&x.weight>0)pts.push({date:l.date,val:x.weight}); }));
++function openExerciseChart(enc){ const name=decodeURIComponent(enc); const e=EXERCISES.find(x=>x.name===name)||{name,nameDe:""}; const pts=[]; strengthLogs().forEach(l=>l.exercises.forEach(x=>{ if(x.name===name&&x.kind==='weight'&&x.weight>0)pts.push({date:l.date,val:x.weight}); }));
+  const inner=pts.length<2?`<div class="empty">${t('no_history')}</div>`:`<svg class="spark" id="exSpark" viewBox="0 0 320 150" preserveAspectRatio="none" style="height:150px"></svg>`;
+  showModal(`<h3>${t('progress_of')}<br>${esc(dn(e))}</h3>${inner}<button class="btn ghost" style="margin-top:12px" onclick="closeModal()">${t('close')}</button>`);
+  if(pts.length>=2)setTimeout(()=>drawLine('exSpark',pts,'kg'),30);
+@@ -1725,12 +1728,12 @@ function openExerciseChart(enc){ const name=decodeURIComponent(enc); const e=EXE
+ const GEM_PER=10, WEEK_BONUS=25, PR_BONUS=15, FREEZE_COST=50;
+ function weekStart(d){ const x=new Date((d||today())+'T00:00:00'); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return x.toISOString().slice(0,10); }
+ function prevWeek(ws){ const d=new Date(ws+'T00:00:00'); d.setDate(d.getDate()-7); return d.toISOString().slice(0,10); }
+-function weekCounts(){ const c={}; DB.logs.forEach(l=>{ const w=weekStart(l.date); c[w]=(c[w]||0)+1; }); return c; }
++function weekCounts(){ const c={}; strengthLogs().forEach(l=>{ const w=weekStart(l.date); c[w]=(c[w]||0)+1; }); return c; }
+ function computeStreak(){ const goal=(DB.settings&&DB.settings.weeklyGoal)||3, c=weekCounts(), froz=new Set(DB.frozenWeeks||[]), met=w=>((c[w]||0)>=goal)||froz.has(w), curW=weekStart(today()); let streak=0,cursor;
+  if(met(curW)){ streak=1; cursor=prevWeek(curW); } else cursor=prevWeek(curW);
+  while(met(cursor)){ streak++; cursor=prevWeek(cursor); }
+  return {streak,goal,curW,curCount:c[curW]||0,curMet:met(curW)}; }
+-function firstLogWeek(){ if(!DB.logs.length)return null; let m=DB.logs[0].date; DB.logs.forEach(l=>{ if(l.date<m)m=l.date; }); return weekStart(m); }
++function firstLogWeek(){ const logs=strengthLogs(); if(!logs.length)return null; let m=logs[0].date; logs.forEach(l=>{ if(l.date<m)m=l.date; }); return weekStart(m); }
+ function riskWeek(){ const goal=(DB.settings&&DB.settings.weeklyGoal)||3, c=weekCounts(), froz=new Set(DB.frozenWeeks||[]), met=w=>((c[w]||0)>=goal)||froz.has(w), pw=prevWeek(weekStart(today())), fw=firstLogWeek();
+  if(fw && pw>=fw && !met(pw)) return pw; return null; }
+ function useFreeze(){ const pw=riskWeek(); if(!pw)return; if((DB.gems||0)<FREEZE_COST){ alert(t('not_enough_gems')); return; } if(!confirm(t('confirm_freeze',{c:FREEZE_COST})))return; DB.gems-=FREEZE_COST; DB.frozenWeeks=DB.frozenWeeks||[]; DB.frozenWeeks.push(pw); save(); renderStreak(); }
+@@ -1760,7 +1763,7 @@ const MEDALS=[
+  {id:'pr1',icon:'trophy',n:{es:'Más fuerte',de:'Stärker'},d:{es:'Tu primer récord de peso',de:'Dein erster Gewichtsrekord'},g:1,v:s=>s.prs},
+  {id:'photo4',icon:'camera',n:{es:'Transformación',de:'Verwandlung'},d:{es:'4 fotos de progreso',de:'4 Fortschrittsfotos'},g:4,v:s=>s.photos}
+ ];
+-function statsForMedals(){ return {workouts:DB.logs.length,streak:computeStreak().streak,gems:DB.gems||0,prs:DB.prCount||0,photos:(DB.photos||[]).length}; }
++function statsForMedals(){ return {workouts:strengthLogs().length,streak:computeStreak().streak,gems:DB.gems||0,prs:DB.prCount||0,photos:(DB.photos||[]).length}; }
+ function earnedIds(){ const s=statsForMedals(); return MEDALS.filter(m=>m.v(s)>=m.g).map(m=>m.id); }
+ function checkNewMedals(){ const seen=new Set(DB.medalsSeen||[]); const now=earnedIds(); const fresh=now.filter(id=>!seen.has(id)); DB.medalsSeen=now; return fresh; }
+ function renderMedals(){ const box=document.getElementById('medalsBody'); if(!box)return; const s=statsForMedals();
+@@ -1982,15 +1985,15 @@ function calcWeightWizard(uid,level){
+ function applyWeightToCard(uid,w){const c=document.querySelector(`#trainBody .traincard[data-uid="${uid}"]`);if(c)c.querySelectorAll('.t-set-weight').forEach(i=>i.value=w);scheduleDraftSave();closeModal();}
+ 
+ function lastSessions(name,n){
+- const max=n||3,out=[];
+- for(let i=DB.logs.length-1;i>=0&&out.length<max;i--){
+-  const f=(DB.logs[i].exercises||[]).find(x=>x.name===name&&x.kind==='weight');if(!f)continue;
++ const max=n||3,out=[],logs=strengthLogs();
++ for(let i=logs.length-1;i>=0&&out.length<max;i--){
++  const f=(logs[i].exercises||[]).find(x=>x.name===name&&x.kind==='weight');if(!f)continue;
+   let weight=f.weight||0,reps=f.reps||0,rir=(f.rir==null?null:+f.rir);
+   if(Array.isArray(f.series)&&f.series.length){
+    const ss=f.series.filter(s=>s.weight>0||s.reps>0);
+    if(ss.length){const best=[...ss].sort((a,b)=>(b.weight||0)-(a.weight||0)||(b.reps||0)-(a.reps||0))[0];weight=best.weight||0;reps=best.reps||0;rir=best.rir==null?null:+best.rir;}
+   }
+-  if(weight>0)out.push({date:DB.logs[i].date,weight,reps,rir,top:!!f.top});
++  if(weight>0)out.push({date:logs[i].date,weight,reps,rir,top:!!f.top});
+  }
+  return out;
+ }
+@@ -2019,13 +2022,13 @@ function exerciseVolumeV3(x){
+  return (x.weight||0)*(x.reps||0)*Math.max(1,x.setsDone||x.sets||1);
+ }
+ function renderWeekSummary(){
+- const sow=startOfWeek(),wl=DB.logs.filter(l=>new Date(l.date+"T00:00:00")>=sow),goal=(DB.settings&&DB.settings.weeklyGoal)||3,done=wl.length;
++ const sow=startOfWeek(),wl=strengthLogs().filter(l=>new Date(l.date+"T00:00:00")>=sow),goal=(DB.settings&&DB.settings.weeklyGoal)||3,done=wl.length;
+  let vol=0;wl.forEach(l=>(l.exercises||[]).forEach(x=>vol+=exerciseVolumeV3(x)));
+  let trend="—",tcol="var(--muted)";if(DB.weights.length>=2){const last=DB.weights[DB.weights.length-1];let ref=DB.weights[0];for(const w of DB.weights){if(daysBetween(w.date,today())>=7)ref=w;}const d=last.kg-ref.kg;trend=(d>0?"+":"")+d.toFixed(1)+" kg";tcol=d<0?"var(--volt)":d>0?"var(--amber)":"var(--muted)";}
+  const en=DB.journal.filter(j=>j.energy&&new Date(j.date+"T00:00:00")>=sow).map(j=>j.energy),avgEn=en.length?(en.reduce((a,b)=>a+b,0)/en.length).toFixed(1):"—",msg=done>=goal?t('great_week'):t('keep_week',{n:goal-done});
+  let cyc="";if(DB.cycle&&DB.cycle.length){const info=cycleInfo();if(info)cyc=`<div class="small muted" style="margin-top:10px;display:flex;align-items:center;gap:6px">${ICONS.drop} ${t('cycle_day',{n:info.day})} · ${t(info.phaseKey)}</div>`;}
+  const rp=wl.filter(l=>l.rpe).map(l=>l.rpe),avgRpe=rp.length?(rp.reduce((a,b)=>a+b,0)/rp.length).toFixed(1):"—",mins=wl.reduce((a,l)=>a+(l.durMin||0),0),totMin=mins?(mins>=60?Math.floor(mins/60)+"h "+(mins%60):mins+" "+t('min_short')):"—";
+- document.getElementById('weekSummary').innerHTML=`<div class="card"><div class="ring-wrap">${ringSvg(done,goal)}<div style="flex:1"><div class="display" style="font-size:20px">${t('week_done',{a:done,b:goal})}</div><div class="small" style="color:${done>=goal?'var(--volt)':'var(--muted)'}">${msg}</div></div></div><div class="grid3" style="margin-top:12px"><div style="text-align:center"><div class="muted xs">${t('volume')}</div><div style="font-weight:700">${Math.round(vol)} kg</div></div><div style="text-align:center"><div class="muted xs">${t('weight_trend')}</div><div style="font-weight:700;color:${tcol}">${trend}</div></div><div style="text-align:center"><div class="muted xs">${t('avg_energy')}</div><div style="font-weight:700">${avgEn}</div></div></div><div class="grid3" style="margin-top:12px"><div style="text-align:center"><div class="muted xs">${t('avg_rpe')}</div><div style="font-weight:700">${avgRpe}</div></div><div style="text-align:center"><div class="muted xs">${t('total_min')}</div><div style="font-weight:700">${totMin}</div></div><div style="text-align:center"><div class="muted xs">${t('st_total')}</div><div style="font-weight:700">${DB.logs.length}</div></div></div>${cyc}</div>`+volumeBySection(wl);
++ document.getElementById('weekSummary').innerHTML=`<div class="card"><div class="ring-wrap">${ringSvg(done,goal)}<div style="flex:1"><div class="display" style="font-size:20px">${t('week_done',{a:done,b:goal})}</div><div class="small" style="color:${done>=goal?'var(--volt)':'var(--muted)'}">${msg}</div></div></div><div class="grid3" style="margin-top:12px"><div style="text-align:center"><div class="muted xs">${t('volume')}</div><div style="font-weight:700">${Math.round(vol)} kg</div></div><div style="text-align:center"><div class="muted xs">${t('weight_trend')}</div><div style="font-weight:700;color:${tcol}">${trend}</div></div><div style="text-align:center"><div class="muted xs">${t('avg_energy')}</div><div style="font-weight:700">${avgEn}</div></div></div><div class="grid3" style="margin-top:12px"><div style="text-align:center"><div class="muted xs">${t('avg_rpe')}</div><div style="font-weight:700">${avgRpe}</div></div><div style="text-align:center"><div class="muted xs">${t('total_min')}</div><div style="font-weight:700">${totMin}</div></div><div style="text-align:center"><div class="muted xs">${t('st_total')}</div><div style="font-weight:700">${strengthLogs().length}</div></div></div>${cyc}</div>`+volumeBySection(wl);
+ }
+ function volumeBySection(wl){
+  const v={},rowsOut=[];let total=0;wl.forEach(l=>(l.exercises||[]).forEach(x=>{if(x.kind!=='weight')return;const c=catOfLogged(x);if(!c||VOL_CATS.indexOf(c)<0)return;const s=exerciseVolumeV3(x);v[c]=(v[c]||0)+s;total+=s;}));
+@@ -2249,9 +2252,9 @@ function commitWorkout(){
+  const short=!!(DB.session&&DB.session.shortMode);
+  const durEl=document.getElementById('wkDur');
+  const durMin=Math.max(1,Math.min(300,+(durEl?durEl.value:0)||sessionMinutes()));
+- const prs=[]; exercises.forEach(x=>{ if(x.kind==='weight'&&x.weight>0){ const prev=bestWeight(x.name,DB.logs); if(prev>0&&x.weight>prev) prs.push({name:x.name,w:x.weight}); } });
+- const wk=weekStart(today()), goal=(DB.settings&&DB.settings.weeklyGoal)||3, weekBefore=DB.logs.filter(l=>weekStart(l.date)===wk).length;
+- const entry={date:today(),dayName:day.name,dayId:day.id,exercises,durMin};
++ const prs=[]; exercises.forEach(x=>{ if(x.kind==='weight'&&x.weight>0){ const prev=bestWeight(x.name,strengthLogs()); if(prev>0&&x.weight>prev) prs.push({name:x.name,w:x.weight}); } });
++ const wk=weekStart(today()), goal=(DB.settings&&DB.settings.weeklyGoal)||3, weekBefore=strengthLogs().filter(l=>weekStart(l.date)===wk).length;
++ const entry={type:"strength",date:today(),dayName:day.name,dayId:day.id,exercises,durMin};
+  if(short)entry.mode="short";
+  if(modalRpe!=null)entry.rpe=modalRpe;
+  DB.logs.push(entry);
+@@ -2269,7 +2272,7 @@ function commitWorkout(){
+ 
+ 
+ /* ===== INIT ===== */
+-if((DB.medalsSeen||[]).length===0 && DB.logs.length>0){ DB.medalsSeen=earnedIds(); save(); }
++if((DB.medalsSeen||[]).length===0 && strengthLogs().length>0){ DB.medalsSeen=earnedIds(); save(); }
+ applyStatic();
+ go("inicio");
+ if(!DB.onboarded)openOnboarding();
