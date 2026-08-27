@@ -12,25 +12,43 @@ jobs:
         with:
           ref: feat/training-types
           fetch-depth: 0
-      - name: Apply Phase 2 yoga persistence patch
+      - name: Apply Phase 2 yoga persistence
         run: |
           set -e
-          if grep -q 'function commitYogaSession' index.html && grep -q 'if(!Array.isArray(d.yogaLogs))d.yogaLogs=[]' index.html; then
-            echo 'Phase 2 already applied'
-            rm -f phase2-yoga.patch .github/workflows/apply-phase2.yml
-            if [ -n "$(git status --porcelain)" ]; then
-              git config user.name "Macarenagalvan"
-              git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
-              git add -A
-              git commit -m "chore: remove Phase 2 helper files"
-              git push origin feat/training-types
-            fi
-            exit 0
-          fi
-          git apply --whitespace=nowarn phase2-yoga.patch
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          if 'function commitYogaSession' in s and 'if(!Array.isArray(d.yogaLogs))d.yogaLogs=[]' in s:
+              print('already applied')
+          else:
+              old_load_tail = "  if(!(d.activeDay>=0&&d.activeDay<d.routine.length))d.activeDay=0;\n  return d;}}catch(e){} return seed(); }"
+              new_load_tail = "  if(!(d.activeDay>=0&&d.activeDay<d.routine.length))d.activeDay=0;\n  if(!Array.isArray(d.yogaLogs))d.yogaLogs=[];\n  return d;}}catch(e){} return seed(); }"
+              assert s.count(old_load_tail)==1, 'load tail'
+              s=s.replace(old_load_tail, new_load_tail)
+              old_seed = 'function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},machineSettings:{},programStartDate:today(),gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,onboarded:false,session:null}; }'
+              new_seed = 'function seed(){ return {lang:"es",name:"",startDate:today(),activeDay:0,routine:defaultRoutine(),logs:[],yogaLogs:[],journal:[],weights:[],photos:[],measures:[],cycle:[],settings:{weeklyGoal:3,cycleLen:28},machineSettings:{},programStartDate:today(),gems:0,frozenWeeks:[],prCount:0,medalsSeen:[],routineMig:true,onboarded:false,session:null}; }'
+              assert s.count(old_seed)==1, 'seed'
+              s=s.replace(old_seed, new_seed)
+              old_save = "function saveYoga(){\n DB.journal.push({date:today(),tags:[],text:t('yoga_home')});\n save(); closeModal(); showToast(t('yoga_saved'));\n}"
+              new_save = "function commitYogaSession(durMin){\n if(commitYogaSession._lock) return false;\n commitYogaSession._lock=true;\n if(!Array.isArray(DB.yogaLogs)) DB.yogaLogs=[];\n DB.yogaLogs.push({type:\"yoga\",date:today(),durMin:Math.max(1,+durMin||1)});\n DB.journal.push({date:today(),tags:[\"yoga\"],text:t('yoga_home')});\n save();\n commitYogaSession._lock=false;\n return true;\n}\nfunction saveYoga(){\n commitYogaSession(20);\n closeModal(); showToast(t('yoga_saved'));\n}"
+              assert s.count(old_save)==1, 'saveYoga'
+              s=s.replace(old_save, new_save)
+              old_imp = 'DB=JSON.parse(r.result); if(!DB.lang)DB.lang="es"; if(!DB.photos)DB.photos=[]; if(DB.name==null)DB.name=""; if(DB.onboarded==null)DB.onboarded=true; if(DB.session===undefined)DB.session=null; save();'
+              new_imp = 'DB=JSON.parse(r.result); if(!DB.lang)DB.lang="es"; if(!DB.photos)DB.photos=[]; if(DB.name==null)DB.name=""; if(DB.onboarded==null)DB.onboarded=true; if(DB.session===undefined)DB.session=null; if(!Array.isArray(DB.yogaLogs))DB.yogaLogs=[]; save();'
+              assert s.count(old_imp)==1, 'importData'
+              s=s.replace(old_imp, new_imp)
+              old_fin = "function finishYogaV31(){\n const elapsed=yogaStateV31?yogaStateV31.elapsed:0,dur=Math.max(1,Math.round(elapsed/60));\n clearYogaTimerV31();\n DB.yogaLogs=DB.yogaLogs||[];\n DB.yogaLogs.push({date:today(),durMin:dur});\n DB.journal.push({date:today(),tags:[\"yoga\"],text:t('yoga_home')});\n save();yogaStateV31=null;\n showModal(`<h3>${t('yoga_complete')}</h3><p class=\"small muted\">${t('yoga_saved_v31')}</p><button class=\"btn\" onclick=\"closeModal();go('inicio')\">${t('done')}</button>`);\n}"
+              new_fin = "function finishYogaV31(){\n if(!yogaStateV31)return;\n const elapsed=yogaStateV31.elapsed||0,dur=Math.max(1,Math.round(elapsed/60));\n clearYogaTimerV31();\n yogaStateV31=null;\n commitYogaSession(dur);\n showModal(`<h3>${t('yoga_complete')}</h3><p class=\"small muted\">${t('yoga_saved_v31')}</p><button class=\"btn\" onclick=\"closeModal();go('inicio')\">${t('done')}</button>`);\n}"
+              assert s.count(old_fin)==1, 'finishYogaV31'
+              s=s.replace(old_fin, new_fin)
+              p.write_text(s, encoding='utf-8')
+              print('applied')
+          PY
           rm -f phase2-yoga.patch .github/workflows/apply-phase2.yml
           git add -A
           git config user.name "Macarenagalvan"
           git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+          git diff --cached --quiet && echo 'no changes' && exit 0
           git commit -m "fix: unify yoga persistence and legacy compatibility"
           git push origin feat/training-types
