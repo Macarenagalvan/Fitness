@@ -1,0 +1,20 @@
+"es",
+)
+
+rep(
+'''  hoy_sub_resume:"Laufende Einheit"
+ }
+};''',
+'''  hoy_sub_resume:"Laufende Einheit",
+''' + "\n" + de + "\n }\n};",
+"de",
+)
+
+OLD_RES_FN = '''function renderResumen(){
+ const sow=startOfWeek();
+ document.getElementById("stWeek").textContent=strengthLogs().filter(l=>new Date(l.date+"T00:00:00")>=sow).length;
+ document.getElementById("stTotal").textContent=strengthLogs().length;
+ document.getElementById("stStreak").textContent=streak();
+ const m=I18N[DB.lang].motiv||I18N.es.motiv; document.getElementById("motiv").textContent=m[Math.floor(Math.random()*m.length)];
+ document.getElementById("suggestDay").textContent=dn(DB.routine[nextDayIdx()]).split('·')[0];
+ const rn=document.getElementById("recentNotes"); const last3=[...DB.journal].slice(-3).reverse();

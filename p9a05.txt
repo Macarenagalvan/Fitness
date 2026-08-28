@@ -1,0 +1,20 @@
+)
+
+rep(
+'''    <div id="photoGallery" style="margin-top:12px"></div>
+  </section>''',
+'''    <div id="photoGallery" style="margin-top:12px"></div>
+    </div>
+    <div id="progRunning" style="display:none"></div>
+    <div id="progYoga" style="display:none"></div>
+    <div id="progMobility" style="display:none"></div>
+  </section>''',
+"prog-close",
+)
+
+rep(
+'''  hoy_sub_resume:"Sesión en curso"
+
+ },''',
+'''  hoy_sub_resume:"Sesión en curso",
+''' + "\n" + es + "\n\n },",
