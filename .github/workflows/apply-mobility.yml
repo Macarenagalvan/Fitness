@@ -3,7 +3,7 @@ on:
   push:
     branches: [feat/training-types]
     paths:
-      - mobility-block.js
+      - p7-go
 jobs:
   apply:
     runs-on: ubuntu-latest
@@ -13,17 +13,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feat/training-types
+      - name: assemble apply and block
+        run: python3 assemble-p7.py
       - name: apply and verify
         run: |
           python3 apply-mobility.py
           python3 - <<'PY'
           import hashlib, pathlib, sys
-          raw = pathlib.Path('index.html').read_bytes()
+          raw = pathlib.Path("index.html").read_bytes()
           md5 = hashlib.md5(raw).hexdigest()
-          print('size', len(raw))
-          print('md5', md5)
-          if md5 != '7f652397bd770c27b0230f1bea2df822':
-              sys.exit('MD5 mismatch')
+          print("size", len(raw))
+          print("md5", md5)
+          if md5 != "7f652397bd770c27b0230f1bea2df822":
+              sys.exit("MD5 mismatch: "+md5)
           PY
       - name: commit product and cleanup
         run: |
@@ -31,6 +33,7 @@ jobs:
           git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet || git commit -m "feat: add mobility and recovery presets"
-          git rm -f apply-mobility.py mobility-block.js i18n-es.txt i18n-de.txt p7-go .github/workflows/apply-mobility.yml || true
+          git ls-files | grep -E '^(p7a|p7m|assemble-p7|apply-mobility|mobility-block|i18n-|p7-go)' | xargs -r git rm -f
+          git rm -f .github/workflows/apply-mobility.yml || true
           git diff --cached --quiet || git commit -m "chore: remove mobility apply helpers"
           git push
