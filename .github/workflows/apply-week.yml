@@ -1,0 +1,38 @@
+name: apply-week
+on:
+  push:
+    branches: [feat/training-types]
+    paths:
+      - p9-go
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/training-types
+      - name: assemble and apply
+        run: |
+          python3 assemble-p9.py
+          python3 apply-week.py
+          python3 - <<'PY'
+          import hashlib, pathlib, sys
+          raw = pathlib.Path("index.html").read_bytes()
+          md5 = hashlib.md5(raw).hexdigest()
+          print("size", len(raw))
+          print("md5", md5)
+          if md5 != "b6ab1a5cbf500901978c0350e951de8a":
+              sys.exit("MD5 mismatch: "+md5)
+          PY
+      - name: commit product and cleanup
+        run: |
+          git config user.name "Macarenagalvan"
+          git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "feat: add multidisciplinary weekly progress"
+          git ls-files | grep -E '^(p9a|p9w|assemble-p9|apply-week|week-block|i18n-|p9-go)' | xargs -r git rm -f
+          git rm -f .github/workflows/apply-week.yml || true
+          git diff --cached --quiet || git commit -m "chore: remove week apply helpers"
+          git push
