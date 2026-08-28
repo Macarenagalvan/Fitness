@@ -1,0 +1,18 @@
+.achnm{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.achdt{color:var(--muted);font-size:12px}
+#progTabs{margin-bottom:12px}
+#progTabs button{min-height:40px}
+@media(min-width:430px){.achgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:360px){.wkrange{font-size:14px}.stat .num{font-size:18px}}
+"""
+
+rep(
+".hoyweek{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}",
+".hoyweek{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}\n"+CSS,
+"css",
+)
+
+RES = '''  <section class="view" id="v-resumen">
+    <div class="grid3">
+      <div class="stat"><div class="num" id="stWeek">0</div><div class="lbl" data-i18n="st_week"></div></div>
+      <div class="stat"><div class="num" id="stStreak">0</div><div class="lbl" data-i18n="st_streak"></div></div>
