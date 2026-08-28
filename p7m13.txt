@@ -1,0 +1,12 @@
+ </div>`;
+}
+
+function mobHtmlActive(){
+ const p=mobPreset(mobLive.presetId); const st=mobCurrent();
+ if(!p||!st){ mobLive=null; return mobHtmlHome(); }
+ const n=mobLive.step+1, total=p.steps.length;
+ const clock=st.mode==="time"?`<div class="mobclock" id="mobClock">${mobFmt(mobLive.remain==null?st.sec:mobLive.remain)}</div>`:"";
+ return `<div class="mobwrap moblive">
+  <button class="btn ghost" onclick="mobAbort()">${esc(t("mob_exit"))}</button>
+  <div class="muted" style="margin-top:8px">${esc(t(p.nameKey))} · ${esc(t("mob_step",{n:n,total:total}))}</div>
+  <div class="mobpose">${esc(t(st.titleKey))}</div>

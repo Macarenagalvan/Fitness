@@ -1,0 +1,12 @@
+  if(st&&st.mode==="time") mobStartTick();
+ }
+}
+
+function mobHtmlHome(){
+ const cards=MOBILITY_PRESETS.map(p=>`<div class="runcard mobcard">
+  <div class="nm">${esc(t(p.nameKey))}</div>
+  <div class="ht">${esc(t("mob_dur",{n:p.duration}))}</div>
+  <div class="mobgoal">${esc(t(p.goalKey))}</div>
+  <button class="btn" style="margin-top:12px;min-height:44px;width:100%" onclick="openMobility('${p.id}')">${esc(t("mob_start"))}</button>
+ </div>`).join("");
+ const logs=mobilityLogs().slice().reverse();

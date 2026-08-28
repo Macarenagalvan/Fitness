@@ -1,0 +1,12 @@
+ const hist=logs.length?logs.slice(0,20).map(l=>{
+  const p=mobPreset(l.presetId);
+  const nm=p?t(p.nameKey):l.presetId;
+  return `<div class="runcard mobcard"><div class="row between"><div><div class="nm">${esc(nm)}</div><div class="ht">${esc(l.date)} · ${esc(t("mob_dur",{n:l.durMin||p&&p.duration||0}))}</div></div></div></div>`;
+ }).join(""):`<div class="empty">${esc(t("mob_no_hist"))}</div>`;
+ return `<div class="mobwrap">
+  <button class="btn ghost" style="margin-bottom:10px" onclick="mobBackHub()">${esc(t("train_back"))}</button>
+  <h2 class="sec">${esc(t("disc_mobility"))}</h2>
+  <div class="muted" style="margin-bottom:12px">${esc(t("mob_home_lead"))}</div>
+  ${cards}
+  <h2 class="sec" style="margin-top:18px">${esc(t("mob_hist"))}</h2>
+  ${hist}

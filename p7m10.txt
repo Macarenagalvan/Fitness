@@ -1,0 +1,12 @@
+ mobLive={presetId:id,step:0,view:"active",startedAt:Date.now(),remain:null};
+ const st=mobCurrent();
+ if(st&&st.mode==="time") mobLive.remain=st.sec;
+}
+
+function renderMobility(){
+ const box=document.getElementById("mobBody"); if(!box) return;
+ if(mobLive&&mobLive.view==="active") box.innerHTML=mobHtmlActive();
+ else if(mobLive&&mobLive.view==="done") box.innerHTML=mobHtmlDone();
+ else box.innerHTML=mobHtmlHome();
+ if(mobLive&&mobLive.view==="active"){
+  const st=mobCurrent();
