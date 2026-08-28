@@ -1,0 +1,20 @@
+    <h2 class="sec"><span class="ic" id="icWeek"></span><span data-i18n="week_summary"></span></h2>
+    <div id="weekSummary"></div>
+    <h2 class="sec"><span class="ic" id="icCal"></span><span data-i18n="consistency"></span></h2>
+    <div class="card" id="consistencyCal"></div>
+    <h2 class="sec"><span class="ic" id="icToday"></span><span data-i18n="today"></span></h2>
+    <div class="card"><div class="row between"><div><div class="muted xs" data-i18n="suggested_day"></div><div class="display" style="font-size:22px" id="suggestDay">—</div></div>
+      <button class="btn mini" onclick="startSuggested()"><span class="ic" id="icPlay"></span><span data-i18n="btn_train"></span></button></div></div>
+    <div class="grid2">
+      <button class="btn sec" onclick="go('progreso');setTimeout(()=>document.getElementById('wKg').focus(),200)"><span class="ic" id="icScale"></span><span data-i18n="btn_log_weight"></span></button>
+      <button class="btn sec" onclick="openJournal()"><span class="ic" id="icPen"></span><span data-i18n="btn_quick_note"></span></button>
+    </div>
+    <h2 class="sec"><span class="ic" id="icBook2"></span><span data-i18n="recent_notes"></span></h2>
+    <div id="recentNotes"></div>
+  </section>
+'''
+
+NEWRES = '''  <section class="view" id="v-resumen">
+    <div id="weekBody"></div>
+  </section>
+'''

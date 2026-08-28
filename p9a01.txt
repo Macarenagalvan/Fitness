@@ -1,0 +1,20 @@
+.wkrange{font-weight:800;font-size:16px}
+.wkdays{display:flex;flex-direction:column;gap:8px}
+.wkday{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.wkday.today{border-color:var(--volt)}
+.wkhd{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+.wkitem{padding:6px 0;border-top:1px solid var(--line)}
+.wkitem:first-of-type{border-top:0;padding-top:0}
+.wknm{font-weight:800;font-size:14px;overflow-wrap:anywhere}
+.wkmt{color:var(--muted);font-size:12px}
+.wkempty{color:var(--muted);font-size:13px}
+.wkpend{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;font-weight:700}
+.wktotals{margin-top:12px}
+.achgrid{display:grid;grid-template-columns:1fr;gap:8px}
+.ach{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.ach.on{border-color:var(--volt)}
+.achmark{font-size:18px;width:22px;flex:none}
+.achnm{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.achdt{color:var(--muted);font-size:12px}
+#progTabs{margin-bottom:12px}
+#progTabs button{min-height:40px}
