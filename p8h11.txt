@@ -1,0 +1,16 @@
+ if(L.level==="high"&&stNeed&&st.isLegs){
+  if(yg&&!yg.done){
+   return {load:L,kind:"yoga",title:t("hoy_type_yg"),sub:t("hoy_sub_yg",{w:yg.week,n:yg.session&&yg.session.id==="s2"?2:1}),recKey:"hoy_rec_legs_loaded",ctaKey:"hoy_cta_start",alts:[{kind:"strength",anyway:1},{kind:"hub"}]};
+  }
+  return {load:L,kind:"mobility",presetId:"postLegs",title:t("hoy_type_mob"),sub:t("mob_legs"),recKey:"hoy_rec_legs_loaded",ctaKey:"hoy_cta_mob",alts:[{kind:"strength",anyway:1},{kind:"hub"}]};
+ }
+ const order=[];
+ if(last==="running") order.push("strength","yoga","running");
+ else if(last==="strength") order.push("running","yoga","strength");
+ else if(last==="yoga"||last==="mobility") order.push("running","strength","yoga");
+ else order.push("strength","running","yoga");
+ if(L.level==="medium"&&L.lastLegs&&hoyDiff(L.lastLegs.date)===0){
+  const i=order.indexOf("running"); if(i>=0) order.splice(i,1);
+  order.push("running");
+ }
+ for(let i=0;i<order.length;i++){

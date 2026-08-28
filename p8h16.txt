@@ -1,0 +1,16 @@
+ const why=L.reasons.map(k=>t(k)).filter(Boolean).slice(0,2).join(" · ");
+ const cta=plan.resume
+  ?`<button class="btn hoycta" onclick="hoyGo('strength',{resume:1})">${esc(t("hoy_cta_resume"))}</button>`
+  :`<button class="btn hoycta" onclick="hoyGo('${plan.kind}',{presetId:'${plan.presetId||""}'})">${esc(t(plan.ctaKey||"hoy_cta_start"))}</button>`;
+ const alts=(plan.alts||[]).map(a=>{
+  const pid=a.presetId||"";
+  const anyway=a.anyway?1:0;
+  return `<button class="btn ghost hoyalt" onclick="hoyGo('${a.kind}',{presetId:'${pid}',anyway:${anyway}})">${esc(hoyAltLabel(a))}</button>`;
+ }).join("");
+ const w=weekMiniCounts();
+ box.innerHTML=`<div class="todaycard hoycard">
+  <div class="kick">${esc(t("today_kick"))}</div>
+  <div class="dayname">${esc(plan.title||"—")}</div>
+  <div class="hoysub">${esc(plan.sub||"")}</div>
+  <div class="hoyload"><span class="${dot}"></span><span>${esc(loadLab)}</span></div>
+  <div class="tip">${esc(t(plan.recKey||"hoy_rec_free"))}</div>

@@ -1,0 +1,16 @@
+  trainPane="run";
+  go("entrenar");
+  const n=nextRunningSession();
+  if(n&&n.session&&!n.done) setTimeout(function(){ runBegin(n.session.id); },0);
+  return;
+ }
+ if(kind==="yoga"){
+  openYogaProg();
+  const n=nextYogaSession();
+  if(n&&n.session&&!n.done) setTimeout(function(){ yogaBegin(n.session.id,0); },0);
+  return;
+ }
+ if(kind==="mobility"){
+  openMobility(opt.presetId||"quick5");
+  return;
+ }

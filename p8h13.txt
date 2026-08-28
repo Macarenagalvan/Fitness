@@ -1,0 +1,16 @@
+ const wantMob=L.level!=="low";
+ if(wantMob&&skip.indexOf("mobility")<0) out.push({kind:"mobility",presetId:"quick5"});
+ if(out.length<2&&yg&&!yg.done&&skip.indexOf("yoga")<0) out.push({kind:"yoga"});
+ if(out.length<2&&run&&!run.done&&skip.indexOf("running")<0) out.push({kind:"running"});
+ if(out.length<2&&stNeed&&skip.indexOf("strength")<0) out.push({kind:"strength"});
+ if(out.length<2) out.push({kind:"hub"});
+ return out.slice(0,2);
+}
+function hoyGo(kind,opt){
+ opt=opt||{};
+ if(kind==="strength"){
+  if(opt.resume||activeSession()){ resumeSession(); return; }
+  startSuggested(); return;
+ }
+ if(kind==="running"){
+  ensureRunningDB(DB);

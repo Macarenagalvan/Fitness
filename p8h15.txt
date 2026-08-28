@@ -1,0 +1,16 @@
+ trainPane="hub"; go("entrenar");
+}
+function hoyAltLabel(a){
+ if(a.kind==="mobility") return t("hoy_alt_mob5");
+ if(a.kind==="hub") return t("hoy_alt_all");
+ if(a.kind==="running") return a.anyway?t("hoy_cta_anyway"):t("hoy_type_run");
+ if(a.kind==="yoga") return t("hoy_type_yg");
+ if(a.kind==="strength") return a.anyway?t("hoy_cta_anyway"):t("hoy_type_str");
+ return t("hoy_alt_all");
+}
+function renderTodayCard(){
+ const box=document.getElementById("todayCard"); if(!box) return;
+ const plan=pickTodayPlan();
+ const L=plan.load||getTrainingLoad();
+ const dot=L.level==="high"?"hoydot high":L.level==="medium"?"hoydot med":"hoydot low";
+ const loadLab=L.level==="high"?t("hoy_load_high"):L.level==="medium"?t("hoy_load_med"):t("hoy_load_low");

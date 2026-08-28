@@ -1,0 +1,16 @@
+  const recKey=L.reasons.indexOf("hoy_r_run_pain")>=0?"hoy_rec_pain":"hoy_rec_rest";
+  const alts=[];
+  if(yg&&!yg.done) alts.push({kind:"yoga"});
+  else if(run&&!run.done) alts.push({kind:"running",anyway:1});
+  else if(stNeed) alts.push({kind:"strength",anyway:1});
+  alts.push({kind:"hub"});
+  return {load:L,kind:"mobility",presetId:preset,title:t("hoy_type_mob"),sub:t("hoy_sub_mob_soft"),recKey:recKey,ctaKey:"hoy_cta_mob",alts:alts.slice(0,2)};
+ }
+ if(L.level==="high"&&run&&!run.done){
+  return {
+   load:L,kind:"mobility",presetId:"postLegs",
+   title:t("hoy_type_mob"),sub:t("mob_legs"),
+   recKey:"hoy_rec_shift_run",ctaKey:"hoy_cta_mob",
+   alts:[{kind:"running",anyway:1}, yg&&!yg.done?{kind:"yoga"}:{kind:"hub"}].slice(0,2)
+  };
+ }

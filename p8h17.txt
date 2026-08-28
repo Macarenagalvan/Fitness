@@ -1,0 +1,11 @@
+  <div class="hoywhy">${esc(why)}</div>
+  ${cta}
+  <div class="hoyalts">${alts}</div>
+  <div class="hoyweek">
+   <div><span>${esc(t("hoy_week_str"))}</span><b>${w.stHave} / ${w.stGoal}</b></div>
+   <div><span>${esc(t("hoy_week_run"))}</span><b>${w.runHave} / ${w.runNeed}</b></div>
+   <div><span>${esc(t("hoy_week_yg"))}</span><b>${w.ygHave} / ${w.ygNeed}</b></div>
+   <div><span>${esc(t("hoy_week_mob"))}</span><b>${w.mobHave}</b></div>
+  </div>
+ </div>`;
+}
