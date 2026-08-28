@@ -188,6 +188,33 @@
 .hoyalts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .hoyalt{width:100%;min-height:44px}
 .hoyweek{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}
+
+.wknav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.wkarr{flex:none;min-width:44px;min-height:44px;padding:0}
+.wktitle{flex:1;min-width:0;text-align:center}
+.wkrange{font-weight:800;font-size:16px}
+.wkdays{display:flex;flex-direction:column;gap:8px}
+.wkday{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.wkday.today{border-color:var(--volt)}
+.wkhd{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+.wkitem{padding:6px 0;border-top:1px solid var(--line)}
+.wkitem:first-of-type{border-top:0;padding-top:0}
+.wknm{font-weight:800;font-size:14px;overflow-wrap:anywhere}
+.wkmt{color:var(--muted);font-size:12px}
+.wkempty{color:var(--muted);font-size:13px}
+.wkpend{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;font-weight:700}
+.wktotals{margin-top:12px}
+.achgrid{display:grid;grid-template-columns:1fr;gap:8px}
+.ach{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.ach.on{border-color:var(--volt)}
+.achmark{font-size:18px;width:22px;flex:none}
+.achnm{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.achdt{color:var(--muted);font-size:12px}
+#progTabs{margin-bottom:12px}
+#progTabs button{min-height:40px}
+@media(min-width:430px){.achgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:360px){.wkrange{font-size:14px}.stat .num{font-size:18px}}
+
 .hoyweek div{display:flex;justify-content:space-between;gap:8px;min-width:0}
 .hoyweek span{color:var(--muted)}
 .hoyweek b{font-variant-numeric:tabular-nums}
@@ -363,28 +390,7 @@
 
   <!-- RESUMEN -->
   <section class="view" id="v-resumen">
-    <div class="grid3">
-      <div class="stat"><div class="num" id="stWeek">0</div><div class="lbl" data-i18n="st_week"></div></div>
-      <div class="stat"><div class="num" id="stStreak">0</div><div class="lbl" data-i18n="st_streak"></div></div>
-      <div class="stat"><div class="num" id="stTotal">0</div><div class="lbl" data-i18n="st_total"></div></div>
-    </div>
-    <div class="card"><div class="small" id="motiv"></div></div>
-    <div id="streakBody"></div>
-    <h2 class="sec"><span class="ic" id="icMedal"></span><span data-i18n="medals_title"></span></h2>
-    <div id="medalsBody"></div>
-    <h2 class="sec"><span class="ic" id="icWeek"></span><span data-i18n="week_summary"></span></h2>
-    <div id="weekSummary"></div>
-    <h2 class="sec"><span class="ic" id="icCal"></span><span data-i18n="consistency"></span></h2>
-    <div class="card" id="consistencyCal"></div>
-    <h2 class="sec"><span class="ic" id="icToday"></span><span data-i18n="today"></span></h2>
-    <div class="card"><div class="row between"><div><div class="muted xs" data-i18n="suggested_day"></div><div class="display" style="font-size:22px" id="suggestDay">—</div></div>
-      <button class="btn mini" onclick="startSuggested()"><span class="ic" id="icPlay"></span><span data-i18n="btn_train"></span></button></div></div>
-    <div class="grid2">
-      <button class="btn sec" onclick="go('progreso');setTimeout(()=>document.getElementById('wKg').focus(),200)"><span class="ic" id="icScale"></span><span data-i18n="btn_log_weight"></span></button>
-      <button class="btn sec" onclick="openJournal()"><span class="ic" id="icPen"></span><span data-i18n="btn_quick_note"></span></button>
-    </div>
-    <h2 class="sec"><span class="ic" id="icBook2"></span><span data-i18n="recent_notes"></span></h2>
-    <div id="recentNotes"></div>
+    <div id="weekBody"></div>
   </section>
 
   <!-- RUTINA -->
@@ -461,6 +467,18 @@
 
   <!-- PROGRESO -->
   <section class="view" id="v-progreso">
+    <div class="seg" id="progTabs"></div>
+    <div id="progStrength">
+    <div class="grid3">
+      <div class="stat"><div class="num" id="stWeek">0</div><div class="lbl" data-i18n="st_week"></div></div>
+      <div class="stat"><div class="num" id="stStreak">0</div><div class="lbl" data-i18n="st_streak"></div></div>
+      <div class="stat"><div class="num" id="stTotal">0</div><div class="lbl" data-i18n="st_total"></div></div>
+    </div>
+    <div id="streakBody"></div>
+    <h2 class="sec"><span data-i18n="pg_str_medals"></span></h2>
+    <div id="medalsBody"></div>
+    <div id="weekSummary"></div>
+    <div class="card" id="consistencyCal"></div>
     <h2 class="sec"><span class="ic" id="icScale2"></span><span data-i18n="your_weight"></span></h2>
     <div class="card"><label class="fld" data-i18n="weight_today"></label>
       <div class="row"><input type="number" inputmode="decimal" step="0.1" id="wKg" placeholder="68.5"><button class="btn mini" style="flex:none;padding:12px 18px" onclick="addWeight()" data-i18n="save"></button></div>
@@ -498,6 +516,10 @@
     <input type="file" id="photoFile" accept="image/*" capture="environment" style="display:none" onchange="onPhotoSelected(event)">
     <div id="compareBox"></div>
     <div id="photoGallery" style="margin-top:12px"></div>
+    </div>
+    <div id="progRunning" style="display:none"></div>
+    <div id="progYoga" style="display:none"></div>
+    <div id="progMobility" style="display:none"></div>
   </section>
 
   <section class="view" id="v-mas">
@@ -1316,7 +1338,51 @@ const I18N={
   hoy_sub_yg:"Semana {w} · Sesión {n}",
   hoy_sub_str:"Siguiente día de rutina",
   hoy_sub_mob_soft:"Opción suave",
-  hoy_sub_resume:"Sesión en curso"
+  hoy_sub_resume:"Sesión en curso",
+
+  wk_this:"Esta semana",
+  wk_other:"Semana",
+  wk_dow_1:"Lun",
+  wk_dow_2:"Mar",
+  wk_dow_3:"Mié",
+  wk_dow_4:"Jue",
+  wk_dow_5:"Vie",
+  wk_dow_6:"Sáb",
+  wk_dow_7:"Dom",
+  wk_done:"Completado",
+  wk_no_day:"Sin sesiones",
+  wk_pending:"Pendiente",
+  wk_pending_none:"Nada pendiente de programas esta semana.",
+  wk_str_left:"{n} de {g} pendiente",
+  pg_week_of:"Semana",
+  pg_sessions:"Sesiones",
+  pg_minutes:"Minutos",
+  pg_phase:"Fase",
+  pg_block:"Mejor bloque de trabajo",
+  pg_block_na:"Sin bloque continuo medible",
+  pg_maxkm:"Distancia máxima",
+  pg_nokm:"Sin distancia registrada",
+  pg_rpe:"RPE reciente",
+  pg_norpe:"Sin RPE registrado",
+  pg_week_now:"Semana actual",
+  pg_ach_run:"Hitos Running",
+  pg_ach_yg:"Hitos Yoga",
+  pg_locked:"Pendiente",
+  pg_run_empty:"Todavía no registraste ninguna salida.",
+  pg_yg_empty:"Tu primera práctica aparecerá acá.",
+  pg_yg_new:"Programa nuevo",
+  pg_yg_legacy:"Sesiones anteriores",
+  pg_poses:"Posturas",
+  pg_learned:"Aprendidas",
+  pg_learning:"Aprendiendo",
+  pg_longest:"Sesión más larga",
+  pg_nolong:"Sin duración registrada",
+  pg_mob_total:"Sesiones",
+  pg_mob_week:"Esta semana",
+  pg_mob_top:"Preset más usado",
+  pg_mob_last:"Última sesión",
+  pg_mob_empty:"Todavía no hay movilidad registrada.",
+  pg_str_medals:"Medallas de fuerza"
 
  },
  de:{
@@ -1805,7 +1871,51 @@ const I18N={
   hoy_sub_yg:"Woche {w} · Einheit {n}",
   hoy_sub_str:"Nächster Krafttag",
   hoy_sub_mob_soft:"Sanfte Option",
-  hoy_sub_resume:"Laufende Einheit"
+  hoy_sub_resume:"Laufende Einheit",
+
+  wk_this:"Diese Woche",
+  wk_other:"Woche",
+  wk_dow_1:"Mo",
+  wk_dow_2:"Di",
+  wk_dow_3:"Mi",
+  wk_dow_4:"Do",
+  wk_dow_5:"Fr",
+  wk_dow_6:"Sa",
+  wk_dow_7:"So",
+  wk_done:"Erledigt",
+  wk_no_day:"Keine Einheiten",
+  wk_pending:"Offen",
+  wk_pending_none:"Diese Woche ist im Programm nichts offen.",
+  wk_str_left:"{n} von {g} offen",
+  pg_week_of:"Woche",
+  pg_sessions:"Einheiten",
+  pg_minutes:"Minuten",
+  pg_phase:"Phase",
+  pg_block:"Längster Arbeitsblock",
+  pg_block_na:"Kein messbarer Dauerblock",
+  pg_maxkm:"Maximale Distanz",
+  pg_nokm:"Keine Distanz erfasst",
+  pg_rpe:"Aktuelles RPE",
+  pg_norpe:"Kein RPE erfasst",
+  pg_week_now:"Aktuelle Woche",
+  pg_ach_run:"Lauf-Meilensteine",
+  pg_ach_yg:"Yoga-Meilensteine",
+  pg_locked:"Offen",
+  pg_run_empty:"Du hast noch keine Laufeinheit erfasst.",
+  pg_yg_empty:"Deine erste Praxis erscheint hier.",
+  pg_yg_new:"Neues Programm",
+  pg_yg_legacy:"Frühere Einheiten",
+  pg_poses:"Haltungen",
+  pg_learned:"Gelernt",
+  pg_learning:"Im Lernen",
+  pg_longest:"Längste Einheit",
+  pg_nolong:"Keine Dauer erfasst",
+  pg_mob_total:"Einheiten",
+  pg_mob_week:"Diese Woche",
+  pg_mob_top:"Häufigstes Preset",
+  pg_mob_last:"Letzte Einheit",
+  pg_mob_empty:"Noch keine Mobilität erfasst.",
+  pg_str_medals:"Kraft-Medaillen"
  }
 };
 function t(key,p){ let s=(I18N[DB.lang]&&I18N[DB.lang][key]!=null)?I18N[DB.lang][key]:(I18N.es[key]!=null?I18N.es[key]:key); if(p)for(const k in p)s=s.split('{'+k+'}').join(p[k]); return s; }
@@ -2140,17 +2250,8 @@ function histLine(hist){
 }
 
 /* ===== RESUMEN (panel) ===== */
-function renderResumen(){
- const sow=startOfWeek();
- document.getElementById("stWeek").textContent=strengthLogs().filter(l=>new Date(l.date+"T00:00:00")>=sow).length;
- document.getElementById("stTotal").textContent=strengthLogs().length;
- document.getElementById("stStreak").textContent=streak();
- const m=I18N[DB.lang].motiv||I18N.es.motiv; document.getElementById("motiv").textContent=m[Math.floor(Math.random()*m.length)];
- document.getElementById("suggestDay").textContent=dn(DB.routine[nextDayIdx()]).split('·')[0];
- const rn=document.getElementById("recentNotes"); const last3=[...DB.journal].slice(-3).reverse();
- rn.innerHTML=last3.length?last3.map(journalCard).join(""):`<div class="empty">${t('no_notes')}</div>`;
- renderStreak(); renderMedals(); renderWeekSummary(); renderConsistency();
-}
+function renderResumenLegacy(){}
+
 function streak(){ if(!DB.logs.length)return 0; const sow=new Date();sow.setDate(sow.getDate()-6); return [...new Set(DB.logs.map(l=>l.date))].filter(d=>new Date(d+"T00:00:00")>=sow).length; }
 function nextDayIdx(){ const logs=strengthLogs(); if(!logs.length)return 0; const last=logs[logs.length-1].dayName; const idx=DB.routine.findIndex(d=>d.name===last||d.nameDe===last); return idx<0?0:(idx+1)%DB.routine.length; }
 function startSuggested(){ trainPane="gym"; go("entrenar"); setTimeout(()=>{const sel=document.getElementById("trainDaySel"); if(sel){sel.value=nextDayIdx();renderTrain();}},120); }
@@ -2460,6 +2561,14 @@ function renderStats(){
 function addWeight(){ const kg=+document.getElementById("wKg").value, date=document.getElementById("wDate").value||today(); if(!kg||kg<20||kg>400){alert(t('valid_weight'));return;} const ex=DB.weights.find(w=>w.date===date); if(ex)ex.kg=kg; else DB.weights.push({date,kg}); DB.weights.sort((a,b)=>a.date.localeCompare(b.date)); document.getElementById("wKg").value=""; save(); renderProgreso(); }
 function delWeight(i){ if(confirm(t('confirm_del_w'))){ DB.weights.splice(i,1); save(); renderProgreso(); } }
 function renderProgreso(){
+ renderProgTabs();
+ const pane=progPane||"strength";
+ const map={strength:"progStrength",running:"progRunning",yoga:"progYoga",mobility:"progMobility"};
+ Object.keys(map).forEach(k=>{ const el=document.getElementById(map[k]); if(el) el.style.display=pane===k?"block":"none"; });
+ if(pane==="running"){ renderProgRunning(); return; }
+ if(pane==="yoga"){ renderProgYoga(); return; }
+ if(pane==="mobility"){ renderProgMobility(); return; }
+ renderProgStrengthExtras();
  const di=document.getElementById("wDate"); if(!di.value)di.value=today(); const ws=DB.weights;
  if(ws.length){ const s=ws[0].kg,n=ws[ws.length-1].kg,d=n-s; document.getElementById("wStart").textContent=s; document.getElementById("wNow").textContent=n; const de=document.getElementById("wDiff"); de.textContent=(d>0?"+":"")+d.toFixed(1); de.style.color=d<0?"var(--volt)":d>0?"var(--amber)":"var(--muted)"; }
  else { ["wStart","wNow","wDiff"].forEach(id=>document.getElementById(id).textContent="—"); }
@@ -4884,6 +4993,220 @@ function mobFinish(){
  save();
  mobLive.view="done";
  renderMobility();
+}
+
+
+/* ===== FASE 9 · SEMANA + PROGRESO MULTIDISCIPLINA ===== */
+let weekCursor=null;
+let progPane="strength";
+const RUN_ACH=[
+ ["first","run_ach_first"],["week_pair","run_ach_week_pair"],["jog5","run_ach_jog5"],["jog10","run_ach_jog10"],
+ ["block5","run_ach_block5"],["cont20","run_ach_cont20"],["cont30","run_ach_cont30"],
+ ["km3","run_ach_km3"],["km5","run_ach_km5"],["km7","run_ach_km7"],["km10","run_ach_km10"],["km12","run_ach_km12"]
+];
+const YG_ACH=[
+ ["first","yg_ach_first"],["week_pair","yg_ach_week_pair"],["poses5","yg_ach_poses5"],["dd","yg_ach_dd"],
+ ["trans","yg_ach_trans"],["miniflow","yg_ach_miniflow"],["min20","yg_ach_min20"],["recall","yg_ach_recall"],
+ ["suna","yg_ach_suna"],["min30","yg_ach_min30"]
+];
+function logsByType(type){ return (DB.logs||[]).filter(l=>sessionType(l)===type); }
+function weekLogsByType(type,ws){ return logsByType(type).filter(l=>weekStart(l.date)===ws); }
+function weekCursorISO(){ return weekCursor||weekStart(today()); }
+function weekDayList(ws){
+ const out=[], d=new Date(ws+"T00:00:00");
+ for(let i=0;i<7;i++){ out.push(d.toISOString().slice(0,10)); d.setDate(d.getDate()+1); }
+ return out;
+}
+function weekRangeLabel(ws){
+ const days=weekDayList(ws);
+ const a=new Date(days[0]+"T00:00:00"), b=new Date(days[6]+"T00:00:00");
+ const loc=DB.lang==="de"?"de-DE":"es-AR";
+ const fa=a.toLocaleDateString(loc,{day:"numeric",month:"short"});
+ const fb=b.toLocaleDateString(loc,{day:"numeric",month:"short"});
+ return fa+" – "+fb;
+}
+function dowKey(iso){
+ const d=new Date(iso+"T00:00:00");
+ return "wk_dow_"+((d.getDay()+6)%7+1);
+}
+function runSessNum(id){ return id==="s2"?2:id==="s3"?3:1; }
+function wkLogTitle(l){
+ const tp=sessionType(l);
+ if(tp==="strength") return (l.dayName||t("hoy_type_str"));
+ if(tp==="running") return t("hoy_type_run")+" · "+t("hoy_sub_run",{w:l.week||"—",n:runSessNum(l.sessionId)});
+ if(tp==="yoga") return t("hoy_type_yg")+" · "+t("hoy_sub_yg",{w:l.week||"—",n:runSessNum(l.sessionId)});
+ if(tp==="mobility"){
+  const p=typeof mobPreset==="function"?mobPreset(l.presetId):null;
+  return t("hoy_type_mob")+(p?" · "+t(p.nameKey):"");
+ }
+ return tp;
+}
+function wkLogMeta(l){
+ const bits=[];
+ if(l.durMin) bits.push(l.durMin+" min");
+ if(l.rpe) bits.push("RPE "+l.rpe);
+ if(l.km && +l.km>0) bits.push((+l.km)+" km");
+ if(sessionType(l)==="running" && l.optional) bits.push(t("run_optional"));
+ return bits.join(" · ");
+}
+function wkShift(delta){
+ const d=new Date(weekCursorISO()+"T00:00:00");
+ d.setDate(d.getDate()+delta*7);
+ weekCursor=d.toISOString().slice(0,10);
+ renderResumen();
+}
+function wkGoToday(){ weekCursor=weekStart(today()); renderResumen(); }
+function renderResumen(){
+ const box=document.getElementById("weekBody"); if(!box) return;
+ const ws=weekCursorISO();
+ const isCur=ws===weekStart(today());
+ const days=weekDayList(ws);
+ const dayHtml=days.map(iso=>{
+  const logs=(DB.logs||[]).filter(l=>l.date===iso);
+  const items=logs.length?logs.map(l=>{
+   const tp=sessionType(l);
+   return `<div class="wkitem ${tp}"><div class="wknm">${esc(wkLogTitle(l))}</div><div class="wkmt">${esc(wkLogMeta(l)||t("wk_done"))}</div></div>`;
+  }).join(""):`<div class="wkempty">${esc(t("wk_no_day"))}</div>`;
+  const mark=iso===today()?" today":"";
+  return `<div class="wkday${mark}"><div class="wkhd"><span>${esc(t(dowKey(iso)))}</span><span class="wknum">${iso.slice(8)}</span></div>${items}</div>`;
+ }).join("");
+ let pend="";
+ if(isCur){
+  const run=nextRunningSession();
+  const yg=nextYogaSession();
+  const stGoal=(DB.settings&&DB.settings.weeklyGoal)||3;
+  const stHave=weekStrengthCount();
+  const rows=[];
+  if(run&&!run.done) rows.push(t("hoy_type_run")+" · "+t("hoy_sub_run",{w:run.week,n:runSessNum(run.session&&run.session.id)}));
+  if(yg&&!yg.done) rows.push(t("hoy_type_yg")+" · "+t("hoy_sub_yg",{w:yg.week,n:runSessNum(yg.session&&yg.session.id)}));
+  if(stHave<stGoal) rows.push(t("hoy_type_str")+" · "+t("wk_str_left",{n:stGoal-stHave,g:stGoal}));
+  pend=`<h2 class="sec">${esc(t("wk_pending"))}</h2>`+(rows.length?rows.map(r=>`<div class="wkpend">${esc(r)}</div>`).join(""):`<div class="empty">${esc(t("wk_pending_none"))}</div>`);
+ }
+ const counts=isCur?weekMiniCounts():{
+  stHave:weekLogsByType("strength",ws).length, stGoal:null,
+  runHave:weekLogsByType("running",ws).filter(l=>!l.optional&&!l.repeat).length, runNeed:null,
+  ygHave:weekLogsByType("yoga",ws).filter(l=>!l.optional&&!l.repeat).length, ygNeed:null,
+  mobHave:weekLogsByType("mobility",ws).length
+ };
+ const cell=(lab,have,need)=>`<div><span>${esc(lab)}</span><b>${need==null?have:have+" / "+need}</b></div>`;
+ box.innerHTML=`<div class="wknav">
+   <button class="btn ghost wkarr" onclick="wkShift(-1)">‹</button>
+   <div class="wktitle" onclick="wkGoToday()"><div class="kick">${esc(isCur?t("wk_this"):t("wk_other"))}</div><div class="wkrange">${esc(weekRangeLabel(ws))}</div></div>
+   <button class="btn ghost wkarr" onclick="wkShift(1)">›</button>
+  </div>
+  <div class="wkdays">${dayHtml}</div>
+  ${pend}
+  <div class="hoyweek wktotals">
+   ${cell(t("hoy_week_str"),counts.stHave,counts.stGoal)}
+   ${cell(t("hoy_week_run"),counts.runHave,counts.runNeed)}
+   ${cell(t("hoy_week_yg"),counts.ygHave,counts.ygNeed)}
+   ${cell(t("hoy_week_mob"),counts.mobHave,null)}
+  </div>`;
+}
+function setProgPane(p){ progPane=p; renderProgreso(); }
+function renderProgTabs(){
+ const box=document.getElementById("progTabs"); if(!box) return;
+ const tabs=[["strength","hoy_type_str"],["running","hoy_type_run"],["yoga","hoy_type_yg"],["mobility","hoy_type_mob"]];
+ box.innerHTML=tabs.map(([id,k])=>`<button class="${progPane===id?"on":""}" onclick="setProgPane('${id}')">${esc(t(k))}</button>`).join("");
+}
+function achMap(list){ const m={}; (list||[]).forEach(a=>m[a.id]=a); return m; }
+function renderAchList(defs, have){
+ const map=achMap(have);
+ return `<div class="achgrid">`+defs.map(([id,key])=>{
+  const got=map[id];
+  return `<div class="ach ${got?"on":""}"><div class="achmark">${got?"✓":"○"}</div><div><div class="achnm">${esc(t(key))}</div><div class="achdt">${got&&got.date?esc(got.date):esc(t("pg_locked"))}</div></div></div>`;
+ }).join("")+`</div>`;
+}
+function renderProgRunning(){
+ const box=document.getElementById("progRunning"); if(!box) return;
+ ensureRunningDB(DB);
+ const p=runProg(); const w=runWeekDef(p.week);
+ const logs=logsByType("running");
+ const done=logs.filter(l=>l.completed!==false);
+ const mins=done.reduce((a,l)=>a+(+l.durMin||0),0);
+ const kms=done.map(l=>+l.km).filter(n=>n>0);
+ const maxKm=kms.length?Math.max.apply(null,kms):null;
+ const rpes=done.filter(l=>+l.rpe>0).slice(-5).map(l=>+l.rpe);
+ const rpeAvg=rpes.length?(rpes.reduce((a,b)=>a+b,0)/rpes.length):null;
+ const cur=weekMiniCounts();
+ let block="—";
+ let blockOk=false;
+ done.forEach(l=>{
+  const s=runSessDef(l.week,l.sessionId);
+  if(s&&s.workSec){ blockOk=true; if(s.workSec> (parseInt(block,10)||0)) block=s.workSec+" s"; }
+ });
+ if(!blockOk) block=t("pg_block_na");
+ const empty=logs.length?"":`<div class="empty">${esc(t("pg_run_empty"))}</div>`;
+ box.innerHTML=`${empty}
+  <div class="grid3">
+   <div class="stat"><div class="num">${p.week||1}/24</div><div class="lbl">${esc(t("pg_week_of"))}</div></div>
+   <div class="stat"><div class="num">${done.length}</div><div class="lbl">${esc(t("pg_sessions"))}</div></div>
+   <div class="stat"><div class="num">${mins||"—"}</div><div class="lbl">${esc(t("pg_minutes"))}</div></div>
+  </div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_phase"))}</div><div>${esc(t(w.phase==="walkrun"?"run_ph_walkrun":w.phase==="transition"?"run_ph_trans":w.phase==="k5"?"run_ph_5k":"run_ph_10k"))}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_block"))}</div><div>${esc(block)}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_maxkm"))}</div><div>${maxKm==null?esc(t("pg_nokm")):maxKm+" km"}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_rpe"))}</div><div>${rpeAvg==null?esc(t("pg_norpe")):rpeAvg.toFixed(1)}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_week_now"))}</div><div>${cur.runHave} / ${cur.runNeed}</div></div>
+  <h2 class="sec">${esc(t("pg_ach_run"))}</h2>
+  ${renderAchList(RUN_ACH, DB.runningAchievements)}`;
+}
+function renderProgYoga(){
+ const box=document.getElementById("progYoga"); if(!box) return;
+ ensureYogaDB(DB);
+ const p=yogaProg(); const w=yogaWeekDef(p.week);
+ const logs=logsByType("yoga");
+ const hist=p.history||[];
+ const legacy=(DB.yogaLogs||[]).length;
+ const poses=p.poses||{};
+ const learned=Object.keys(poses).filter(k=>poses[k]==="learned").length;
+ const learning=Object.keys(poses).filter(k=>poses[k]==="learning").length;
+ const total=typeof YOGA_POSES!=="undefined"?YOGA_POSES.length:19;
+ const durs=hist.map(h=>+h.durMin||0).concat(logs.map(l=>+l.durMin||0)).filter(n=>n>0);
+ const longest=durs.length?Math.max.apply(null,durs):null;
+ const cur=weekMiniCounts();
+ const empty=hist.length||logs.length?"":`<div class="empty">${esc(t("pg_yg_empty"))}</div>`;
+ box.innerHTML=`${empty}
+  <div class="grid3">
+   <div class="stat"><div class="num">${p.week||1}/24</div><div class="lbl">${esc(t("pg_week_of"))}</div></div>
+   <div class="stat"><div class="num">${hist.length}</div><div class="lbl">${esc(t("pg_yg_new"))}</div></div>
+   <div class="stat"><div class="num">${legacy||"—"}</div><div class="lbl">${esc(t("pg_yg_legacy"))}</div></div>
+  </div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_poses"))}</div><div>${t("pg_learned")}: ${learned} / ${total} · ${t("pg_learning")}: ${learning}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_longest"))}</div><div>${longest==null?esc(t("pg_nolong")):longest+" min"}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_week_now"))}</div><div>${cur.ygHave} / ${cur.ygNeed}</div></div>
+  <h2 class="sec">${esc(t("pg_ach_yg"))}</h2>
+  ${renderAchList(YG_ACH, DB.yogaAchievements)}`;
+}
+function renderProgMobility(){
+ const box=document.getElementById("progMobility"); if(!box) return;
+ const logs=logsByType("mobility");
+ const wk=weekLogsByType("mobility", weekStart(today()));
+ const last=logs.length?logs[logs.length-1]:null;
+ const used={};
+ logs.forEach(l=>{ if(l.presetId) used[l.presetId]=(used[l.presetId]||0)+1; });
+ let top=null, topN=0;
+ Object.keys(used).forEach(k=>{ if(used[k]>topN){ top=k; topN=used[k]; } });
+ const p=top&&typeof mobPreset==="function"?mobPreset(top):null;
+ const topLab=p?t(p.nameKey):(top||"—");
+ box.innerHTML=`
+  <div class="grid3">
+   <div class="stat"><div class="num">${logs.length}</div><div class="lbl">${esc(t("pg_mob_total"))}</div></div>
+   <div class="stat"><div class="num">${wk.length}</div><div class="lbl">${esc(t("pg_mob_week"))}</div></div>
+   <div class="stat"><div class="num">${top?topLab:"—"}</div><div class="lbl">${esc(t("pg_mob_top"))}</div></div>
+  </div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_mob_last"))}</div><div>${last?esc(last.date+(last.presetId?" · "+(p&&last.presetId===top?topLab:last.presetId):"")):esc(t("pg_mob_empty"))}</div></div>`;
+}
+function renderProgStrengthExtras(){
+ const sow=startOfWeek();
+ const elW=document.getElementById("stWeek");
+ if(elW) elW.textContent=strengthLogs().filter(l=>new Date(l.date+"T00:00:00")>=sow).length;
+ const elT=document.getElementById("stTotal"); if(elT) elT.textContent=strengthLogs().length;
+ const elS=document.getElementById("stStreak"); if(elS) elS.textContent=computeStreak().streak;
+ if(typeof renderStreak==="function") renderStreak();
+ if(typeof renderMedals==="function") renderMedals();
+ if(typeof renderWeekSummary==="function") renderWeekSummary();
+ if(typeof renderConsistency==="function") renderConsistency();
 }
 
 
