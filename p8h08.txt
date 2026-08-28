@@ -1,0 +1,16 @@
+ }
+ if(!reasons.length) reasons.push("hoy_r_none");
+ const level=score>=2?"high":score>=1?"medium":"low";
+ return {level,score,conservative,reasons,lastLegs,lastRun};
+}
+function hoyRunLabel(n){
+ if(!n||!n.session) return t("hoy_type_run");
+ const s=n.session;
+ const num=s.id==="s1"?1:s.id==="s2"?2:3;
+ const lab=s.optional?t("run_optional"):(s.role==="short"?t("run_short"):s.role==="long"?t("run_long"):t("run_session",{n:num}));
+ return lab;
+}
+function pickTodayPlan(){
+ const L=getTrainingLoad();
+ const run=nextRunningSession();
+ const yg=nextYogaSession();

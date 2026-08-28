@@ -1,0 +1,16 @@
+ if(lastRun){
+  const d=hoyDiff(lastRun.date);
+  if(d<=1){
+   if(lastRun.legs==="pain"){
+    conservative=true;
+    score=Math.max(score,2);
+    reasons.push("hoy_r_run_pain");
+   }else if(lastRun.legs==="heavy"){
+    score=Math.max(score, d===0?2:1);
+    reasons.push("hoy_r_run_heavy");
+   }else if((+lastRun.rpe||0)>=7){
+    score=Math.max(score,1);
+    reasons.push("hoy_r_run_hard");
+   }else if((+lastRun.rpe||0)<=3 && lastRun.legs!=="tired"){
+    if(d===0) reasons.push("hoy_r_run_easy");
+   }else if(lastRun.legs==="tired" || (+lastRun.rpe||0)>=5){

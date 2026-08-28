@@ -1,0 +1,16 @@
+ let score=0;
+ let conservative=false;
+ const lastLegs=hoyLast(strengthLogs().filter(strengthLogHasLegs));
+ if(lastLegs){
+  const d=hoyDiff(lastLegs.date);
+  const rpe=lastLegs.rpe;
+  const strong=(rpe==null||rpe>=6);
+  if(d===0){
+   score=Math.max(score, strong?2:1);
+   reasons.push(strong?"hoy_r_legs_today":"hoy_r_legs_today_easy");
+  }else if(d===1){
+   score=Math.max(score, (strong&&(rpe||0)>=8)?2:1);
+   reasons.push("hoy_r_legs_yday");
+  }
+ }
+ const lastRun=hoyLast(runningLogs());

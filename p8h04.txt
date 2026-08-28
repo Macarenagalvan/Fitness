@@ -1,0 +1,16 @@
+ const runNeed=runRequired(runProg().week).length;
+ const ygHave=yogaDoneReq(yogaProg().week).size;
+ const ygNeed=yogaRequired(yogaProg().week).length;
+ const wk=weekStart(today());
+ const mobHave=mobilityLogs().filter(l=>weekStart(l.date)===wk).length;
+ return {stHave,stGoal,runHave,runNeed,ygHave,ygNeed,mobHave};
+}
+function lastActivityType(){
+ const logs=DB.logs||[];
+ if(!logs.length) return "";
+ const last=logs[logs.length-1];
+ if(hoyDiff(last.date)>1) return "";
+ return sessionType(last);
+}
+function getTrainingLoad(){
+ const reasons=[];
