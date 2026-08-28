@@ -1,0 +1,12 @@
+ const st=mobCurrent();
+ if(!mobLive||!st||st.mode!=="time") return;
+ if(mobLive.remain==null) mobLive.remain=st.sec;
+ mobTick=setInterval(function(){
+  if(!mobLive||mobLive.view!=="active"){ mobClearTick(); return; }
+  mobLive.remain--;
+  const el=document.getElementById("mobClock");
+  if(el) el.textContent=mobFmt(Math.max(0,mobLive.remain));
+  if(mobLive.remain<=0){ mobClearTick(); mobLive.remain=0; }
+ },1000);
+}
+
