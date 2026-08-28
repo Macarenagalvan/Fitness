@@ -175,6 +175,28 @@
   .todaycard .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
   .todaycard .tip{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.35}
   .todaycard .btn{margin-top:13px}
+
+.hoycard{max-width:100%;overflow-x:hidden}
+.hoycard .dayname{font-size:28px;overflow-wrap:anywhere}
+.hoysub{color:var(--volt);font-weight:800;margin-top:6px;font-size:15px}
+.hoyload{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;font-weight:700}
+.hoydot{width:10px;height:10px;border-radius:50%;flex:none;background:#7dce7a}
+.hoydot.med{background:#e6c35c}
+.hoydot.high{background:#e08a3c}
+.hoywhy{color:var(--muted);font-size:13px;line-height:1.35;margin-top:6px}
+.hoycta{margin-top:13px;width:100%;min-height:44px}
+.hoyalts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.hoyalt{width:100%;min-height:44px}
+.hoyweek{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:13px}
+.hoyweek div{display:flex;justify-content:space-between;gap:8px;min-width:0}
+.hoyweek span{color:var(--muted)}
+.hoyweek b{font-variant-numeric:tabular-nums}
+@media(max-width:360px){
+ .hoycard .dayname{font-size:24px}
+ .hoysub{font-size:14px}
+ .hoyweek{grid-template-columns:1fr}
+}
+
   /* --- Series (contador visual) --- */
   .sets{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}
   .setdot{width:38px;height:38px;border-radius:11px;background:var(--surface2);border:1px solid var(--line);color:var(--muted);font-weight:700;font-size:14px;display:grid;place-items:center;flex:none;transition:.12s}
@@ -1253,6 +1275,49 @@ const I18N={
   mob_fetal:"Child's Pose o postura fetal",
   mob_fetal_cue:"Elegí Child's Pose o acurrucarte de costado. El cuerpo pesado, la respiración lenta.",
 
+  hoy_load_low:"Carga baja",
+  hoy_load_med:"Carga media",
+  hoy_load_high:"Carga alta",
+  hoy_r_none:"Sin carga importante reciente",
+  hoy_r_legs_today:"Piernas fuertes hoy",
+  hoy_r_legs_today_easy:"Fuerza de piernas hoy, carga moderada",
+  hoy_r_legs_yday:"Piernas fuertes ayer",
+  hoy_r_run_pain:"Dolor reportado en la última salida",
+  hoy_r_run_heavy:"Última salida con piernas pesadas",
+  hoy_r_run_hard:"Running exigente reciente",
+  hoy_r_run_easy:"Running suave reciente",
+  hoy_r_run_recent:"Running reciente",
+  hoy_r_journal_low:"Cansancio o malestar reciente en el diario",
+  hoy_r_journal_tired:"Energía baja o sueño flojo en el diario",
+  hoy_rec_run:"Hoy encaja bien una salida de running.",
+  hoy_rec_yoga:"Yoga pendiente. Carga actual compatible.",
+  hoy_rec_str:"Hoy encaja fuerza.",
+  hoy_rec_shift_run:"Hoy conviene mover el running o hacer una caminata suave.",
+  hoy_rec_legs_loaded:"Piernas cargadas. Mejor una opción más suave.",
+  hoy_rec_pain:"Reportaste dolor en tu última salida. Hoy priorizá descanso o movilidad suave. Si el dolor persiste o empeora, no fuerces el entrenamiento.",
+  hoy_rec_rest:"Hoy conviene ir suave: movilidad o descanso.",
+  hoy_rec_free:"La semana de programas está al día. Podés soltar con movilidad o elegir otro entrenamiento.",
+  hoy_rec_resume:"Tenés un entrenamiento de fuerza empezado.",
+  hoy_cta_start:"Iniciar",
+  hoy_cta_resume:"Continuar",
+  hoy_cta_anyway:"Entrenar igual",
+  hoy_cta_mob:"Empezar movilidad",
+  hoy_alt_mob5:"Movilidad 5 min",
+  hoy_alt_all:"Ver todos los entrenamientos",
+  hoy_week_str:"Fuerza",
+  hoy_week_run:"Running",
+  hoy_week_yg:"Yoga",
+  hoy_week_mob:"Movilidad",
+  hoy_type_run:"Running",
+  hoy_type_yg:"Yoga",
+  hoy_type_str:"Fuerza",
+  hoy_type_mob:"Movilidad",
+  hoy_sub_run:"Semana {w} · Sesión {n}",
+  hoy_sub_yg:"Semana {w} · Sesión {n}",
+  hoy_sub_str:"Siguiente día de rutina",
+  hoy_sub_mob_soft:"Opción suave",
+  hoy_sub_resume:"Sesión en curso"
+
  },
  de:{
   brand_sub:"Training", your_name:"Dein Name", name_ph:"Wie heißt du?", hero_hello:"Hallo, {n}!", hero_hi:"Auf geht's!",
@@ -1698,6 +1763,49 @@ const I18N={
   mob_knees_cue:"Knie umarmen. Leicht schaukeln, wenn es hilft. Langer Nacken.",
   mob_fetal:"Child's Pose oder Embryohaltung",
   mob_fetal_cue:"Child's Pose oder auf der Seite zusammenrollen. Schwerer Körper, langsamer Atem.",
+
+  hoy_load_low:"Niedrige Belastung",
+  hoy_load_med:"Mittlere Belastung",
+  hoy_load_high:"Hohe Belastung",
+  hoy_r_none:"Keine wesentliche aktuelle Belastung",
+  hoy_r_legs_today:"Beine heute stark belastet",
+  hoy_r_legs_today_easy:"Beintraining heute, moderate Belastung",
+  hoy_r_legs_yday:"Beine gestern stark belastet",
+  hoy_r_run_pain:"Schmerz in der letzten Laufeinheit gemeldet",
+  hoy_r_run_heavy:"Letzter Lauf mit schweren Beinen",
+  hoy_r_run_hard:"Anspruchsvoller Lauf zuletzt",
+  hoy_r_run_easy:"Lockerer Lauf zuletzt",
+  hoy_r_run_recent:"Lauf kürzlich",
+  hoy_r_journal_low:"Müdigkeit oder Unwohlsein im Tagebuch",
+  hoy_r_journal_tired:"Wenig Energie oder schlechter Schlaf im Tagebuch",
+  hoy_rec_run:"Heute passt eine Laufeinheit gut.",
+  hoy_rec_yoga:"Yoga steht an. Aktuelle Belastung passt.",
+  hoy_rec_str:"Heute passt Krafttraining.",
+  hoy_rec_shift_run:"Heute lieber den Lauf verschieben oder locker gehen.",
+  hoy_rec_legs_loaded:"Beine belastet. Besser eine sanftere Option.",
+  hoy_rec_pain:"Du hast Schmerz in der letzten Einheit gemeldet. Heute Pause oder sanfte Mobilität. Wenn der Schmerz bleibt oder stärker wird, nicht erzwingen.",
+  hoy_rec_rest:"Heute lieber sanft: Mobilität oder Pause.",
+  hoy_rec_free:"Die Programmwoche ist im Plan. Mobilität oder ein anderes Training.",
+  hoy_rec_resume:"Du hast ein Krafttraining angefangen.",
+  hoy_cta_start:"Starten",
+  hoy_cta_resume:"Weiter",
+  hoy_cta_anyway:"Trotzdem trainieren",
+  hoy_cta_mob:"Mobilität starten",
+  hoy_alt_mob5:"Mobilität 5 Min.",
+  hoy_alt_all:"Alle Trainings ansehen",
+  hoy_week_str:"Kraft",
+  hoy_week_run:"Laufen",
+  hoy_week_yg:"Yoga",
+  hoy_week_mob:"Mobilität",
+  hoy_type_run:"Laufen",
+  hoy_type_yg:"Yoga",
+  hoy_type_str:"Kraft",
+  hoy_type_mob:"Mobilität",
+  hoy_sub_run:"Woche {w} · Einheit {n}",
+  hoy_sub_yg:"Woche {w} · Einheit {n}",
+  hoy_sub_str:"Nächster Krafttag",
+  hoy_sub_mob_soft:"Sanfte Option",
+  hoy_sub_resume:"Laufende Einheit"
  }
 };
 function t(key,p){ let s=(I18N[DB.lang]&&I18N[DB.lang][key]!=null)?I18N[DB.lang][key]:(I18N.es[key]!=null?I18N.es[key]:key); if(p)for(const k in p)s=s.split('{'+k+'}').join(p[k]); return s; }
@@ -2717,19 +2825,290 @@ function activeSession(){
 }
 function resumeSession(){ go('entrenar'); }
 
-function renderTodayCard(){
- const box=document.getElementById('todayCard'); if(!box)return;
- if(!DB.routine||!DB.routine.length){ box.innerHTML=`<div class="todaycard"><div class="kick">${t('today_kick')}</div><div class="dayname">—</div><div class="tip">${t('today_no_routine')}</div></div>`; return; }
- const idx=activeSession()?DB.session.dayIdx:nextDayIdx(), day=DB.routine[idx];
- const ph=phaseInfo(), ci=cycleInfo();
- const chips=[`<span class="pill on" style="cursor:default">${ICONS.spark}${t('phase_label')} ${ph.n}</span>`];
- if(ci)chips.push(`<span class="pill pink on" style="cursor:default">${ICONS.drop}${t(ci.phaseKey)} · ${t('cycle_day',{n:ci.day})}</span>`);
- const tip=ci?t(ci.tip):t('tip_phase'+ph.n);
- const cta=activeSession()
-  ?`<button class="btn" onclick="resumeSession()"><span class="ic">${ICONS.play}</span>${t('resume_training')}</button>`
-  :`<button class="btn" onclick="startSuggested()"><span class="ic">${ICONS.rocket}</span>${t('today_start')}</button>`;
- box.innerHTML=`<div class="todaycard"><div class="kick">${t('today_kick')}</div><div class="dayname">${esc(dn(day).split('·')[0].trim())}</div><div class="chips">${chips.join("")}</div><div class="tip">${esc(tip)}</div>${cta}</div>`;
+/* ===== FASE 8 · HOY + CARGA ===== */
+const HOY_LEG_CAT={legs:1,glutes:1};
+function hoyDiff(date){
+ const a=new Date((date||today())+"T00:00:00");
+ const b=new Date(today()+"T00:00:00");
+ return Math.round((b-a)/86400000);
 }
+function runningLogs(){ return (DB.logs||[]).filter(l=>sessionType(l)==="running"); }
+function hoyLast(arr){ return arr&&arr.length?arr[arr.length-1]:null; }
+function strengthExCat(e){
+ if(!e) return "";
+ if(e.cat) return e.cat;
+ const lib=LIB[e.libId||e.id];
+ return lib?lib.cat:"";
+}
+function strengthLogHasLegs(log){
+ const ex=log&&log.exercises||[];
+ for(let i=0;i<ex.length;i++){
+  const cat=strengthExCat(ex[i]);
+  if(HOY_LEG_CAT[cat]) return true;
+  const id=ex[i].libId||ex[i].id||"";
+  if(id.indexOf("lg_")==0||id.indexOf("gl_")==0) return true;
+ }
+ return false;
+}
+function strengthDayIsLegs(day){
+ if(!day) return false;
+ const ex=day.ex||[];
+ let n=0;
+ for(let i=0;i<ex.length;i++){
+  const cat=strengthExCat(ex[i]);
+  if(HOY_LEG_CAT[cat]) n++;
+ }
+ return n>=2;
+}
+function nextStrengthDay(){
+ const idx=nextDayIdx();
+ const day=(DB.routine&&DB.routine[idx])||null;
+ return {idx:idx,day:day,isLegs:strengthDayIsLegs(day)};
+}
+function nextRunningSession(){
+ ensureRunningDB(DB);
+ const p=runProg(), w=runWeekDef(p.week);
+ const sess=(w.sessions||[]).filter(s=>!s.optional);
+ const pending=sess.find(s=>!runIsRequiredDone(p.week,s.id));
+ if(pending) return {week:p.week,session:pending,done:false};
+ return {week:p.week,session:sess[0]||null,done:true};
+}
+function nextYogaSession(){
+ ensureYogaDB(DB);
+ const p=yogaProg(), w=yogaWeekDef(p.week);
+ const sess=(w.sessions||[]).filter(s=>!s.optional);
+ const pending=sess.find(s=>!yogaIsDone(p.week,s.id));
+ if(pending) return {week:p.week,session:pending,done:false};
+ return {week:p.week,session:sess[0]||null,done:true};
+}
+function weekStrengthCount(){
+ const wk=weekStart(today());
+ return strengthLogs().filter(l=>weekStart(l.date)===wk).length;
+}
+function weekMiniCounts(){
+ const stGoal=(DB.settings&&DB.settings.weeklyGoal)||3;
+ const stHave=weekStrengthCount();
+ const runHave=runDoneRequired(runProg().week).size;
+ const runNeed=runRequired(runProg().week).length;
+ const ygHave=yogaDoneReq(yogaProg().week).size;
+ const ygNeed=yogaRequired(yogaProg().week).length;
+ const wk=weekStart(today());
+ const mobHave=mobilityLogs().filter(l=>weekStart(l.date)===wk).length;
+ return {stHave,stGoal,runHave,runNeed,ygHave,ygNeed,mobHave};
+}
+function lastActivityType(){
+ const logs=DB.logs||[];
+ if(!logs.length) return "";
+ const last=logs[logs.length-1];
+ if(hoyDiff(last.date)>1) return "";
+ return sessionType(last);
+}
+function getTrainingLoad(){
+ const reasons=[];
+ let score=0;
+ let conservative=false;
+ const lastLegs=hoyLast(strengthLogs().filter(strengthLogHasLegs));
+ if(lastLegs){
+  const d=hoyDiff(lastLegs.date);
+  const rpe=lastLegs.rpe;
+  const strong=(rpe==null||rpe>=6);
+  if(d===0){
+   score=Math.max(score, strong?2:1);
+   reasons.push(strong?"hoy_r_legs_today":"hoy_r_legs_today_easy");
+  }else if(d===1){
+   score=Math.max(score, (strong&&(rpe||0)>=8)?2:1);
+   reasons.push("hoy_r_legs_yday");
+  }
+ }
+ const lastRun=hoyLast(runningLogs());
+ if(lastRun){
+  const d=hoyDiff(lastRun.date);
+  if(d<=1){
+   if(lastRun.legs==="pain"){
+    conservative=true;
+    score=Math.max(score,2);
+    reasons.push("hoy_r_run_pain");
+   }else if(lastRun.legs==="heavy"){
+    score=Math.max(score, d===0?2:1);
+    reasons.push("hoy_r_run_heavy");
+   }else if((+lastRun.rpe||0)>=7){
+    score=Math.max(score,1);
+    reasons.push("hoy_r_run_hard");
+   }else if((+lastRun.rpe||0)<=3 && lastRun.legs!=="tired"){
+    if(d===0) reasons.push("hoy_r_run_easy");
+   }else if(lastRun.legs==="tired" || (+lastRun.rpe||0)>=5){
+    score=Math.max(score,1);
+    reasons.push("hoy_r_run_recent");
+   }
+  }
+ }
+ const jtags=new Set();
+ (DB.journal||[]).forEach(j=>{
+  if(hoyDiff(j.date)<=1) (j.tags||[]).forEach(tg=>jtags.add(tg));
+ });
+ if(jtags.has("overtrained")||jtags.has("unwell")){
+  conservative=true;
+  score=Math.max(score,1);
+  reasons.push("hoy_r_journal_low");
+ }else if(jtags.has("tired")||jtags.has("bad_sleep")||jtags.has("not_strong")||jtags.has("lowered")){
+  if(score<2) score=Math.max(score,1);
+  reasons.push("hoy_r_journal_tired");
+ }
+ if(!reasons.length) reasons.push("hoy_r_none");
+ const level=score>=2?"high":score>=1?"medium":"low";
+ return {level,score,conservative,reasons,lastLegs,lastRun};
+}
+function hoyRunLabel(n){
+ if(!n||!n.session) return t("hoy_type_run");
+ const s=n.session;
+ const num=s.id==="s1"?1:s.id==="s2"?2:3;
+ const lab=s.optional?t("run_optional"):(s.role==="short"?t("run_short"):s.role==="long"?t("run_long"):t("run_session",{n:num}));
+ return lab;
+}
+function pickTodayPlan(){
+ const L=getTrainingLoad();
+ const run=nextRunningSession();
+ const yg=nextYogaSession();
+ const st=nextStrengthDay();
+ const stGoal=(DB.settings&&DB.settings.weeklyGoal)||3;
+ const stNeed=weekStrengthCount()<stGoal;
+ const last=lastActivityType();
+ if(activeSession()){
+  return {
+   load:L, kind:"strength", resume:true,
+   title:st.day?dn(st.day).split("·")[0].trim():t("hoy_type_str"),
+   sub:t("hoy_sub_resume"),
+   recKey:"hoy_rec_resume",
+   ctaKey:"hoy_cta_resume",
+   alts:[{kind:"hub"}]
+  };
+ }
+ if(L.conservative){
+  const preset=(L.lastLegs&&hoyDiff(L.lastLegs.date)<=1)?"postLegs":"quick5";
+  const recKey=L.reasons.indexOf("hoy_r_run_pain")>=0?"hoy_rec_pain":"hoy_rec_rest";
+  const alts=[];
+  if(yg&&!yg.done) alts.push({kind:"yoga"});
+  else if(run&&!run.done) alts.push({kind:"running",anyway:1});
+  else if(stNeed) alts.push({kind:"strength",anyway:1});
+  alts.push({kind:"hub"});
+  return {load:L,kind:"mobility",presetId:preset,title:t("hoy_type_mob"),sub:t("hoy_sub_mob_soft"),recKey:recKey,ctaKey:"hoy_cta_mob",alts:alts.slice(0,2)};
+ }
+ if(L.level==="high"&&run&&!run.done){
+  return {
+   load:L,kind:"mobility",presetId:"postLegs",
+   title:t("hoy_type_mob"),sub:t("mob_legs"),
+   recKey:"hoy_rec_shift_run",ctaKey:"hoy_cta_mob",
+   alts:[{kind:"running",anyway:1}, yg&&!yg.done?{kind:"yoga"}:{kind:"hub"}].slice(0,2)
+  };
+ }
+ if(L.level==="high"&&stNeed&&st.isLegs){
+  if(yg&&!yg.done){
+   return {load:L,kind:"yoga",title:t("hoy_type_yg"),sub:t("hoy_sub_yg",{w:yg.week,n:yg.session&&yg.session.id==="s2"?2:1}),recKey:"hoy_rec_legs_loaded",ctaKey:"hoy_cta_start",alts:[{kind:"strength",anyway:1},{kind:"hub"}]};
+  }
+  return {load:L,kind:"mobility",presetId:"postLegs",title:t("hoy_type_mob"),sub:t("mob_legs"),recKey:"hoy_rec_legs_loaded",ctaKey:"hoy_cta_mob",alts:[{kind:"strength",anyway:1},{kind:"hub"}]};
+ }
+ const order=[];
+ if(last==="running") order.push("strength","yoga","running");
+ else if(last==="strength") order.push("running","yoga","strength");
+ else if(last==="yoga"||last==="mobility") order.push("running","strength","yoga");
+ else order.push("strength","running","yoga");
+ if(L.level==="medium"&&L.lastLegs&&hoyDiff(L.lastLegs.date)===0){
+  const i=order.indexOf("running"); if(i>=0) order.splice(i,1);
+  order.push("running");
+ }
+ for(let i=0;i<order.length;i++){
+  const k=order[i];
+  if(k==="running"&&run&&!run.done){
+   return {load:L,kind:"running",title:t("hoy_type_run"),sub:t("hoy_sub_run",{w:run.week,n:run.session&&run.session.id==="s2"?2:run.session&&run.session.id==="s3"?3:1}),recKey:"hoy_rec_run",ctaKey:"hoy_cta_start",alts:hoyAlts(L,run,yg,stNeed,["running"])};
+  }
+  if(k==="yoga"&&yg&&!yg.done){
+   return {load:L,kind:"yoga",title:t("hoy_type_yg"),sub:t("hoy_sub_yg",{w:yg.week,n:yg.session&&yg.session.id==="s2"?2:1}),recKey:"hoy_rec_yoga",ctaKey:"hoy_cta_start",alts:hoyAlts(L,run,yg,stNeed,["yoga"])};
+  }
+  if(k==="strength"&&stNeed){
+   const nm=st.day?dn(st.day).split("·")[0].trim():t("hoy_type_str");
+   return {load:L,kind:"strength",title:nm,sub:t("hoy_sub_str"),recKey:"hoy_rec_str",ctaKey:"hoy_cta_start",alts:hoyAlts(L,run,yg,stNeed,["strength"])};
+  }
+ }
+ return {load:L,kind:"mobility",presetId:"general10",title:t("hoy_type_mob"),sub:t("mob_gen10"),recKey:"hoy_rec_free",ctaKey:"hoy_cta_mob",alts:[{kind:"hub"}]};
+}
+function hoyAlts(L,run,yg,stNeed,skip){
+ const out=[];
+ const wantMob=L.level!=="low";
+ if(wantMob&&skip.indexOf("mobility")<0) out.push({kind:"mobility",presetId:"quick5"});
+ if(out.length<2&&yg&&!yg.done&&skip.indexOf("yoga")<0) out.push({kind:"yoga"});
+ if(out.length<2&&run&&!run.done&&skip.indexOf("running")<0) out.push({kind:"running"});
+ if(out.length<2&&stNeed&&skip.indexOf("strength")<0) out.push({kind:"strength"});
+ if(out.length<2) out.push({kind:"hub"});
+ return out.slice(0,2);
+}
+function hoyGo(kind,opt){
+ opt=opt||{};
+ if(kind==="strength"){
+  if(opt.resume||activeSession()){ resumeSession(); return; }
+  startSuggested(); return;
+ }
+ if(kind==="running"){
+  ensureRunningDB(DB);
+  trainPane="run";
+  go("entrenar");
+  const n=nextRunningSession();
+  if(n&&n.session&&!n.done) setTimeout(function(){ runBegin(n.session.id); },0);
+  return;
+ }
+ if(kind==="yoga"){
+  openYogaProg();
+  const n=nextYogaSession();
+  if(n&&n.session&&!n.done) setTimeout(function(){ yogaBegin(n.session.id,0); },0);
+  return;
+ }
+ if(kind==="mobility"){
+  openMobility(opt.presetId||"quick5");
+  return;
+ }
+ trainPane="hub"; go("entrenar");
+}
+function hoyAltLabel(a){
+ if(a.kind==="mobility") return t("hoy_alt_mob5");
+ if(a.kind==="hub") return t("hoy_alt_all");
+ if(a.kind==="running") return a.anyway?t("hoy_cta_anyway"):t("hoy_type_run");
+ if(a.kind==="yoga") return t("hoy_type_yg");
+ if(a.kind==="strength") return a.anyway?t("hoy_cta_anyway"):t("hoy_type_str");
+ return t("hoy_alt_all");
+}
+function renderTodayCard(){
+ const box=document.getElementById("todayCard"); if(!box) return;
+ const plan=pickTodayPlan();
+ const L=plan.load||getTrainingLoad();
+ const dot=L.level==="high"?"hoydot high":L.level==="medium"?"hoydot med":"hoydot low";
+ const loadLab=L.level==="high"?t("hoy_load_high"):L.level==="medium"?t("hoy_load_med"):t("hoy_load_low");
+ const why=L.reasons.map(k=>t(k)).filter(Boolean).slice(0,2).join(" · ");
+ const cta=plan.resume
+  ?`<button class="btn hoycta" onclick="hoyGo('strength',{resume:1})">${esc(t("hoy_cta_resume"))}</button>`
+  :`<button class="btn hoycta" onclick="hoyGo('${plan.kind}',{presetId:'${plan.presetId||""}'})">${esc(t(plan.ctaKey||"hoy_cta_start"))}</button>`;
+ const alts=(plan.alts||[]).map(a=>{
+  const pid=a.presetId||"";
+  const anyway=a.anyway?1:0;
+  return `<button class="btn ghost hoyalt" onclick="hoyGo('${a.kind}',{presetId:'${pid}',anyway:${anyway}})">${esc(hoyAltLabel(a))}</button>`;
+ }).join("");
+ const w=weekMiniCounts();
+ box.innerHTML=`<div class="todaycard hoycard">
+  <div class="kick">${esc(t("today_kick"))}</div>
+  <div class="dayname">${esc(plan.title||"—")}</div>
+  <div class="hoysub">${esc(plan.sub||"")}</div>
+  <div class="hoyload"><span class="${dot}"></span><span>${esc(loadLab)}</span></div>
+  <div class="tip">${esc(t(plan.recKey||"hoy_rec_free"))}</div>
+  <div class="hoywhy">${esc(why)}</div>
+  ${cta}
+  <div class="hoyalts">${alts}</div>
+  <div class="hoyweek">
+   <div><span>${esc(t("hoy_week_str"))}</span><b>${w.stHave} / ${w.stGoal}</b></div>
+   <div><span>${esc(t("hoy_week_run"))}</span><b>${w.runHave} / ${w.runNeed}</b></div>
+   <div><span>${esc(t("hoy_week_yg"))}</span><b>${w.ygHave} / ${w.ygNeed}</b></div>
+   <div><span>${esc(t("hoy_week_mob"))}</span><b>${w.mobHave}</b></div>
+  </div>
+ </div>`;
+}
+
 
 let draftSaveTimer=null, guidedModeV3=false, guidedIndexV3=0;
 function startSession(idx){
