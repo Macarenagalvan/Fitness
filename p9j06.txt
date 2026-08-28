@@ -1,0 +1,14 @@
+  pend=`<h2 class="sec">${esc(t("wk_pending"))}</h2>`+(rows.length?rows.map(r=>`<div class="wkpend">${esc(r)}</div>`).join(""):`<div class="empty">${esc(t("wk_pending_none"))}</div>`);
+ }
+ const counts=isCur?weekMiniCounts():{
+  stHave:weekLogsByType("strength",ws).length, stGoal:null,
+  runHave:weekLogsByType("running",ws).filter(l=>!l.optional&&!l.repeat).length, runNeed:null,
+  ygHave:weekLogsByType("yoga",ws).filter(l=>!l.optional&&!l.repeat).length, ygNeed:null,
+  mobHave:weekLogsByType("mobility",ws).length
+ };
+ const cell=(lab,have,need)=>`<div><span>${esc(lab)}</span><b>${need==null?have:have+" / "+need}</b></div>`;
+ box.innerHTML=`<div class="wknav">
+   <button class="btn ghost wkarr" onclick="wkShift(-1)">‹</button>
+   <div class="wktitle" onclick="wkGoToday()"><div class="kick">${esc(isCur?t("wk_this"):t("wk_other"))}</div><div class="wkrange">${esc(weekRangeLabel(ws))}</div></div>
+   <button class="btn ghost wkarr" onclick="wkShift(1)">›</button>
+  </div>
