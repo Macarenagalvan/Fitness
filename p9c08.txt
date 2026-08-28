@@ -1,0 +1,18 @@
+rep(OLD_RES_FN, "function renderResumenLegacy(){}\n", "resumen-fn")
+
+rep(
+'''function renderProgreso(){
+ const di=document.getElementById("wDate"); if(!di.value)di.value=today(); const ws=DB.weights;''',
+'''function renderProgreso(){
+ renderProgTabs();
+ const pane=progPane||"strength";
+ const map={strength:"progStrength",running:"progRunning",yoga:"progYoga",mobility:"progMobility"};
+ Object.keys(map).forEach(k=>{ const el=document.getElementById(map[k]); if(el) el.style.display=pane===k?"block":"none"; });
+ if(pane==="running"){ renderProgRunning(); return; }
+ if(pane==="yoga"){ renderProgYoga(); return; }
+ if(pane==="mobility"){ renderProgMobility(); return; }
+ renderProgStrengthExtras();
+ const di=document.getElementById("wDate"); if(!di.value)di.value=today(); const ws=DB.weights;''',
+"prog-fn",
+)
+
