@@ -1,0 +1,20 @@
+          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_mobility"></span><span class="sub" data-i18n="disc_soon"></span></span>
+        </button>""",
+"""        <button class="disccard" onclick="openMobility()">
+          <span class="ico" id="icoMob"></span>
+          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_mobility"></span><span class="sub" data-i18n="disc_mobility_sub"></span></span>
+          <span class="goarr">›</span>
+        </button>""",
+"card",
+)
+
+rep(
+"""    <div id="trainYoga" style="display:none">
+      <div id="yogaBody"></div>
+    </div>""",
+"""    <div id="trainYoga" style="display:none">
+      <div id="yogaBody"></div>
+    </div>
+    <div id="trainMob" style="display:none">
+      <div id="mobBody"></div>
+    </div>""",
