@@ -1,0 +1,14 @@
+/* ===== FASE 9 · SEMANA + PROGRESO MULTIDISCIPLINA ===== */
+let weekCursor=null;
+let progPane="strength";
+const RUN_ACH=[
+ ["first","run_ach_first"],["week_pair","run_ach_week_pair"],["jog5","run_ach_jog5"],["jog10","run_ach_jog10"],
+ ["block5","run_ach_block5"],["cont20","run_ach_cont20"],["cont30","run_ach_cont30"],
+ ["km3","run_ach_km3"],["km5","run_ach_km5"],["km7","run_ach_km7"],["km10","run_ach_km10"],["km12","run_ach_km12"]
+];
+const YG_ACH=[
+ ["first","yg_ach_first"],["week_pair","yg_ach_week_pair"],["poses5","yg_ach_poses5"],["dd","yg_ach_dd"],
+ ["trans","yg_ach_trans"],["miniflow","yg_ach_miniflow"],["min20","yg_ach_min20"],["recall","yg_ach_recall"],
+ ["suna","yg_ach_suna"],["min30","yg_ach_min30"]
+];
+function logsByType(type){ return (DB.logs||[]).filter(l=>sessionType(l)===type); }

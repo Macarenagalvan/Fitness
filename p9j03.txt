@@ -1,0 +1,14 @@
+ }
+ return tp;
+}
+function wkLogMeta(l){
+ const bits=[];
+ if(l.durMin) bits.push(l.durMin+" min");
+ if(l.rpe) bits.push("RPE "+l.rpe);
+ if(l.km && +l.km>0) bits.push((+l.km)+" km");
+ if(sessionType(l)==="running" && l.optional) bits.push(t("run_optional"));
+ return bits.join(" · ");
+}
+function wkShift(delta){
+ const d=new Date(weekCursorISO()+"T00:00:00");
+ d.setDate(d.getDate()+delta*7);

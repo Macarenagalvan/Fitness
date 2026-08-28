@@ -1,0 +1,14 @@
+}
+function dowKey(iso){
+ const d=new Date(iso+"T00:00:00");
+ return "wk_dow_"+((d.getDay()+6)%7+1);
+}
+function runSessNum(id){ return id==="s2"?2:id==="s3"?3:1; }
+function wkLogTitle(l){
+ const tp=sessionType(l);
+ if(tp==="strength") return (l.dayName||t("hoy_type_str"));
+ if(tp==="running") return t("hoy_type_run")+" · "+t("hoy_sub_run",{w:l.week||"—",n:runSessNum(l.sessionId)});
+ if(tp==="yoga") return t("hoy_type_yg")+" · "+t("hoy_sub_yg",{w:l.week||"—",n:runSessNum(l.sessionId)});
+ if(tp==="mobility"){
+  const p=typeof mobPreset==="function"?mobPreset(l.presetId):null;
+  return t("hoy_type_mob")+(p?" · "+t(p.nameKey):"");
