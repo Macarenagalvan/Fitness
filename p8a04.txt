@@ -1,0 +1,18 @@
+  ?`<button class="btn" onclick="resumeSession()"><span class="ic">${ICONS.play}</span>${t('resume_training')}</button>`
+  :`<button class="btn" onclick="startSuggested()"><span class="ic">${ICONS.rocket}</span>${t('today_start')}</button>`;
+ box.innerHTML=`<div class="todaycard"><div class="kick">${t('today_kick')}</div><div class="dayname">${esc(dn(day).split('·')[0].trim())}</div><div class="chips">${chips.join("")}</div><div class="tip">${esc(tip)}</div>${cta}</div>`;
+}'''
+
+if t.count(OLD) != 1:
+    raise SystemExit(f"FAIL card: count={t.count(OLD)}")
+# keep first renderTodayCard (dead) — replace only the live second copy
+t = t.replace(OLD, block, 1)
+print("ok card")
+
+# sanity
+for s in ["function getTrainingLoad", "function pickTodayPlan", "function renderTodayCard", "hoy_load_low", "hoy_rec_pain", "hoyweek", "function nextRunningSession", "function nextYogaSession"]:
+    if s not in t:
+        raise SystemExit("missing "+s)
+# first dead copy still present plus new live one
+if t.count("function renderTodayCard") < 2:
+    raise SystemExit("renderTodayCard count unexpected")

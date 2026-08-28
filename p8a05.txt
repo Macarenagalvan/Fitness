@@ -1,0 +1,3 @@
+print("ok sanity")
+p.write_text(t)
+print("wrote", p.stat().st_size)
