@@ -1,0 +1,12 @@
+ mobClearTick();
+ mobLive=null;
+ renderMobility();
+}
+function mobNext(){
+ if(!mobLive) return;
+ const p=mobPreset(mobLive.presetId); if(!p) return;
+ mobClearTick();
+ if(mobLive.step+1>=p.steps.length){ mobFinish(); return; }
+ mobLive.step++;
+ mobLive.remain=null;
+ const st=mobCurrent();

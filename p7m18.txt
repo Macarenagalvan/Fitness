@@ -1,0 +1,3 @@
+ mobLive.view="done";
+ renderMobility();
+}
