@@ -1,0 +1,14 @@
+}
+function achMap(list){ const m={}; (list||[]).forEach(a=>m[a.id]=a); return m; }
+function renderAchList(defs, have){
+ const map=achMap(have);
+ return `<div class="achgrid">`+defs.map(([id,key])=>{
+  const got=map[id];
+  return `<div class="ach ${got?"on":""}"><div class="achmark">${got?"✓":"○"}</div><div><div class="achnm">${esc(t(key))}</div><div class="achdt">${got&&got.date?esc(got.date):esc(t("pg_locked"))}</div></div></div>`;
+ }).join("")+`</div>`;
+}
+function renderProgRunning(){
+ const box=document.getElementById("progRunning"); if(!box) return;
+ ensureRunningDB(DB);
+ const p=runProg(); const w=runWeekDef(p.week);
+ const logs=logsByType("running");

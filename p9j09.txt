@@ -1,0 +1,14 @@
+ const done=logs.filter(l=>l.completed!==false);
+ const mins=done.reduce((a,l)=>a+(+l.durMin||0),0);
+ const kms=done.map(l=>+l.km).filter(n=>n>0);
+ const maxKm=kms.length?Math.max.apply(null,kms):null;
+ const rpes=done.filter(l=>+l.rpe>0).slice(-5).map(l=>+l.rpe);
+ const rpeAvg=rpes.length?(rpes.reduce((a,b)=>a+b,0)/rpes.length):null;
+ const cur=weekMiniCounts();
+ let block="—";
+ let blockOk=false;
+ done.forEach(l=>{
+  const s=runSessDef(l.week,l.sessionId);
+  if(s&&s.workSec){ blockOk=true; if(s.workSec> (parseInt(block,10)||0)) block=s.workSec+" s"; }
+ });
+ if(!blockOk) block=t("pg_block_na");

@@ -1,0 +1,14 @@
+ const cur=weekMiniCounts();
+ const empty=hist.length||logs.length?"":`<div class="empty">${esc(t("pg_yg_empty"))}</div>`;
+ box.innerHTML=`${empty}
+  <div class="grid3">
+   <div class="stat"><div class="num">${p.week||1}/24</div><div class="lbl">${esc(t("pg_week_of"))}</div></div>
+   <div class="stat"><div class="num">${hist.length}</div><div class="lbl">${esc(t("pg_yg_new"))}</div></div>
+   <div class="stat"><div class="num">${legacy||"—"}</div><div class="lbl">${esc(t("pg_yg_legacy"))}</div></div>
+  </div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_poses"))}</div><div>${t("pg_learned")}: ${learned} / ${total} · ${t("pg_learning")}: ${learning}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_longest"))}</div><div>${longest==null?esc(t("pg_nolong")):longest+" min"}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_week_now"))}</div><div>${cur.ygHave} / ${cur.ygNeed}</div></div>
+  <h2 class="sec">${esc(t("pg_ach_yg"))}</h2>
+  ${renderAchList(YG_ACH, DB.yogaAchievements)}`;
+}
