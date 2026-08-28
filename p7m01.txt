@@ -1,0 +1,12 @@
+ {id:"general10",nameKey:"mob_gen10",goalKey:"mob_gen10_goal",duration:10,steps:[
+  {id:"g10_catcow",titleKey:"mob_catcow",cueKey:"mob_catcow_cue",mode:"reps",reps:6},
+  {id:"g10_hip_r",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"R"},
+  {id:"g10_hip_l",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"L"},
+  {id:"g10_child",titleKey:"mob_child",cueKey:"mob_child_cue",mode:"breaths",breaths:4},
+  {id:"g10_calf_r",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"R"},
+  {id:"g10_calf_l",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"L"},
+  {id:"g10_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"R"},
+  {id:"g10_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"L"},
+  {id:"g10_lunge_r",titleKey:"mob_lunge_soft",cueKey:"mob_lunge_soft_cue",mode:"time",sec:30,side:"R"},
+  {id:"g10_lunge_l",titleKey:"mob_lunge_soft",cueKey:"mob_lunge_soft_cue",mode:"time",sec:30,side:"L"},
+  {id:"g10_fig4_r",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:30,side:"R"},

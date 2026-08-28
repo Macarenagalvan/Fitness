@@ -1,0 +1,12 @@
+  {id:"pl_fig4_l",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:35,side:"L"},
+  {id:"pl_sava",titleKey:"mob_sava",cueKey:"mob_sava_cue",mode:"time",sec:60}
+ ]},
+ {id:"postRun",nameKey:"mob_run",goalKey:"mob_run_goal",duration:10,steps:[
+  {id:"pr_ank_r",titleKey:"mob_ankle",cueKey:"mob_ankle_cue",mode:"reps",reps:8,side:"R"},
+  {id:"pr_ank_l",titleKey:"mob_ankle",cueKey:"mob_ankle_cue",mode:"reps",reps:8,side:"L"},
+  {id:"pr_calf_r",titleKey:"mob_calf_ext",cueKey:"mob_calf_ext_cue",mode:"time",sec:30,side:"R"},
+  {id:"pr_calf_l",titleKey:"mob_calf_ext",cueKey:"mob_calf_ext_cue",mode:"time",sec:30,side:"L"},
+  {id:"pr_sole_r",titleKey:"mob_soleus",cueKey:"mob_soleus_cue",mode:"time",sec:30,side:"R"},
+  {id:"pr_sole_l",titleKey:"mob_soleus",cueKey:"mob_soleus_cue",mode:"time",sec:30,side:"L"},
+  {id:"pr_lunge_r",titleKey:"mob_lunge_short",cueKey:"mob_lunge_short_cue",mode:"time",sec:25,side:"R"},
+  {id:"pr_lunge_l",titleKey:"mob_lunge_short",cueKey:"mob_lunge_short_cue",mode:"time",sec:25,side:"L"},

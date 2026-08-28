@@ -1,0 +1,12 @@
+/* ===== FASE 7 · MOVILIDAD / RECUPERACIÓN ===== */
+const MOBILITY_PRESETS=[
+ {id:"quick5",nameKey:"mob_quick5",goalKey:"mob_quick5_goal",duration:5,steps:[
+  {id:"q5_catcow",titleKey:"mob_catcow",cueKey:"mob_catcow_cue",mode:"reps",reps:6},
+  {id:"q5_hip_r",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"R"},
+  {id:"q5_hip_l",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"L"},
+  {id:"q5_child",titleKey:"mob_child",cueKey:"mob_child_cue",mode:"breaths",breaths:4},
+  {id:"q5_calf_r",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"R"},
+  {id:"q5_calf_l",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"L"},
+  {id:"q5_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"R"},
+  {id:"q5_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"L"}
+ ]},
