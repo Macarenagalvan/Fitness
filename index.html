@@ -300,6 +300,20 @@
 #trainYoga{max-width:100%;overflow-x:hidden}
 @media(max-width:360px){.ygpose{font-size:22px}.ygcue{font-size:14px}}
 
+.mobwrap{max-width:100%;overflow-x:hidden}
+.mobcard{overflow-wrap:anywhere}
+.mobgoal{color:var(--muted);font-size:15px;line-height:1.4;margin-top:6px}
+.moblive{text-align:center;padding:8px 0 18px}
+.mobpose{font-family:Impact,sans-serif;font-size:28px;letter-spacing:1px;line-height:1.15;margin-top:12px}
+.mobmeta{color:var(--volt);font-weight:800;margin-top:8px;font-size:16px}
+.mobcue{color:var(--muted);font-size:15px;line-height:1.45;margin:12px 8px 0}
+.mobclock{font-family:Impact,'Arial Narrow',sans-serif;font-size:56px;letter-spacing:1px;color:var(--volt);line-height:1;margin:14px 0 8px}
+.mobnav{margin-top:18px;max-width:100%}
+.mobnav .btn{min-height:44px}
+#trainMob{max-width:100%;overflow-x:hidden}
+@media(max-width:360px){.mobpose{font-size:22px}.mobclock{font-size:44px}.mobcue{font-size:14px}}
+
+
 
 @media(max-width:360px){nav.tabs button{font-size:10px} .disccard .ttl{font-size:18px}}
   @media(min-width:375px){nav.tabs button{font-size:11px}}
@@ -383,9 +397,10 @@
           <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_run"></span><span class="sub" data-i18n="disc_run_sub"></span></span>
           <span class="goarr">›</span>
         </button>
-        <button class="disccard soon" onclick="comingSoon()">
+        <button class="disccard" onclick="openMobility()">
           <span class="ico" id="icoMob"></span>
-          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_mobility"></span><span class="sub" data-i18n="disc_soon"></span></span>
+          <span style="flex:1;min-width:0"><span class="ttl" data-i18n="disc_mobility"></span><span class="sub" data-i18n="disc_mobility_sub"></span></span>
+          <span class="goarr">›</span>
         </button>
       </div>
     </div>
@@ -400,6 +415,9 @@
     </div>
     <div id="trainYoga" style="display:none">
       <div id="yogaBody"></div>
+    </div>
+    <div id="trainMob" style="display:none">
+      <div id="mobBody"></div>
     </div>
   </section>
 
@@ -869,7 +887,7 @@ const I18N={
   confirm_reset:"Esto restaura la rutina original (no borra tus entrenos). ¿Seguir?", confirm_wipe:"¿Borrar TODO? No se puede deshacer.",
   new_day_name:"Nuevo nombre del día:", cancel:"Cancelar", got_it:"¡Entendido!",
   nav_home:"Hoy", nav_routine:"Rutina", nav_train:"Entrenar", nav_library:"Ejercicios", nav_journal:"Diario", nav_progress:"Progreso", nav_week:"Semana", nav_more:"Más",
-  disc_strength:"Fuerza", disc_strength_sub:"Tu rutina actual", disc_run:"Running", disc_yoga:"Yoga", disc_yoga_sub:"Programa 24 semanas", disc_mobility:"Movilidad", disc_soon:"Próximamente", coming_soon:"Próximamente", more_title:"Más", train_back:"Volver a disciplinas",
+  disc_strength:"Fuerza", disc_strength_sub:"Tu rutina actual", disc_run:"Running", disc_yoga:"Yoga", disc_yoga_sub:"Programa 24 semanas", disc_mobility:"Movilidad", disc_mobility_sub:"Soltar y recuperar", disc_soon:"Próximamente", coming_soon:"Próximamente", more_title:"Más", train_back:"Volver a disciplinas",
   sec_warmup:"Calentamiento", sec_abs:"Abdominales", sec_machines:"Máquinas y fuerza", sec_cardio:"Cardio suave", sec_stretch:"Estiramiento",
   cat_warmup:"Movilidad", cat_abs:"Abdominales", cat_legs:"Piernas", cat_glutes:"Glúteos", cat_back:"Espalda", cat_chest:"Pecho", cat_shoulders:"Hombros", cat_arms:"Brazos", cat_cardio:"Cardio", cat_stretch:"Estiramiento", cat_all:"Todos",
   help_body:"<p><b>Rutina:</b> cada día está dividido en Calentamiento → Abdominales → Máquinas → Cardio → Estiramiento (≈1 h). Quitá ejercicios con el tacho.</p><p><b>Ejercicios:</b> el catálogo completo. Tocá + y elegí a qué día agregarlo. Así armás tu propia versión.</p><p><b>Entrenar:</b> en las máquinas cargá peso y reps (la app te dice cuándo subir); el resto lo marcás como hecho.</p><p><b>Diario y Progreso:</b> notas con patrones, peso con gráfico y fotos antes/después.</p>",
@@ -1164,6 +1182,77 @@ const I18N={
   yg_ach_suna:"Primer Saludo A modificado",
   yg_ach_min30:"Primera sesión de 30 min",
 
+  disc_mobility_sub:"Soltar y recuperar",
+  mob_home_lead:"Rutinas cortas para soltar, recuperar y mover articulaciones. No es Yoga.",
+  mob_start:"Iniciar",
+  mob_ready:"Listo / Siguiente",
+  mob_exit:"Salir",
+  mob_back_home:"Volver a Movilidad",
+  mob_done_title:"Listo",
+  mob_hist:"Historial",
+  mob_no_hist:"Todavía no hay rutinas de movilidad.",
+  mob_dur:"{n} min",
+  mob_step:"Paso {n} de {total}",
+  mob_side_r:"lado derecho",
+  mob_side_l:"lado izquierdo",
+  mob_dose_sec:"{n} segundos",
+  mob_dose_breaths:"{n} respiraciones",
+  mob_dose_reps:"×{n}",
+  mob_quick5:"5 minutos",
+  mob_quick5_goal:"Movilidad rápida cuando hay poco tiempo.",
+  mob_gen10:"General 10 min",
+  mob_gen10_goal:"Soltar el cuerpo entero con calma.",
+  mob_legs:"Después de piernas",
+  mob_legs_goal:"Recuperación suave después de gym de piernas.",
+  mob_run:"Después de Running",
+  mob_run_goal:"Gemelos, sóleo, cadera, isquios y glúteo.",
+  mob_sleep:"Antes de dormir",
+  mob_sleep_goal:"Relajación y movilidad suave.",
+  mob_catcow:"Cat-Cow",
+  mob_catcow_cue:"En cuatro apoyos, mové la columna al ritmo de la respiración. Sin forzar el cuello.",
+  mob_hipcirc:"Círculos de cadera",
+  mob_hipcirc_cue:"En cuatro apoyos, dibujá círculos lentos con la rodilla. Cadera suelta.",
+  mob_child:"Child's Pose",
+  mob_child_cue:"Caderas hacia los talones, brazos adelante o al costado. Respirá ancho.",
+  mob_child_open:"Child's Pose con rodillas abiertas",
+  mob_child_open_cue:"Rodillas separadas, caderas atrás. Dejá que la cintura baje sin apretar.",
+  mob_calf:"Gemelo contra pared",
+  mob_calf_cue:"Manos a la pared, pierna de atrás larga. Talón al piso. Suave.",
+  mob_calf_ext:"Gemelo contra pared, rodilla extendida",
+  mob_calf_ext_cue:"Pierna de atrás estirada, talón apoyado. Estirás el gemelo, no rebotes.",
+  mob_soleus:"Sóleo contra pared, rodilla flexionada",
+  mob_soleus_cue:"Misma posición, rodilla de atrás un poco doblada. El estiramiento baja al sóleo.",
+  mob_twist:"Supine Twist",
+  mob_twist_cue:"Boca arriba, rodillas a un lado. Hombros quietos. Respirá hacia el costado.",
+  mob_lunge_soft:"Low Lunge suave",
+  mob_lunge_soft_cue:"Rodilla de atrás apoyada. Cadera adelante un poco. Sin hundir la lumbar.",
+  mob_lunge_short:"Low Lunge corto",
+  mob_lunge_short_cue:"Zancada corta, rodilla de atrás puede apoyarse. Cadera suave, no fuerza.",
+  mob_fig4:"Figura 4 boca arriba",
+  mob_fig4_cue:"Tobillo sobre la rodilla contraria. Acercá las piernas al pecho sin tironear.",
+  mob_fig4_glute:"Figura 4 / glúteo",
+  mob_baby:"Happy Baby",
+  mob_baby_cue:"Boca arriba, tomá la parte externa de los pies. Rodillas abiertas, sacro al piso.",
+  mob_baby_hold_cue:"Misma forma, quedate y respirá. Si las manos no llegan, tomá los muslos.",
+  mob_neck:"Cuello suave: oreja a hombro",
+  mob_neck_cue:"Oreja hacia el hombro, hombros bajos. Sin girar ni forzar.",
+  mob_bridge:"Bridge suave",
+  mob_bridge_cue:"Subí la cadera con control, 3 respiraciones arriba, bajá. Nada de impulso.",
+  mob_sava:"Savasana",
+  mob_sava_cue:"Boca arriba, brazos al costado. Soltá el peso. No hay nada que hacer.",
+  mob_sava_side:"Savasana o de costado",
+  mob_sava_side_cue:"Boca arriba o de costado, lo que sea más cómodo. Ojos suaves.",
+  mob_ankle:"Círculos de tobillo",
+  mob_ankle_cue:"Mové el tobillo lento en los dos sentidos. Pie relajado.",
+  mob_ham:"Isquiotibial: talón adelante",
+  mob_ham_cue:"Talón adelante, rodilla blanda, pecho hacia adelante. Sin trabar la rodilla.",
+  mob_lie_breath:"Respiración acostada",
+  mob_lie_breath_cue:"Boca arriba, una mano en el abdomen. Inhalá y exhalá por la nariz, sin prisa.",
+  mob_knees:"Rodillas al pecho",
+  mob_knees_cue:"Abrazá las rodillas. Mecete un poco si ayuda. Cuello largo.",
+  mob_fetal:"Child's Pose o postura fetal",
+  mob_fetal_cue:"Elegí Child's Pose o acurrucarte de costado. El cuerpo pesado, la respiración lenta.",
+
  },
  de:{
   brand_sub:"Training", your_name:"Dein Name", name_ph:"Wie heißt du?", hero_hello:"Hallo, {n}!", hero_hi:"Auf geht's!",
@@ -1244,7 +1333,7 @@ const I18N={
   confirm_reset:"Standardplan wiederherstellen (Trainings bleiben). Fortfahren?", confirm_wipe:"ALLES löschen? Nicht rückgängig machbar.",
   new_day_name:"Neuer Name des Tages:", cancel:"Abbrechen", got_it:"Verstanden!",
   nav_home:"Heute", nav_routine:"Plan", nav_train:"Training", nav_library:"Übungen", nav_journal:"Tagebuch", nav_progress:"Fortschritt", nav_week:"Woche", nav_more:"Mehr",
-  disc_strength:"Kraft", disc_strength_sub:"Dein aktueller Plan", disc_run:"Laufen", disc_yoga:"Yoga", disc_yoga_sub:"24-Wochen-Programm", disc_mobility:"Mobilität", disc_soon:"Demnächst", coming_soon:"Demnächst", more_title:"Mehr", train_back:"Zurück zu Disziplinen",
+  disc_strength:"Kraft", disc_strength_sub:"Dein aktueller Plan", disc_run:"Laufen", disc_yoga:"Yoga", disc_yoga_sub:"24-Wochen-Programm", disc_mobility:"Mobilität", disc_mobility_sub:"Lösen und erholen", disc_soon:"Demnächst", coming_soon:"Demnächst", more_title:"Mehr", train_back:"Zurück zu Disziplinen",
   sec_warmup:"Aufwärmen", sec_abs:"Bauch", sec_machines:"Maschinen & Kraft", sec_cardio:"Lockeres Cardio", sec_stretch:"Dehnen",
   cat_warmup:"Mobilität", cat_abs:"Bauch", cat_legs:"Beine", cat_glutes:"Po", cat_back:"Rücken", cat_chest:"Brust", cat_shoulders:"Schultern", cat_arms:"Arme", cat_cardio:"Cardio", cat_stretch:"Dehnen", cat_all:"Alle",
   help_body:"<p><b>Plan:</b> jeder Tag ist unterteilt in Aufwärmen → Bauch → Maschinen → Cardio → Dehnen (ca. 1 Std). Übungen mit dem Mülleimer entfernen.</p><p><b>Übungen:</b> der komplette Katalog. Tipp auf + und wähl den Tag. So baust du deine eigene Version.</p><p><b>Training:</b> bei Maschinen Gewicht und Wdh. eintragen (die App sagt, wann mehr); den Rest abhaken.</p><p><b>Tagebuch & Fortschritt:</b> Notizen mit Mustern, Gewicht mit Graph und Vorher/Nachher-Fotos.</p>",
@@ -1538,6 +1627,77 @@ const I18N={
   yg_ach_recall:"Einheit mit wenig Hilfe",
   yg_ach_suna:"Erster abgewandelter Sonnengruß A",
   yg_ach_min30:"Erste 30-Minuten-Einheit",
+
+  disc_mobility_sub:"Lösen und erholen",
+  mob_home_lead:"Kurze Routinen zum Lösen, Erholen und Bewegen der Gelenke. Das ist kein Yoga.",
+  mob_start:"Starten",
+  mob_ready:"Fertig / Weiter",
+  mob_exit:"Beenden",
+  mob_back_home:"Zurück zu Mobilität",
+  mob_done_title:"Fertig",
+  mob_hist:"Verlauf",
+  mob_no_hist:"Noch keine Mobilitätsroutinen.",
+  mob_dur:"{n} Min.",
+  mob_step:"Schritt {n} von {total}",
+  mob_side_r:"rechte Seite",
+  mob_side_l:"linke Seite",
+  mob_dose_sec:"{n} Sekunden",
+  mob_dose_breaths:"{n} Atemzüge",
+  mob_dose_reps:"×{n}",
+  mob_quick5:"5 Minuten",
+  mob_quick5_goal:"Schnelle Mobilität, wenn wenig Zeit ist.",
+  mob_gen10:"Allgemein 10 Min.",
+  mob_gen10_goal:"Den ganzen Körper ruhig lösen.",
+  mob_legs:"Nach Beinen",
+  mob_legs_goal:"Sanfte Erholung nach Beintraining.",
+  mob_run:"Nach dem Laufen",
+  mob_run_goal:"Wade, Soleus, Hüfte, Beinrückseite und Gesäß.",
+  mob_sleep:"Vor dem Schlafen",
+  mob_sleep_goal:"Entspannung und sanfte Mobilität.",
+  mob_catcow:"Cat-Cow",
+  mob_catcow_cue:"Im Vierfüßler die Wirbelsäule mit dem Atem bewegen. Nacken nicht pressen.",
+  mob_hipcirc:"Hüftkreise",
+  mob_hipcirc_cue:"Im Vierfüßler langsame Kreise mit dem Knie. Hüfte weich.",
+  mob_child:"Child's Pose",
+  mob_child_cue:"Hüften zu den Fersen, Arme nach vorn oder seitlich. Breit atmen.",
+  mob_child_open:"Child's Pose mit offenen Knien",
+  mob_child_open_cue:"Knie weit, Hüften zurück. Die Taille sinken lassen, ohne zu drücken.",
+  mob_calf:"Wade an der Wand",
+  mob_calf_cue:"Hände an die Wand, hinteres Bein lang. Ferse am Boden. Sanft.",
+  mob_calf_ext:"Wade an der Wand, Knie gestreckt",
+  mob_calf_ext_cue:"Hinteres Bein gestreckt, Ferse unten. Wade dehnen, nicht federn.",
+  mob_soleus:"Soleus an der Wand, Knie gebeugt",
+  mob_soleus_cue:"Gleiche Position, hinteres Knie leicht gebeugt. Die Dehnung wandert in den Soleus.",
+  mob_twist:"Supine Twist",
+  mob_twist_cue:"Auf dem Rücken, Knie zur Seite. Schultern bleiben. In die Seite atmen.",
+  mob_lunge_soft:"Sanfter Low Lunge",
+  mob_lunge_soft_cue:"Hinteres Knie abgelegt. Hüfte etwas vor. Lenden nicht durchhängen.",
+  mob_lunge_short:"Kurzer Low Lunge",
+  mob_lunge_short_cue:"Kurzer Ausfallschritt, hinteres Knie darf liegen. Hüfte weich, keine Kraft.",
+  mob_fig4:"Figure 4 auf dem Rücken",
+  mob_fig4_cue:"Knöchel auf das andere Knie. Beine zur Brust, ohne zu ziehen.",
+  mob_fig4_glute:"Figure 4 / Gesäß",
+  mob_baby:"Happy Baby",
+  mob_baby_cue:"Auf dem Rücken, Außenkante der Füße halten. Knie offen, Kreuzbein am Boden.",
+  mob_baby_hold_cue:"Gleiche Form, bleiben und atmen. Wenn die Hände nicht ankommen, Oberschenkel halten.",
+  mob_neck:"Nacken weich: Ohr zur Schulter",
+  mob_neck_cue:"Ohr zur Schulter, Schultern tief. Nicht drehen und nicht zwingen.",
+  mob_bridge:"Sanfte Brücke",
+  mob_bridge_cue:"Hüfte kontrolliert heben, 3 Atemzüge oben, senken. Kein Schwung.",
+  mob_sava:"Savasana",
+  mob_sava_cue:"Auf dem Rücken, Arme seitlich. Gewicht abgeben. Nichts tun.",
+  mob_sava_side:"Savasana oder Seitlage",
+  mob_sava_side_cue:"Rücken oder Seite, was bequemer ist. Weicher Blick.",
+  mob_ankle:"Fußkreise",
+  mob_ankle_cue:"Den Knöchel langsam in beide Richtungen. Fuß locker.",
+  mob_ham:"Beinrückseite: Ferse vorn",
+  mob_ham_cue:"Ferse vorn, Knie weich, Brust nach vorn. Knie nicht durchdrücken.",
+  mob_lie_breath:"Atmung liegend",
+  mob_lie_breath_cue:"Auf dem Rücken, eine Hand am Bauch. Durch die Nase, ohne Eile.",
+  mob_knees:"Knie zur Brust",
+  mob_knees_cue:"Knie umarmen. Leicht schaukeln, wenn es hilft. Langer Nacken.",
+  mob_fetal:"Child's Pose oder Embryohaltung",
+  mob_fetal_cue:"Child's Pose oder auf der Seite zusammenrollen. Schwerer Körper, langsamer Atem.",
  }
 };
 function t(key,p){ let s=(I18N[DB.lang]&&I18N[DB.lang][key]!=null)?I18N[DB.lang][key]:(I18N.es[key]!=null?I18N.es[key]:key); if(p)for(const k in p)s=s.split('{'+k+'}').join(p[k]); return s; }
@@ -1795,14 +1955,14 @@ function buildNav(){
 function navGo(v){ if(v==="entrenar"){ trainPane=(DB.runningSession&&DB.runningSession.active)?"run":(DB.yogaSession&&DB.yogaSession.active)?"yoga":"hub"; } go(v); }
 function showTrainHub(){
  trainPane="hub";
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga");
- if(h)h.style.display="block"; if(g)g.style.display="none"; if(r)r.style.display="none"; if(y)y.style.display="none";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga"),m=document.getElementById("trainMob");
+ if(h)h.style.display="block"; if(g)g.style.display="none"; if(r)r.style.display="none"; if(y)y.style.display="none"; if(m)m.style.display="none";
  renderTrainHub();
 }
 function showTrainGym(){
  trainPane="gym";
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga");
- if(h)h.style.display="none"; if(g)g.style.display="block"; if(r)r.style.display="none"; if(y)y.style.display="none";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga"),m=document.getElementById("trainMob");
+ if(h)h.style.display="none"; if(g)g.style.display="block"; if(r)r.style.display="none"; if(y)y.style.display="none"; if(m)m.style.display="none";
  renderTrainSelect();
 }
 function renderTrainHub(){
@@ -1832,7 +1992,7 @@ function go(v){ currentView=v; document.querySelectorAll(".view").forEach(s=>s.c
  const tabOn=["inicio","entrenar","resumen","progreso","mas"].includes(v)?v:"mas";
  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===tabOn)); window.scrollTo(0,0);
  if(v==="inicio")renderHub(); if(v==="resumen")renderResumen(); if(v==="rutina")renderRutina();
- if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else if(trainPane==="run")showTrainRun(); else if(trainPane==="yoga")showTrainYoga(); else showTrainHub(); }
+ if(v==="entrenar"){ if(trainPane==="gym")showTrainGym(); else if(trainPane==="run")showTrainRun(); else if(trainPane==="yoga")showTrainYoga(); else if(trainPane==="mob")showTrainMob(); else showTrainHub(); }
  if(v==="ejercicios")renderLibrary(); if(v==="diario")renderJournal(); if(v==="progreso")renderProgreso(); if(v==="mas")renderMore(); }
 
 /* ===== FASE / PROGRESIÓN ===== */
@@ -3153,8 +3313,8 @@ const RUNNING_PROGRAM=[
 let runLive=null, runFb={rpe:3,breath:"controlled",legs:"fresh",could:1,km:""}, runWuOn={};
 
 function runPaneShow(){
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga");
- if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="block"; if(y)y.style.display="none";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga"),m=document.getElementById("trainMob");
+ if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="block"; if(y)y.style.display="none"; if(m)m.style.display="none";
 }
 function showTrainRun(){ trainPane="run"; runPaneShow(); renderRunning(); }
 function openRunning(){
@@ -3822,8 +3982,8 @@ function yogaClearTick(){ if(yogaTick){clearInterval(yogaTick);yogaTick=null;} }
 function yogaHasChaturanga(steps){ return (steps||[]).some(s=>(s.poseId||s.cue||"").toString().toLowerCase().indexOf("chaturanga")>=0); }
 
 function yogaPaneShow(){
- const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga");
- if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="none"; if(y)y.style.display="block";
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga"),m=document.getElementById("trainMob");
+ if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="none"; if(y)y.style.display="block"; if(m)m.style.display="none";
 }
 function showTrainYoga(){ trainPane="yoga"; yogaPaneShow(); renderYogaProg(); }
 function openYogaProg(){
@@ -4124,6 +4284,227 @@ function yogaHtmlHist(){
   <h2 class="sec">${t("yg_history")}</h2>
   <div class="card">${neu||`<div class="empty">${t("yg_no_hist")}</div>`}</div>
   ${legacy?`<div class="card"><div class="xs muted">${t("yg_legacy")}</div>${legacy}</div>`:""}`;
+}
+
+
+/* ===== FASE 7 · MOVILIDAD / RECUPERACIÓN ===== */
+const MOBILITY_PRESETS=[
+ {id:"quick5",nameKey:"mob_quick5",goalKey:"mob_quick5_goal",duration:5,steps:[
+  {id:"q5_catcow",titleKey:"mob_catcow",cueKey:"mob_catcow_cue",mode:"reps",reps:6},
+  {id:"q5_hip_r",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"R"},
+  {id:"q5_hip_l",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"L"},
+  {id:"q5_child",titleKey:"mob_child",cueKey:"mob_child_cue",mode:"breaths",breaths:4},
+  {id:"q5_calf_r",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"R"},
+  {id:"q5_calf_l",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"L"},
+  {id:"q5_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"R"},
+  {id:"q5_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"L"}
+ ]},
+ {id:"general10",nameKey:"mob_gen10",goalKey:"mob_gen10_goal",duration:10,steps:[
+  {id:"g10_catcow",titleKey:"mob_catcow",cueKey:"mob_catcow_cue",mode:"reps",reps:6},
+  {id:"g10_hip_r",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"R"},
+  {id:"g10_hip_l",titleKey:"mob_hipcirc",cueKey:"mob_hipcirc_cue",mode:"reps",reps:4,side:"L"},
+  {id:"g10_child",titleKey:"mob_child",cueKey:"mob_child_cue",mode:"breaths",breaths:4},
+  {id:"g10_calf_r",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"R"},
+  {id:"g10_calf_l",titleKey:"mob_calf",cueKey:"mob_calf_cue",mode:"time",sec:20,side:"L"},
+  {id:"g10_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"R"},
+  {id:"g10_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:3,side:"L"},
+  {id:"g10_lunge_r",titleKey:"mob_lunge_soft",cueKey:"mob_lunge_soft_cue",mode:"time",sec:30,side:"R"},
+  {id:"g10_lunge_l",titleKey:"mob_lunge_soft",cueKey:"mob_lunge_soft_cue",mode:"time",sec:30,side:"L"},
+  {id:"g10_fig4_r",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:30,side:"R"},
+  {id:"g10_fig4_l",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:30,side:"L"},
+  {id:"g10_baby",titleKey:"mob_baby",cueKey:"mob_baby_cue",mode:"breaths",breaths:4},
+  {id:"g10_neck_r",titleKey:"mob_neck",cueKey:"mob_neck_cue",mode:"breaths",breaths:3,side:"R"},
+  {id:"g10_neck_l",titleKey:"mob_neck",cueKey:"mob_neck_cue",mode:"breaths",breaths:3,side:"L"}
+ ]},
+ {id:"postLegs",nameKey:"mob_legs",goalKey:"mob_legs_goal",duration:8,steps:[
+  {id:"pl_child",titleKey:"mob_child_open",cueKey:"mob_child_open_cue",mode:"time",sec:60},
+  {id:"pl_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:5,side:"R"},
+  {id:"pl_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:5,side:"L"},
+  {id:"pl_bridge",titleKey:"mob_bridge",cueKey:"mob_bridge_cue",mode:"reps",reps:4},
+  {id:"pl_baby",titleKey:"mob_baby",cueKey:"mob_baby_hold_cue",mode:"time",sec:60},
+  {id:"pl_fig4_r",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:35,side:"R"},
+  {id:"pl_fig4_l",titleKey:"mob_fig4",cueKey:"mob_fig4_cue",mode:"time",sec:35,side:"L"},
+  {id:"pl_sava",titleKey:"mob_sava",cueKey:"mob_sava_cue",mode:"time",sec:60}
+ ]},
+ {id:"postRun",nameKey:"mob_run",goalKey:"mob_run_goal",duration:10,steps:[
+  {id:"pr_ank_r",titleKey:"mob_ankle",cueKey:"mob_ankle_cue",mode:"reps",reps:8,side:"R"},
+  {id:"pr_ank_l",titleKey:"mob_ankle",cueKey:"mob_ankle_cue",mode:"reps",reps:8,side:"L"},
+  {id:"pr_calf_r",titleKey:"mob_calf_ext",cueKey:"mob_calf_ext_cue",mode:"time",sec:30,side:"R"},
+  {id:"pr_calf_l",titleKey:"mob_calf_ext",cueKey:"mob_calf_ext_cue",mode:"time",sec:30,side:"L"},
+  {id:"pr_sole_r",titleKey:"mob_soleus",cueKey:"mob_soleus_cue",mode:"time",sec:30,side:"R"},
+  {id:"pr_sole_l",titleKey:"mob_soleus",cueKey:"mob_soleus_cue",mode:"time",sec:30,side:"L"},
+  {id:"pr_lunge_r",titleKey:"mob_lunge_short",cueKey:"mob_lunge_short_cue",mode:"time",sec:25,side:"R"},
+  {id:"pr_lunge_l",titleKey:"mob_lunge_short",cueKey:"mob_lunge_short_cue",mode:"time",sec:25,side:"L"},
+  {id:"pr_ham_r",titleKey:"mob_ham",cueKey:"mob_ham_cue",mode:"time",sec:20,side:"R"},
+  {id:"pr_ham_l",titleKey:"mob_ham",cueKey:"mob_ham_cue",mode:"time",sec:20,side:"L"},
+  {id:"pr_fig4_r",titleKey:"mob_fig4_glute",cueKey:"mob_fig4_cue",mode:"time",sec:30,side:"R"},
+  {id:"pr_fig4_l",titleKey:"mob_fig4_glute",cueKey:"mob_fig4_cue",mode:"time",sec:30,side:"L"},
+  {id:"pr_child",titleKey:"mob_child",cueKey:"mob_child_cue",mode:"breaths",breaths:5}
+ ]},
+ {id:"sleep",nameKey:"mob_sleep",goalKey:"mob_sleep_goal",duration:7,steps:[
+  {id:"sl_breath",titleKey:"mob_lie_breath",cueKey:"mob_lie_breath_cue",mode:"time",sec:60},
+  {id:"sl_knees",titleKey:"mob_knees",cueKey:"mob_knees_cue",mode:"breaths",breaths:4},
+  {id:"sl_twist_r",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:5,side:"R"},
+  {id:"sl_twist_l",titleKey:"mob_twist",cueKey:"mob_twist_cue",mode:"breaths",breaths:5,side:"L"},
+  {id:"sl_rest",titleKey:"mob_fetal",cueKey:"mob_fetal_cue",mode:"breaths",breaths:5},
+  {id:"sl_sava",titleKey:"mob_sava_side",cueKey:"mob_sava_side_cue",mode:"time",sec:120}
+ ]}
+];
+
+let mobLive=null;
+let mobTick=null;
+
+function mobilityLogs(){ return (DB.logs||[]).filter(l=>sessionType(l)==="mobility"); }
+function mobPreset(id){ return MOBILITY_PRESETS.find(p=>p.id===id)||null; }
+function mobCurrent(){ if(!mobLive) return null; const p=mobPreset(mobLive.presetId); if(!p) return null; return p.steps[mobLive.step]||null; }
+function mobFmt(sec){ sec=Math.max(0,sec|0); const m=(sec/60)|0,s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function mobSideLabel(side){ if(side==="R") return t("mob_side_r"); if(side==="L") return t("mob_side_l"); return ""; }
+function mobDose(st){
+ if(!st) return "";
+ const side=mobSideLabel(st.side);
+ let core="";
+ if(st.mode==="time") core=t("mob_dose_sec",{n:st.sec});
+ else if(st.mode==="breaths") core=t("mob_dose_breaths",{n:st.breaths});
+ else if(st.mode==="reps") core=t("mob_dose_reps",{n:st.reps});
+ return side?core+" · "+side:core;
+}
+function mobClearTick(){ if(mobTick){ clearInterval(mobTick); mobTick=null; } }
+function mobStartTick(){
+ mobClearTick();
+ const st=mobCurrent();
+ if(!mobLive||!st||st.mode!=="time") return;
+ if(mobLive.remain==null) mobLive.remain=st.sec;
+ mobTick=setInterval(function(){
+  if(!mobLive||mobLive.view!=="active"){ mobClearTick(); return; }
+  mobLive.remain--;
+  const el=document.getElementById("mobClock");
+  if(el) el.textContent=mobFmt(Math.max(0,mobLive.remain));
+  if(mobLive.remain<=0){ mobClearTick(); mobLive.remain=0; }
+ },1000);
+}
+
+function mobPaneShow(){
+ const h=document.getElementById("trainHub"),g=document.getElementById("trainGym"),r=document.getElementById("trainRun"),y=document.getElementById("trainYoga"),m=document.getElementById("trainMob");
+ if(h)h.style.display="none"; if(g)g.style.display="none"; if(r)r.style.display="none"; if(y)y.style.display="none"; if(m)m.style.display="block";
+}
+function showTrainMob(){ trainPane="mob"; mobPaneShow(); renderMobility(); }
+function openMobility(presetId){
+ trainPane="mob";
+ if(presetId && mobPreset(presetId)){
+  mobBegin(presetId);
+ }else{
+  mobClearTick();
+  mobLive=null;
+ }
+ go("entrenar");
+}
+function mobBackHub(){
+ mobClearTick();
+ mobLive=null;
+ trainPane="hub";
+ showTrainHub();
+}
+function mobBegin(id){
+ const p=mobPreset(id); if(!p) return;
+ mobClearTick();
+ mobLive={presetId:id,step:0,view:"active",startedAt:Date.now(),remain:null};
+ const st=mobCurrent();
+ if(st&&st.mode==="time") mobLive.remain=st.sec;
+}
+
+function renderMobility(){
+ const box=document.getElementById("mobBody"); if(!box) return;
+ if(mobLive&&mobLive.view==="active") box.innerHTML=mobHtmlActive();
+ else if(mobLive&&mobLive.view==="done") box.innerHTML=mobHtmlDone();
+ else box.innerHTML=mobHtmlHome();
+ if(mobLive&&mobLive.view==="active"){
+  const st=mobCurrent();
+  if(st&&st.mode==="time") mobStartTick();
+ }
+}
+
+function mobHtmlHome(){
+ const cards=MOBILITY_PRESETS.map(p=>`<div class="runcard mobcard">
+  <div class="nm">${esc(t(p.nameKey))}</div>
+  <div class="ht">${esc(t("mob_dur",{n:p.duration}))}</div>
+  <div class="mobgoal">${esc(t(p.goalKey))}</div>
+  <button class="btn" style="margin-top:12px;min-height:44px;width:100%" onclick="openMobility('${p.id}')">${esc(t("mob_start"))}</button>
+ </div>`).join("");
+ const logs=mobilityLogs().slice().reverse();
+ const hist=logs.length?logs.slice(0,20).map(l=>{
+  const p=mobPreset(l.presetId);
+  const nm=p?t(p.nameKey):l.presetId;
+  return `<div class="runcard mobcard"><div class="row between"><div><div class="nm">${esc(nm)}</div><div class="ht">${esc(l.date)} · ${esc(t("mob_dur",{n:l.durMin||p&&p.duration||0}))}</div></div></div></div>`;
+ }).join(""):`<div class="empty">${esc(t("mob_no_hist"))}</div>`;
+ return `<div class="mobwrap">
+  <button class="btn ghost" style="margin-bottom:10px" onclick="mobBackHub()">${esc(t("train_back"))}</button>
+  <h2 class="sec">${esc(t("disc_mobility"))}</h2>
+  <div class="muted" style="margin-bottom:12px">${esc(t("mob_home_lead"))}</div>
+  ${cards}
+  <h2 class="sec" style="margin-top:18px">${esc(t("mob_hist"))}</h2>
+  ${hist}
+ </div>`;
+}
+
+function mobHtmlActive(){
+ const p=mobPreset(mobLive.presetId); const st=mobCurrent();
+ if(!p||!st){ mobLive=null; return mobHtmlHome(); }
+ const n=mobLive.step+1, total=p.steps.length;
+ const clock=st.mode==="time"?`<div class="mobclock" id="mobClock">${mobFmt(mobLive.remain==null?st.sec:mobLive.remain)}</div>`:"";
+ return `<div class="mobwrap moblive">
+  <button class="btn ghost" onclick="mobAbort()">${esc(t("mob_exit"))}</button>
+  <div class="muted" style="margin-top:8px">${esc(t(p.nameKey))} · ${esc(t("mob_step",{n:n,total:total}))}</div>
+  <div class="mobpose">${esc(t(st.titleKey))}</div>
+  <div class="mobmeta">${esc(mobDose(st))}</div>
+  <div class="mobcue">${esc(t(st.cueKey))}</div>
+  ${clock}
+  <div class="mobnav">
+   <button class="btn" style="min-height:44px;width:100%" onclick="mobNext()">${esc(t("mob_ready"))}</button>
+  </div>
+ </div>`;
+}
+
+function mobHtmlDone(){
+ const p=mobPreset(mobLive&&mobLive.presetId);
+ return `<div class="mobwrap moblive">
+  <div class="mobpose">${esc(t("mob_done_title"))}</div>
+  <div class="mobcue">${esc(p?t(p.nameKey):"")}</div>
+  <button class="btn" style="margin-top:16px;min-height:44px;width:100%" onclick="mobCloseDone()">${esc(t("mob_back_home"))}</button>
+ </div>`;
+}
+
+function mobAbort(){
+ mobClearTick();
+ mobLive=null;
+ renderMobility();
+}
+function mobCloseDone(){
+ mobClearTick();
+ mobLive=null;
+ renderMobility();
+}
+function mobNext(){
+ if(!mobLive) return;
+ const p=mobPreset(mobLive.presetId); if(!p) return;
+ mobClearTick();
+ if(mobLive.step+1>=p.steps.length){ mobFinish(); return; }
+ mobLive.step++;
+ mobLive.remain=null;
+ const st=mobCurrent();
+ if(st&&st.mode==="time") mobLive.remain=st.sec;
+ renderMobility();
+}
+function mobFinish(){
+ if(!mobLive) return;
+ const p=mobPreset(mobLive.presetId);
+ const elapsed=Math.round((Date.now()-mobLive.startedAt)/60000);
+ const dur=Math.max(1, elapsed|| (p&&p.duration) ||1);
+ const entry={type:"mobility",date:today(),presetId:mobLive.presetId,durMin:dur,completed:true,exercises:[]};
+ if(!Array.isArray(DB.logs)) DB.logs=[];
+ DB.logs.push(entry);
+ save();
+ mobLive.view="done";
+ renderMobility();
 }
 
 
