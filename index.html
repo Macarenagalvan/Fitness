@@ -5143,7 +5143,7 @@ function renderProgRunning(){
    <div class="stat"><div class="num">${done.length}</div><div class="lbl">${esc(t("pg_sessions"))}</div></div>
    <div class="stat"><div class="num">${mins||"—"}</div><div class="lbl">${esc(t("pg_minutes"))}</div></div>
   </div>
-  <div class="card tight"><div class="xs muted">${esc(t("pg_phase"))}</div><div>${esc(t(w.phase==="walkrun"?"run_ph_walkrun":w.phase==="transition"?"run_ph_trans":w.phase==="k5"?"run_ph_5k":"run_ph_10k"))}</div></div>
+  <div class="card tight"><div class="xs muted">${esc(t("pg_phase"))}</div><div>${esc(runPhaseLabel(w.phase))}</div></div>
   <div class="card tight"><div class="xs muted">${esc(t("pg_block"))}</div><div>${esc(block)}</div></div>
   <div class="card tight"><div class="xs muted">${esc(t("pg_maxkm"))}</div><div>${maxKm==null?esc(t("pg_nokm")):maxKm+" km"}</div></div>
   <div class="card tight"><div class="xs muted">${esc(t("pg_rpe"))}</div><div>${rpeAvg==null?esc(t("pg_norpe")):rpeAvg.toFixed(1)}</div></div>
@@ -5157,7 +5157,7 @@ function renderProgYoga(){
  const p=yogaProg(); const w=yogaWeekDef(p.week);
  const logs=logsByType("yoga");
  const hist=p.history||[];
- const legacy=(DB.yogaLogs||[]).length;
+ const legacy=(DB.yogaLogs||[]).filter(x=>x&&x.source!=="prog").length;
  const poses=p.poses||{};
  const learned=Object.keys(poses).filter(k=>poses[k]==="learned").length;
  const learning=Object.keys(poses).filter(k=>poses[k]==="learning").length;
