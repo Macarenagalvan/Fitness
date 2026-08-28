@@ -36,7 +36,14 @@ rep(
 )
 
 rep(
-"""        <button class=\"disccard soon\" onclick=\"comingSoon()\">\n          <span class=\"ico\" id=\"icoMob\"></span>\n          <span style=\"flex:1;min-width:0\"><span class=\"ttl\" data-i18n=\"disc_mobility\"></span><span class=\"sub\" data-i18n=\"disc_soon\"></span></span>\n        </button>""",
-"""        <button class=\"disccard\" onclick=\"openMobility()\">\n          <span class=\"ico\" id=\"icoMob\"></span>\n          <span style=\"flex:1;min-width:0\"><span class=\"ttl\" data-i18n=\"disc_mobility\"></span><span class=\"sub\" data-i18n=\"disc_mobility_sub\"></span></span>\n          <span class=\"goarr\">›</span>\n        </button>""",
+"""        <button class=\"disccard soon\" onclick=\"comingSoon()\">
+          <span class=\"ico\" id=\"icoMob\"></span>
+          <span style=\"flex:1;min-width:0\"><span class=\"ttl\" data-i18n=\"disc_mobility\"></span><span class=\"sub\" data-i18n=\"disc_soon\"></span></span>
+        </button>""",
+"""        <button class=\"disccard\" onclick=\"openMobility()\">
+          <span class=\"ico\" id=\"icoMob\"></span>
+          <span style=\"flex:1;min-width:0\"><span class=\"ttl\" data-i18n=\"disc_mobility\"></span><span class=\"sub\" data-i18n=\"disc_mobility_sub\"></span></span>
+          <span class=\"goarr\">›</span>
+        </button>""",
 "card",
 )
