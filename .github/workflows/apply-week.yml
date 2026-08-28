@@ -23,7 +23,7 @@ jobs:
           md5 = hashlib.md5(raw).hexdigest()
           print("size", len(raw))
           print("md5", md5)
-          if md5 != "b6ab1a5cbf500901978c0350e951de8a":
+          if md5 != "f11771d0d053daa1c15df013b51ddffe":
               sys.exit("MD5 mismatch: "+md5)
           PY
       - name: commit product and cleanup
@@ -32,7 +32,7 @@ jobs:
           git config user.email "79223918+Macarenagalvan@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet || git commit -m "feat: add multidisciplinary weekly progress"
-          git ls-files | grep -E '^(p9a|p9w|assemble-p9|apply-week|week-block|i18n-|p9-go)' | xargs -r git rm -f
+          git ls-files | grep -E '^(p9a|p9c|p9w|p9j|p9x|assemble-p9|apply-week|week-block|i18n-|p9-go)' | xargs -r git rm -f
           git rm -f .github/workflows/apply-week.yml || true
           git diff --cached --quiet || git commit -m "chore: remove week apply helpers"
           git push
